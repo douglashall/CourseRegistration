@@ -1,0 +1,531 @@
+.course_catalog_tool {
+font-family:Arial,Helvetica,sans-serif;
+font-size:12px; 
+margin:0;
+padding:0;
+}
+.topic-wrap .course_catalog_tool li { 
+ margin: 0; 
+}
+.course_catalog_tool fieldset {margin-top: 1em; margin-bottom: 0.5em; padding: 0.5em; border: thin solid gray;}
+.course_catalog_tool legend {padding: 0.25em 0.5em; font-size: 125%; border: thin solid gray;}
+.course_catalog_tool p {
+    margin-top: 1em;
+}
+.course_catalog_tool a.moredetails,a.showalldetails {
+    color: #666;
+    background-color: inherit;
+}
+
+.course_catalog_tool .pagenavigation {
+    border-top: thin solid #ccc;
+    margin-top: 0.5em;
+    padding-top: 1em;
+}
+.course_catalog_tool .facetcount {
+    color: #666;
+    background-color: inherit;
+}
+.course_catalog_tool .prevnexttext {
+    padding: 0.5em;
+}
+
+.course_catalog_tool .days {
+    font-weight: bold;
+}
+.course_catalog_tool .course_title {
+    font-weight: bold;
+    
+}
+
+.course_catalog_tool #detail .course_title {
+    font-weight: bold;
+    font-size: 130%;
+    padding: 0.25em 0.25em;
+    background-color: #eee;
+}
+.course_catalog_tool #detail .course_no {
+    font-weight: bold;
+}
+.course_catalog_tool tr.course td {
+    padding-top: 1em;
+}
+.course_catalog_tool .searchfound {
+    margin-top: 0.5em; 
+	padding: 0.5em;
+    background-color: #eee;
+}
+
+.course_catalog_tool #detail td,#detail th {
+    padding-right: 3em;
+}
+.course_catalog_tool #detail table {
+    margin-top: 0.25em;
+}
+.course_catalog_tool tr.moredetailcontent td {
+    padding: 0.5em 2em;
+    background-color: #ddd;
+}
+.course_catalog_tool .moredetailcontent p {
+    margin: 0.25em;
+}
+.course_catalog_tool .registrationform {
+    height: 45px;
+    width: 300px;
+    background-color: #ddd;
+    padding: 0.5em 0.5em 0.5em 50px;
+    background-position: 10px 10px;
+    background-repeat: no-repeat;
+    background-image: url(../images/document.png);
+}
+
+.course_catalog_tool .course span.bracketed_course_title {background-color: #fff; font-weight: normal; color: #666;}
+.course_catalog_tool .course span.bracket {font-weight: bold; color: #000;}
+.course_catalog_tool table .nextoffered { font-style: italic; background-color:#eee;}
+.course_catalog_tool #detail p.nextoffered { font-weight: bold; font-size: 110%; margin-bottom: 1em; padding: 0.25em; font-style: italic; font-weight: bold; background-color: #eee;}
+
+
+/* CSS Document */
+.course_catalog_tool ul.weekdisplay {
+    margin: 0px;
+    padding: 0px;
+}
+.course_catalog_tool ul.weekdisplay li {
+    margin: 0px;
+    padding: 0px;
+}
+.course_catalog_tool ul.weekdisplay li {
+    font-weight: bold;
+    display: inline;
+    padding: 1px 3px;
+    border: thin solid #999;
+	zoom:1;
+}
+.course_catalog_tool ul.weekdisplay li.meet {
+    background-color: #666;
+    color: white;
+}
+
+
+.course_catalog_tool .clear { clear:both; height: 2px;}
+
+.course_catalog_tool .calendars{
+    width:107px;
+    height:100px;
+    float:left;
+    padding: 0px 10px 0px 0px;
+    }
+
+.course_catalog_tool .termsTop{
+    display:inline-block;
+    width:107px;
+    height:35px;
+    float:left;
+    background: transparent url('../imgs/calendarOffTop.jpg');
+    text-align:center;
+}
+
+.course_catalog_tool .termsTop.On, .termsTop.Active{
+    background: transparent url('../imgs/calendarOnTop.jpg');
+    
+    }
+
+.course_catalog_tool .topActive{
+    display:inline-block;
+    width:107px;
+    height:35px;
+    float:left;
+    background: transparent url('../imgs/calendarOnTop.jpg');
+    text-align:center;
+    }
+.course_catalog_tool .termsBtm{
+    display:inline-block;
+    width:107px;
+    height:65px;
+    float:left;
+    background: transparent url('../imgs/calendarOffBtm.jpg');
+    text-align:center;
+}
+
+.course_catalog_tool .termsBtm.On, .course_catalog_tool .termsBtm.Active{
+    background: transparent url('../imgs/calendarOnBtm.jpg');
+    color:#000;
+    }
+
+.course_catalog_tool .btmActive{
+    display:inline-block;
+    width:107px;
+    height:65px;
+    float:left;
+    background: transparent url('../imgs/calendarOnBtm.jpg');
+    text-align:center;
+    }
+
+.course_catalog_tool .termsTop a, .course_catalog_tool .topActive a {
+    display:inline-block;
+    padding:16px 0px 0px 0px;
+    font-family:Arial, Helvetica, sans-serif;
+    font-size:15px;
+    font-weight:bold;
+    color:#fff;
+    text-decoration:none;
+    width:107px;
+    height:19px;
+    cursor: pointer;
+    }
+
+.course_catalog_tool .termsBtm a {
+    display:inline-block;
+    padding:16px 0px 0px 0px;
+    font-family:Arial, Helvetica, sans-serif;
+    font-size:13px;
+    font-weight:bold;
+    color:#666363;
+    text-decoration:none;
+    width:107px;
+    height:49px;
+    } 
+
+.course_catalog_tool div.btmActiveLink, .course_catalog_tool .btmActive a {
+    display:inline-block;
+    padding:16px 0px 0px 0px;
+    font-family:Arial, Helvetica, sans-serif;
+    font-size:13px;
+    font-weight:bold;
+    color:#000;
+    text-decoration:none;
+    width:107px;
+    height:49px;
+    }
+
+.course_catalog_tool .termsBtm.On a, .course_catalog_tool .termsBtm.On a:hover, .course_catalog_tool .termsBtm.Active a{ color: #000; outline:none;     cursor: pointer;}
+
+.course_catalog_tool .school{
+    margin: 25px 0px 0px 0px;
+    font-family:"Times New Roman", Times, serif;
+    color:#a51d21;
+    font-size:24px;
+    }
+
+.course_catalog_tool .term{
+    font-family:"Gill Sans";
+    font-size: 18px;
+    color: #010101;
+    margin:6px 0px 0px 0px;
+    }
+
+.course_catalog_tool .detailCalendarWrapper{
+    float:left;
+    margin:10px 0 0 0;
+    }
+
+.course_catalog_tool .detailCalendar{
+    width:85px;
+    height: 80px;
+    float:left;
+    }
+
+.course_catalog_tool .detailCalendarTop{
+    width:85px;
+    height:32px;
+    background: transparent url('../imgs/calendarDetailTop.jpg') no-repeat left top;
+    display:inline-block;
+    text-align:center;
+    }
+
+.course_catalog_tool .detailCalendarTop h5{
+    font-family:Arial, Helvetica, sans-serif;
+    font-size:20px;
+    color:#fff;
+    margin:8px 0 0 0;
+    padding:0px;
+    }
+
+.course_catalog_tool .detailCalendarBtm{
+    width:85px;
+    height:48px;
+    background: transparent url('../imgs/calendarDetailBtm.jpg') no-repeat left top;
+    display:inline-block;
+    text-align:center;
+    }
+
+.course_catalog_tool .detailCalendarBtm h5{
+    font-family:Arial, Helvetica, sans-serif;
+    font-size:36px;
+    color:#000;
+    margin:12px 0 0 0;
+    padding:0px;
+    }
+
+.course_catalog_tool .dateDetail{
+    float:left;
+    font-family:"Gill Sans";
+    color:#891d1a;
+    font-size:20px;
+    margin: 18px 0px 0px 12px;
+    }
+.course_catalog_tool .dateDetailLongDate { color: black; font-size: 80%; }
+
+a.crossReg{
+    float: left; 
+    display:block;
+    width: 172px;
+    height: 19px;
+    background: transparent url('../imgs/crossRegBtn.jpg') no-repeat left top;
+    padding: 6px 0 0 16px;
+    color: #000;
+    text-decoration:none;
+    line-height: 1;
+    margin-right: 0.5em;
+    }
+
+a.crossReg:hover{
+    background: transparent url('../imgs/crossRegBtnHover.jpg') no-repeat left top;
+    color: #fff;
+    }
+/*************************** LEFT NAV (START) ****************************/
+#facetnavigation  {
+    background-color:#EEEEEE;
+    /*border:thin solid #FFFFFF;*/
+    float:left;
+    font-size:12px;
+    width:225px;
+}
+
+#facetnavigation h3.first{
+    font:Arial, Helvetica, sans-serif;
+    font-size: 12px;
+    color: #000;
+    padding: 5px 0 8px 12px;
+    margin: 0;
+    background: #a6a087 url('../imgs/leftNavFirstCat.jpg') no-repeat left top;
+    }
+
+#facetnavigation h3{
+    font:Arial, Helvetica, sans-serif;
+    font-size: 12px;
+    color: #000;
+    padding: 5px 0 8px 12px;
+    margin: 0;
+    width:213px;
+    background: #a6a087 url('../imgs/leftNavAllCat.jpg') no-repeat left top;
+    }
+
+#facetnavigation ul{
+    padding: 0;
+    margin:14px 0 14px 0;
+    list-style:none;
+    }
+
+#facetnavigation ul li{
+    line-height: 20px;
+    padding: 0 0 0 10px;
+    }
+
+#facetnavigation ul li a{
+    color:#000;
+    }
+
+#facetnavigation ul li a:hover{
+    text-decoration:none;
+    color: #6b0707;
+    }
+
+
+#facetnavigation ul li.active{
+    background: transparent url('../imgs/redArrow.jpg') no-repeat left 7px;
+    padding: 0 0 0 10px;
+    color: #6b0707;
+    }
+/*************************** LEFT NAV (END) ****************************/
+
+#result  {
+    border:thin solid #FFFFFF;
+    float:left;
+    margin-left:1em;
+    width:675px;
+    }
+/*************************** SEARCH TEXT BOX AND SUBMIT BTN (START) ****************************/
+input.textbox{ padding-left: 5px; }
+
+.searchCourse{ 
+    background: transparent url('../imgs/searchInputBkg.jpg') no-repeat left top; 
+    float:left;
+    padding: 0px 0 0 10px;
+    vertical-align: middle;
+    }
+
+#submit{
+    
+    width:102px;
+    height:32px;
+    float:left;
+    border:0;
+    text-align:left;
+    text-transform:uppercase;
+    color:#fff;
+    padding: 0 0 0 12px;
+    font-weight:bold;
+    font-size:12px;
+    }
+
+
+
+.search { background: transparent url('../imgs/searchBkgIMG.jpg') no-repeat left top; }
+.searchHover { background: transparent url('../imgs/searchBkgIMG_over.jpg') no-repeat left top; cursor:pointer;}
+
+/*************************** SEARCH TEXT BOX AND SUBMIT BTN (END) ****************************/
+
+/*************************** START OVER LINK (START) ****************************/
+a.startOver{
+    float:left;
+    display:block;
+    width: 97px;
+    height: 23px;
+    background: transparent url('../imgs/btnStartOver.jpg') no-repeat left top;
+    padding: 9px 0 0 22px;
+    font:Arial, Helvetica, sans-serif;
+    font-size:12px;
+    text-decoration:none;
+    margin: 0 0 0 10px;
+    color:#000;
+    }
+
+a.startOver:hover{
+    background: transparent url('../imgs/btnStartOverHover.jpg') no-repeat left top;
+    color:#fff;
+    }
+
+/*************************** START OVER LINK (END) ****************************/
+
+/*************************** NARROWED BY LINKS (START) ****************************/
+ul#chosenfacets{
+    margin: 16px 0 0 0;
+    padding:0;
+    }
+
+ul#chosenfacets li{
+    display:inline-block;
+    font-size: 12px;
+    background: transparent url('../imgs/cross.png') no-repeat left 50%;
+    padding-left: 20px;
+    margin-right: 20px;
+    line-height:20px;
+    }
+
+ul#chosenfacets li a{
+    color: #404040;
+    }
+
+ul#chosenfacets li a:hover{
+    color: #6b0707;
+    text-decoration:none;
+    }
+
+ul#chosenfacets li.first{
+    font-size:12px;
+    display:block;
+    text-transform:uppercase;
+    background:none;
+    padding-left: 0px;
+    }
+/*************************** NARROWED BY LINKS (END) ****************************/
+
+/*************************** SEARCH RESULTS (START) ****************************/
+
+#resultsBox{
+    height:38px;
+    color:#6b0707;
+    margin:15px 0 0;
+}
+#resultsBoxLeft{
+    width:14px;
+    height:38px;
+    float:left;
+    background:transparent url('../imgs/resultsBoxLeft.jpg') no-repeat left top;
+    }
+#resultsBoxMiddle{
+    height:31px;
+    float:left;
+    background:transparent url('../imgs/resultsBoxMiddle.jpg') no-repeat left top;
+    font-size:20px;
+    font-weight:bold;
+    text-align:center;
+    padding: 10px 0 0 0;
+    }
+#resultsBoxRight{
+    width:14px;
+    height:38px;
+    float:left;
+    background:transparent url('../imgs/resultsBoxRight.jpg') no-repeat left top;
+    }
+
+#resultsBox p{
+/*    font-family:"Times New Roman", Times, serif; */
+    font-size: 20px;
+    font-weight:bold;
+    padding:7px 0 0 10px;
+    margin:0;
+    display:inline-block;
+    }
+
+thead { 
+    background: transparent url('../imgs/theaderBkg.jpg') repeat-x left top; 
+    /*height: 39px;*/
+    text-align:left;
+}
+.course_catalog_tool table thead tr th {
+    vertical-align: middle;
+}
+
+/*************************** SEARCH RESULTS (END) ****************************/
+
+
+/*************************** SORT NAV (START) ****************************/
+#sortWrapper{
+    height: 19px;
+    float:right;
+    font-size: 11px;
+    }
+
+#sortWrapper a{
+    font-size: 11px;
+    color:#272727;
+    padding: 0 2px;
+    }
+
+#sortWrapper a:hover, #sortWrapper a.active{
+    color:#6b0707;
+    text-decoration:none;
+    }
+#sortWrapper a.active{
+    font-weight: bold;
+    }
+
+#sortNavLeftCorner {
+    background: transparent url('../imgs/sortWrapLeft.jpg') no-repeat left top;
+    width: 9px;
+    height: 19px;
+    float: left;
+    }
+
+#sortNavContent{
+    background: transparent url('../imgs/sortWrapBkg.jpg') repeat-x left top;
+    height: 16px;
+    float: left;
+    padding: 3px 5px 0 0;
+    }
+/*************************** SORT NAV (END) ****************************/
+
+
+.course_catalog_tool #mylist {
+margin-bottom: 1em;
+	}
+	
+.course_catalog_tool .blur { color: #999; }	
+
+.course_catalog_tool table.grid {border: thin solid black; border-collapse: collapse; margin-bottom: 5px;}
+.course_catalog_tool table.grid td, table.grid th {border-bottom: thin solid black; border-right: thin solid black; padding: .25em;}
+.course_catalog_tool table.grid caption {  border: medium solid black; background-color: #ddd; }
+.course_catalog_tool table.petition_form thead th {font-size: smaller;}
+.course_catalog_tool table.petition_form thead tr { background-color: #ddd;}

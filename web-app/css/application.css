@@ -1,0 +1,8 @@
+.x-action-col-cell img.create-col {
+	height: 16px;
+	width: 16px;
+	background-image: url(http://isites.harvard.edu/js/isites/resources/images/accept.png);
+}
+.x-grid3-cell-inner {
+	white-space: normal;
+}
