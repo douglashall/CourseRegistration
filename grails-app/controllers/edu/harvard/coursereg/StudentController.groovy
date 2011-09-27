@@ -10,16 +10,17 @@ class StudentController {
 	
 	def list = {
 		def studentCourses = StudentCourse.findAllByUserIdAndActive(request.userId, 1)
+		def model = new TreeMap(studentCourses.groupBy {it.termDisplay})
 		withFormat {
-			html {[studentCourseList:studentCourses, topicId:params.topicId]}
+			html {[model: model, topicId:params.topicId]}
 			json {
 				JSON.use("deep") {
-					render studentCourses as JSON
+					render model as JSON
 				}
 			}
 			xml {
 				XML.use("deep") {
-					render studentCourses as XML
+					render model as XML
 				}
 			}
 		}

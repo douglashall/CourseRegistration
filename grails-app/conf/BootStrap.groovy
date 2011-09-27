@@ -1,6 +1,7 @@
 import edu.harvard.coursereg.StudentCourse
 import edu.harvard.icommons.coursedata.Course
 import edu.harvard.icommons.coursedata.CourseInstance
+import edu.harvard.icommons.coursedata.CourseMeeting
 import grails.converters.JSON
 import grails.converters.XML
 
@@ -25,7 +26,8 @@ class BootStrap {
 					'title': it.title,
 					'shortTitle': it.shortTitle,
 					'course': it.course,
-					'term': it.term
+					'term': it.term,
+					'courseMeetings': it.courseMeetings
 				]
 			}
 			JSON.registerObjectMarshaller(Course) {
@@ -35,6 +37,14 @@ class BootStrap {
 					'registrarCode': it.registrarCode,
 					'registrarCodeDisplay': it.registrarCodeDisplay,
 					'source': it.source
+				]
+			}
+			JSON.registerObjectMarshaller(CourseMeeting) {
+				return [
+					'day': it.day,
+					'startTime': it.startTime,
+					'endTime': it.endTime,
+					'location': it.location
 				]
 			}
 		}
@@ -56,7 +66,8 @@ class BootStrap {
 					'title': it.title,
 					'shortTitle': it.shortTitle,
 					'course': it.course,
-					'term': it.term
+					'term': it.term,
+					'courseMeetings': it.courseMeetings
 				]
 			}
 			XML.registerObjectMarshaller(Course) {
@@ -66,6 +77,14 @@ class BootStrap {
 					'registrarCode': it.registrarCode,
 					'registrarCodeDisplay': it.registrarCodeDisplay,
 					'source': it.source
+				]
+			}
+			XML.registerObjectMarshaller(CourseMeeting) {
+				return [
+					'day': it.day,
+					'startTime': it.startTime,
+					'endTime': it.endTime,
+					'location': it.location
 				]
 			}
 		}

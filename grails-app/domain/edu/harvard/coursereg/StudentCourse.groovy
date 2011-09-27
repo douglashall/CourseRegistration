@@ -1,6 +1,7 @@
 package edu.harvard.coursereg
 
 import edu.harvard.icommons.coursedata.CourseInstance
+import edu.harvard.icommons.coursedata.School
 
 class StudentCourse implements Serializable {
 
@@ -9,8 +10,9 @@ class StudentCourse implements Serializable {
 	int active = 1
 	
 	Map student
+	String termDisplay
 	
-	static transients = ['student']
+	static transients = ['student','termDisplay']
 	
 	static belongsTo = [
 		courseInstance : CourseInstance
@@ -32,5 +34,10 @@ class StudentCourse implements Serializable {
     static constraints = {
 		userId(blank: false)
     }
+	
+	public String getTermDisplay() {
+		def school = School.findBySchoolId(this.courseInstance.course.schoolId)
+		return this.courseInstance.term.displayName + ", " + school.titleLong
+	}
 	
 }
