@@ -57,6 +57,7 @@ grails.exceptionresolver.params.exclude = ['password']
 environments {
 	production {
 		grails.serverURL = "http://www.changeme.com"
+		icommonsapi.url = "http://tool2.isites.harvard.edu:8971/icommonsapi"
 	}
 	development {
 		grails.serverURL = "http://localhost:8080/${appName}"
@@ -64,6 +65,7 @@ environments {
 	}
 	test {
 		grails.serverURL = "http://localhost:8080/${appName}"
+		icommonsapi.url = "http://qa.isites.harvard.edu:8861/icommonsapi"
 	}
 
 }

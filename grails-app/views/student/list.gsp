@@ -16,7 +16,7 @@
 						<tr>
 							<th style="width: 100%" rowspan="1" colspan="1">Course</th>
 							<th rowspan="1" colspan="1">Level</th>
-							<th rowspan="1" colspan="1">Grading Option</th>
+							<th rowspan="1" colspan="1">Grading&nbsp;Option</th>
 							<th rowspan="1" colspan="1">Status</th>
 						</tr>
 					</thead>
