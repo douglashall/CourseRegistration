@@ -10,15 +10,25 @@ import groovyx.net.http.Method
 class StudentCourse implements Serializable {
 
 	String userId
+	Long homeSchoolId
 	Date dateCreated
 	int active = 1
 	
 	Map student
 	String termDisplay
+	Map instructor
 	List<Map> levelOptions
 	List<Map> gradingOptions
+	List<Map> schoolOptions
 	
-	static transients = ['student','termDisplay', 'levelOptions', 'gradingOptions']
+	static transients = [
+		'student',
+		'termDisplay',
+		'instructor',
+		'levelOptions',
+		'gradingOptions',
+		'schoolOptions'
+	]
 	
 	static belongsTo = [
 		courseInstance : CourseInstance
@@ -69,19 +79,43 @@ class StudentCourse implements Serializable {
 		return student
 	}
 	
+	public Map getInstructor() {
+		if (!instructor) {
+			def courseStaff = this.courseInstance.staff.find {it.roleId == 1}
+			instructor = [
+				'userId': courseStaff.userId,
+				'name': courseStaff.displayName ? courseStaff.displayName : this.courseInstance.instructorsDisplay
+			]
+		}
+		return instructor
+	}
+	
 	public List<Map> getLevelOptions() {
-		return [
-			["id": 1, "name": "Undergraduate"],
-			["id": 2, "name": "Graduate"]
-		]
+		if (!levelOptions) {
+			levelOptions = [
+				["id": 1, "name": "Undergraduate"],
+				["id": 2, "name": "Graduate"]
+			]
+		}
+		return levelOptions
 	}
 	
 	public List<Map> getGradingOptions() {
-		return [
-			["id": 1, "name": "Letter"],
-			["id": 2, "name": "Sat-Unsat"],
-			["id": 3, "name": "Audit"]
-		]
+		if (!gradingOptions) {
+			gradingOptions = [
+				["id": 1, "name": "Letter"],
+				["id": 2, "name": "Sat-Unsat"],
+				["id": 3, "name": "Audit"]
+			]
+		}
+		return gradingOptions
+	}
+	
+	public List<Map> getSchoolOptions() {
+		if (!schoolOptions) {
+			schoolOptions = []
+		}
+		return schoolOptions
 	}
 	
 }

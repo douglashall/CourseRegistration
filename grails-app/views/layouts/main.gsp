@@ -8,7 +8,6 @@
         <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.6.1/jquery.min.js"></script>
         <script src="http://isites.harvard.edu/js/ext/adapter/ext/ext-base-debug.js"></script>
         <script src="http://isites.harvard.edu/js/ext/ext-all-debug.js"></script>
-        <g:javascript library="application" />
         <g:layoutHead />
     </head>
     <body class="course_catalog_tool">
