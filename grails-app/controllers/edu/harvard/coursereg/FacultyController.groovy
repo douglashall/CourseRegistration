@@ -16,7 +16,6 @@ class FacultyController {
 			join ci.staff as staff \
 				with staff.userId = ? \
 			where sc.active = 1", [request.userId])
-		CourseRegistrationUtils.findPeopleForStudentCourses(studentCourses)
 		def model = new TreeMap(studentCourses.groupBy {it.courseInstance.shortTitle + " / " + it.courseInstance.term.displayName})
 		withFormat {
 			html {[model:model, topicId:params.topicId]}

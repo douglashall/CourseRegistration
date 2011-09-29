@@ -6,8 +6,15 @@ import grails.converters.JSON
 import grails.converters.XML
 
 class BootStrap {
-
+	
+	def grailsApplication
+	
     def init = { servletContext ->
+		for (dc in grailsApplication.domainClasses) {
+			dc.clazz.metaClass.getGrailsApplication = { -> grailsApplication }
+			dc.clazz.metaClass.static.getGrailsApplication = { -> grailsApplication }
+		}
+		
 		JSON.use("deep") {
 			JSON.registerObjectMarshaller(StudentCourse) {
 				return [
@@ -25,6 +32,7 @@ class BootStrap {
 					'id': it.id,
 					'title': it.title,
 					'shortTitle': it.shortTitle,
+					'subTitle': it.subTitle,
 					'course': it.course,
 					'term': it.term,
 					'courseMeetings': it.courseMeetings
@@ -65,6 +73,7 @@ class BootStrap {
 					'id': it.id,
 					'title': it.title,
 					'shortTitle': it.shortTitle,
+					'subTitle': it.subTitle,
 					'course': it.course,
 					'term': it.term,
 					'courseMeetings': it.courseMeetings

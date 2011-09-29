@@ -30,11 +30,19 @@
 									<a href="mailto:${studentCourse.student.email}">${studentCourse.student.email}</a>
 								</td>
 								<td rowspan="1" colspan="1">${studentCourse.student.school}</td>
-								<td rowspan="1" colspan="1">${studentCourse.studentCourseAttributes['levelOption']}</td>
-								<td rowspan="1" colspan="1">${studentCourse.studentCourseAttributes['gradingOption']}</td>
 								<td rowspan="1" colspan="1">
-									<a class="course_approve approvethis" style="font-size: small" title="" href="javascript:void(0);" shape="rect">approve</a>
-									<a class="course_deny denythis" style="font-size: small" title="" href="javascript:void(0);" shape="rect">deny</a>
+									<g:if test="${studentCourse.studentCourseAttributes['levelOption']}">
+										${studentCourse.studentCourseAttributes['levelOption']}
+									</g:if>
+								</td>
+								<td rowspan="1" colspan="1">
+									<g:if test="${studentCourse.studentCourseAttributes['gradingOption']}">
+										${studentCourse.studentCourseAttributes['gradingOption']}
+									</g:if>
+								</td>
+								<td rowspan="1" colspan="1">
+									<a class="course_approve approvethis" style="font-size: small" title="" href="javascript:void(0);" shape="rect">Approve</a>
+									<a class="course_deny denythis" style="font-size: small" title="" href="javascript:void(0);" shape="rect">Deny</a>
 								</td>
 							</tr>
 						</g:each>

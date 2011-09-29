@@ -1,20 +1,5 @@
 Ext.namespace('CourseRegistration');
 
-CourseRegistration.levelOptions = new Ext.data.ArrayStore({
-	fields: ['id', 'title'],
-	data: [
-		['g', 'Graduate'],
-		['u', 'Undergraduate']
-	]
-});
-CourseRegistration.gradingOptions = new Ext.data.ArrayStore({
-	fields: ['id', 'title'],
-	data: [
-		['letter', 'Letter'],
-		['satunsat', 'Sat-Unsat'],
-		['passfail', 'Pass-Fail']
-	]
-});
 CourseRegistration.schoolOptions = new Ext.data.ArrayStore({
 	fields: ['id', 'title'],
 	data: [
@@ -60,28 +45,21 @@ CourseRegistration.CreatePetitionFormPanel = Ext.extend(Ext.form.FormPanel, {
 	border: false,
 	labelWidth: 125,
 	padding: 10,
+	studentCourse: undefined,
 	
 	initComponent: function(){
 		this.items = [{
-			id: 'grading-option-combo',
-			xtype: 'combo',
-	        fieldLabel: 'Grading Option',
-	        name: 'gradingOption',
-	        store: CourseRegistration.gradingOptions,
-	        displayField: 'title',
-	        valueField: 'id',
-	        mode: 'local',
-	        forceSelection: true,
-	        allowBlank: false,
-	        msgTarget: 'side',
-	        emptyText: 'Please select...'
-	    },{
 	    	id: 'level-option-combo',
 	    	xtype: 'combo',
 	        fieldLabel: 'Level',
 	        name: 'levelOption',
-	        store: CourseRegistration.levelOptions,
-	        displayField: 'title',
+	        store: new Ext.data.JsonStore({
+	            root: 'options',
+	            idProperty: 'id',
+	            fields: ['id', 'name'],
+	            data: {options: this.studentCourse.get('levelOptions')[0]}
+	        }),
+	        displayField: 'name',
 	        valueField: 'id',
 	        mode: 'local',
 	        forceSelection: true,
@@ -89,6 +67,24 @@ CourseRegistration.CreatePetitionFormPanel = Ext.extend(Ext.form.FormPanel, {
 	        msgTarget: 'side',
 	        emptyText: 'Please select...'
 	    },{
+			id: 'grading-option-combo',
+			xtype: 'combo',
+	        fieldLabel: 'Grading Option',
+	        name: 'gradingOption',
+	        store: new Ext.data.JsonStore({
+	            root: 'options',
+	            idProperty: 'id',
+	            fields: ['id', 'name'],
+	            data: {options: this.studentCourse.get('gradingOptions')[0]}
+	        }),
+	        displayField: 'name',
+	        valueField: 'id',
+	        mode: 'local',
+	        forceSelection: true,
+	        allowBlank: false,
+	        msgTarget: 'side',
+	        emptyText: 'Please select...'
+	    }/*,{
 	    	id: 'home-school-combo',
 	    	xtype: 'combo',
 	        fieldLabel: 'Your school affiliation',
@@ -101,7 +97,7 @@ CourseRegistration.CreatePetitionFormPanel = Ext.extend(Ext.form.FormPanel, {
 	        allowBlank: false,
 	        msgTarget: 'side',
 	        emptyText: 'Please select...'
-	    }];
+	    }*/];
 
 		CourseRegistration.CreatePetitionFormPanel.superclass.initComponent.apply(this);
 	}
@@ -113,7 +109,8 @@ CourseRegistration.CreatePetitionWindow = Ext.extend(Ext.Window, {
 	buttonAlign: 'center',
 	height: 300,
 	width: 400,
-	petition: undefined,
+	modal: true,
+	studentCourse: undefined,
 	
 	initComponent: function(){
 		this.items = [{
@@ -121,8 +118,8 @@ CourseRegistration.CreatePetitionWindow = Ext.extend(Ext.Window, {
 			layout: 'fit', 
 			border: false,
 			padding: 10,
-			html: String.format('<p>Submitting this form will begin the cross-registration process for {0}. {1} will receive a notification and either approve or deny your request. The faculty member may require a separate application process.</p>', this.petition.get('courseNumber'), this.petition.get('courseInstructor'))
-		}, new CourseRegistration.CreatePetitionFormPanel({region: 'center', id: 'create-petition-form-panel'})];
+			html: String.format('<p>Submitting this form will begin the cross-registration process for {0}. {1} will receive a notification and either approve or deny your request. The faculty member may require a separate application process.</p>', this.studentCourse.get('courseNumber'), this.studentCourse.get('courseInstructor'))
+		}, new CourseRegistration.CreatePetitionFormPanel({region: 'center', id: 'create-petition-form-panel', studentCourse: this.studentCourse})];
 		this.buttons = [{
 			text: 'Create',
 			handler: function(){
@@ -136,7 +133,7 @@ CourseRegistration.CreatePetitionWindow = Ext.extend(Ext.Window, {
 				
 				if (isValid) {
 					var p = {
-                        courseId: this.petition.get('courseId'),
+                        courseId: this.studentCourse.get('courseId'),
                         levelOption: Ext.getCmp('level-option-combo').getValue(),
                         gradingOption: Ext.getCmp('grading-option-combo').getValue(),
                         homeSchoolId: Ext.getCmp('home-school-combo').getValue()
