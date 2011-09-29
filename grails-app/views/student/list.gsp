@@ -265,9 +265,13 @@
 									</g:if>
 								</td>
 								<td rowspan="1" colspan="1">
-									<a class="course_add addthis isites-button" style="font-size: small" title="" href="javascript:void(0);" shape="rect">Add</a>
-									<a class="course_print printthis isites-button" style="font-size: small" title="" href="javascript:void(0);" shape="rect">Print</a>
-									<a class="course_remove removethis isites-button" style="font-size: small" title="" href="javascript:void(0);" shape="rect">Remove</a>
+									<g:if test="${studentCourse.checkPilot()}">
+										<a class="course_add addthis isites-button" style="font-size: small" title="" href="javascript:void(0);">Add</a>
+									</g:if>
+									<g:else>
+										<a class="course_print printthis isites-button" style="font-size: small" title="" href="javascript:void(0);">Print</a>
+									</g:else>
+									<a class="course_remove removethis isites-button" style="font-size: small" title="" href="javascript:void(0);">Remove</a>
 								</td>
 							</tr>
 						</g:each>

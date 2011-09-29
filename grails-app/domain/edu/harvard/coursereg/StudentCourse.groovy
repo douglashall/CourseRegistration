@@ -49,6 +49,7 @@ class StudentCourse implements Serializable {
 	
     static constraints = {
 		userId(blank: false)
+		homeSchoolId(nullable: true)
     }
 	
 	public String getTermDisplay() {
@@ -116,6 +117,12 @@ class StudentCourse implements Serializable {
 			schoolOptions = []
 		}
 		return schoolOptions
+	}
+	
+	public boolean checkPilot() {
+		def schools = Arrays.asList(grailsApplication.config.courseregistration.pilot.schools.split(','));
+		def school = School.get(this.courseInstance.course.id)
+		return schools.contains(school)
 	}
 	
 }

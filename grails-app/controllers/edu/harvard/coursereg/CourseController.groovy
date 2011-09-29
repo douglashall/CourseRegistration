@@ -11,6 +11,9 @@ class CourseController {
 	
 	def add = {
 		def ci = CourseInstance.get(params.id)
+		println params.id
+		println ci as JSON
+		
 		def studentCourse = this.registrationService.addCourseForStudent(request.userId, ci)
 		withFormat {
 			form {render(contentType: "application/json"){studentCourse} as JSON}
