@@ -120,11 +120,12 @@ class StudentCourse implements Serializable {
 	}
 	
 	public boolean checkPilot() {
-		def config = grailsApplication.config.courseregistration.pilot.schools;
+		def config= grailsApplication.config.courseregistration.pilot.schools
 		if (!config) {
-			return false;
+			log.warn("missing courseregistration.pilot.schools config")
+			return false
 		}
-		
+
 		def schools = Arrays.asList(config.split(','));
 		def school = School.get(this.courseInstance.course.id)
 		return schools.contains(school)
