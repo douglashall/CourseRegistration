@@ -1,3 +1,5 @@
+import edu.harvard.coursereg.CourseRegistrationUtils
+
 class AuthenticationFilters {
 
     def filters = {
@@ -5,7 +7,7 @@ class AuthenticationFilters {
             before = {
                 def userId = request.getHeader("HU-PIN-USER-ID")
 				if (!userId) {
-					userId = params.userid
+					userId = CourseRegistrationUtils.decryptId(params.userid)
 				}
 				if (userId) {
 					request.userId = userId

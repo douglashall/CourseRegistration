@@ -6,3 +6,6 @@
 .x-grid3-cell-inner {
 	white-space: normal;
 }
+td.status a {
+	white-space: nowrap;
+}

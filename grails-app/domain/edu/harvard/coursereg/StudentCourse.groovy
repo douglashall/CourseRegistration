@@ -11,7 +11,10 @@ class StudentCourse implements Serializable {
 
 	String userId
 	Long homeSchoolId
+	String levelOption
+	String gradingOption
 	Date dateCreated
+	Date lastUpdated
 	int active = 1
 	
 	Map student
@@ -35,8 +38,7 @@ class StudentCourse implements Serializable {
 	]
 	
 	static hasMany = [
-		registrationStates : RegistrationState,
-		studentCourseAttributes : StudentCourseAttribute
+		registrationStates : RegistrationState
 	]
 	
 	static mapping = {
@@ -44,12 +46,13 @@ class StudentCourse implements Serializable {
 		id generator:'sequence', params:[sequence:'student_course_id_seq']
 		courseInstance fetch: 'join'
 		registrationStates lazy: false
-		studentCourseAttributes lazy: false
 	}
 	
     static constraints = {
 		userId(blank: false)
 		homeSchoolId(nullable: true)
+		levelOption(nullable: true)
+		gradingOption(nullable: true)
     }
 	
 	public String getTermDisplay() {
@@ -83,20 +86,38 @@ class StudentCourse implements Serializable {
 	public Map getInstructor() {
 		if (!instructor) {
 			def courseStaff = this.courseInstance.staff.find {it.roleId == 1}
-			instructor = [
-				'userId': courseStaff.userId,
-				'name': courseStaff.displayName ? courseStaff.displayName : this.courseInstance.instructorsDisplay
-			]
+			if (courseStaff) {
+				instructor = [
+					'userId': courseStaff.userId,
+					'name': courseStaff.displayName ? courseStaff.displayName : this.courseInstance.instructorsDisplay
+				]
+			} else {
+				instructor = [
+					'userId': '',
+					'name': this.courseInstance.instructorsDisplay
+				]
+			}
 		}
 		return instructor
 	}
 	
 	public List<Map> getLevelOptions() {
 		if (!levelOptions) {
-			levelOptions = [
-				["id": 1, "name": "Undergraduate"],
-				["id": 2, "name": "Graduate"]
-			]
+			if (this.courseInstance.undergraduateCreditFlag == 0 &&
+					this.courseInstance.graduateCreditFlag == 0) {
+				levelOptions = [
+					["id": 1, "name": "Undergraduate"],
+					["id": 2, "name": "Graduate"]
+				]
+			} else {
+				levelOptions = []
+				if (this.courseInstance.undergraduateCreditFlag == 1) {
+					levelOptions << ["id": 1, "name": "Undergraduate"]
+				}
+				if (this.courseInstance.graduateCreditFlag == 1) {
+					levelOptions << ["id": 2, "name": "Graduate"]
+				}
+			}
 		}
 		return levelOptions
 	}
@@ -127,8 +148,8 @@ class StudentCourse implements Serializable {
 		}
 
 		def schools = Arrays.asList(config.split(','));
-		def school = School.get(this.courseInstance.course.id)
-		return schools.contains(school)
+		def school = School.findBySchoolId(this.courseInstance.course.schoolId)
+		return schools.contains(school.schoolId)
 	}
 	
 }

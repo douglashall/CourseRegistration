@@ -8,6 +8,7 @@
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
         <meta name="layout" content="main" />
         <script>
+        	// <![CDATA[
 	        Ext.namespace('CourseRegistration');
 	
 	        CourseRegistration.constructUrl = function(url, topicId) {
@@ -39,58 +40,74 @@
 	        	studentCourse: undefined,
 	        	
 	        	initComponent: function(){
-	        		this.items = [{
-	        	    	id: 'level-option-combo',
-	        	    	xtype: 'combo',
-	        	        fieldLabel: 'Level',
-	        	        name: 'levelOption',
-	        	        store: new Ext.data.JsonStore({
-	        	            root: 'options',
-	        	            idProperty: 'id',
-	        	            fields: ['id', 'name'],
-	        	            data: {options: this.studentCourse.get('levelOptions')[0]}
-	        	        }),
-	        	        displayField: 'name',
-	        	        valueField: 'id',
-	        	        mode: 'local',
-	        	        triggerAction: 'all',
-	        	        forceSelection: true,
-	        	        allowBlank: false,
-	        	        msgTarget: 'side',
-	        	        emptyText: 'Please select...'
-	        	    },{
-	        			id: 'grading-option-combo',
-	        			xtype: 'combo',
-	        	        fieldLabel: 'Grading Option',
-	        	        name: 'gradingOption',
-	        	        store: new Ext.data.JsonStore({
-	        	            root: 'options',
-	        	            idProperty: 'id',
-	        	            fields: ['id', 'name'],
-	        	            data: {options: this.studentCourse.get('gradingOptions')[0]}
-	        	        }),
-	        	        displayField: 'name',
-	        	        valueField: 'id',
-	        	        mode: 'local',
-	        	        triggerAction: 'all',
-	        	        forceSelection: true,
-	        	        allowBlank: false,
-	        	        msgTarget: 'side',
-	        	        emptyText: 'Please select...'
-	        	    }/*,{
-	        	    	id: 'home-school-combo',
-	        	    	xtype: 'combo',
-	        	        fieldLabel: 'Your school affiliation',
-	        	        name: 'homeSchoolId',
-	        	        store: CourseRegistration.schoolOptions,
-	        	        displayField: 'title',
-	        	        valueField: 'id',
-	        	        mode: 'local',
-	        	        forceSelection: true,
-	        	        allowBlank: false,
-	        	        msgTarget: 'side',
-	        	        emptyText: 'Please select...'
-	        	    }*/];
+		        	var levelOptions = this.studentCourse.get('levelOptions');
+		        	var gradingOptions = this.studentCourse.get('gradingOptions');
+		        	var schoolOptions = this.studentCourse.get('schoolOptions');
+		        	this.items = [];
+		        	if (levelOptions.length > 1) {
+			        	this.items.push({
+		        	    	id: 'level-option-combo',
+		        	    	xtype: 'combo',
+		        	        fieldLabel: 'Credit Level',
+		        	        name: 'levelOption',
+		        	        store: new Ext.data.JsonStore({
+		        	            root: 'options',
+		        	            idProperty: 'id',
+		        	            fields: ['id', 'name'],
+		        	            data: {options: levelOptions}
+		        	        }),
+		        	        value: levelOptions.length == 1 ? levelOptions[0].id : undefined,
+		    	        	disabled: levelOptions.length == 1,
+		        	        displayField: 'name',
+		        	        valueField: 'id',
+		        	        mode: 'local',
+		        	        triggerAction: 'all',
+		        	        forceSelection: true,
+		        	        allowBlank: false,
+		        	        msgTarget: 'side',
+		        	        emptyText: 'Please select...'
+		        	    });
+			        }
+		        	if (gradingOptions.length > 1) {
+		        		this.items.push({
+		        			id: 'grading-option-combo',
+		        			xtype: 'combo',
+		        	        fieldLabel: 'Grading Option',
+		        	        name: 'gradingOption',
+		        	        store: new Ext.data.JsonStore({
+		        	            root: 'options',
+		        	            idProperty: 'id',
+		        	            fields: ['id', 'name'],
+		        	            data: {options: this.studentCourse.get('gradingOptions')}
+		        	        }),
+		        	        value: gradingOptions.length == 1 ? gradingOptions[0].id : undefined,
+				    	    disabled: gradingOptions.length == 1,
+		        	        displayField: 'name',
+		        	        valueField: 'id',
+		        	        mode: 'local',
+		        	        triggerAction: 'all',
+		        	        forceSelection: true,
+		        	        allowBlank: false,
+		        	        msgTarget: 'side',
+		        	        emptyText: 'Please select...'
+		        	    });
+		        	}
+		        	if (schoolOptions.length > 1) {
+		        	    this.items.push({
+		        	    	id: 'home-school-combo',
+		        	    	xtype: 'combo',
+		        	        fieldLabel: 'Your school affiliation',
+		        	        name: 'homeSchoolId',
+		        	        store: CourseRegistration.schoolOptions,
+		        	        displayField: 'title',
+		        	        valueField: 'id',
+		        	        mode: 'local',
+		        	        forceSelection: true,
+		        	        allowBlank: false,
+		        	        msgTarget: 'side',
+		        	        emptyText: 'Please select...'
+		        	    });
+	        		}
 	
 	        		CourseRegistration.CreatePetitionFormPanel.superclass.initComponent.apply(this);
 	        	}
@@ -111,7 +128,7 @@
 	        			layout: 'fit', 
 	        			border: false,
 	        			padding: 10,
-	        			html: String.format('<p>Submitting this form will begin the cross-registration process for {0}. {1} will receive a notification and either approve or deny your request. The faculty member may require a separate application process.</p>', this.studentCourse.get('courseShortTitle'), this.studentCourse.get('instructor')[0].name)
+	        			html: String.format('<p>Submitting this form will begin the cross-registration process for {0}. {1} will receive a notification and either approve or deny your request. The faculty member may require a separate application process.</p>', this.studentCourse.get('courseShortTitle'), this.studentCourse.get('instructor').name)
 	        		}, new CourseRegistration.CreatePetitionFormPanel({region: 'center', id: 'create-petition-form-panel', studentCourse: this.studentCourse})];
 	        		this.buttons = [{
 	        			text: 'Create',
@@ -148,22 +165,27 @@
 	        		this.addEvents('createpetition');
 	        	}
 	        });
+	        // ]]>
         </script>
         <script>
+        	// <![CDATA[
         	$(document).ready(function(){
         		Ext.QuickTips.init();
         		var topicId = '${topicId}';
         		var data = [];
-            	<g:each in="${model}" var="item">
-            		data.push([
-						'${item.value.id[0]}',
-						'${item.value.userId[0]}',
-                       	'${item.value.courseInstance.id[0]}',
-                       	'${item.value.courseInstance.shortTitle[0]}',
-                       	${item.value.levelOptions as JSON},
-                       	${item.value.gradingOptions as JSON},
-                       	${item.value.instructor as JSON}
-            		]);
+            	<g:each in="${model}" var="entry">
+            		<g:each in="${entry.value}" var="item">
+	            		data.push([
+							'${item.id}',
+							'${item.userId}',
+	                       	'${item.courseInstance.id}',
+	                       	'${item.courseInstance.shortTitle}',
+	                       	${item.levelOptions as JSON},
+	                       	${item.gradingOptions as JSON},
+	                    	${item.schoolOptions as JSON},
+	                       	${item.instructor as JSON}
+	            		]);
+	            	</g:each>
             	</g:each>
 				var store = new Ext.data.ArrayStore({
 					fields: [
@@ -173,12 +195,13 @@
 						{name: 'courseShortTitle'},
 						{name: 'levelOptions'},
 						{name: 'gradingOptions'},
+						{name: 'schoolOptions'},
 						{name: 'instructor'}
 					]
                 });
                 store.loadData(data);
 
-            	$('.course_add').click(function(){
+            	$('.course_create').click(function(){
             		var tr = $(this).parents('tr').first();
                 	var rec = store.getAt(store.find('id', tr.attr('id')));
                     var win = new CourseRegistration.CreatePetitionWindow({
@@ -219,22 +242,30 @@
                         dataType: 'json',
                         success: function(data){
                         	store.remove(rec);
-                        	if (tr.parent().length == 1) {
+                        	if (tr.siblings().length == 0) {
                             	tr.parents('fieldset').first().slideUp(500, function(){
 	                            	$(this).remove();
 	                            });
                             } else {
 	                        	tr.slideUp(500, function(){
-	                            	tr.remove();
+	                        		$(this).remove();
 	                            });
                             }
                         }
                     });
                 });
+
+                $('.course_create').click(function(){
+            		var tr = $(this).parents('tr').first();
+                	var rec = store.getAt(store.find('id', tr.attr('id')));
+                });
             });
+        	// ]]>
         </script>
     </head>
     <body>
+    	<div class="course_catalog_tool">
+    	<div class="result">
     	<g:each in="${model}" var="entry">
 	    	<fieldset>
 				<legend>${entry.key}</legend>
@@ -255,23 +286,19 @@
 									<br/>${studentCourse.courseInstance.instructorsDisplay}<br/>${studentCourse.courseInstance.meetingTime}
 								</td>
 								<td rowspan="1" colspan="1">
-									<g:if test="${studentCourse.studentCourseAttributes['levelOption']}">
-										${studentCourse.studentCourseAttributes['levelOption']}
-									</g:if>
+									${studentCourse.levelOption}
 								</td>
 								<td rowspan="1" colspan="1">
-									<g:if test="${studentCourse.studentCourseAttributes['gradingOption']}">
-										${studentCourse.studentCourseAttributes['gradingOption']}
-									</g:if>
+									${studentCourse.gradingOption}
 								</td>
-								<td rowspan="1" colspan="1">
+								<td class="status" rowspan="1" colspan="1">
 									<g:if test="${studentCourse.checkPilot()}">
-										<a class="course_add addthis isites-button" style="font-size: small" title="" href="javascript:void(0);">Add</a>
+										<a class="course_create createthis" style="font-size: small" title="" href="javascript:void(0);">Create Petition</a>
 									</g:if>
 									<g:else>
-										<a class="course_print printthis isites-button" style="font-size: small" title="" href="javascript:void(0);">Print</a>
+										<a class="course_print printthis" style="font-size: small" title="" href="javascript:void(0);">Create PDF Petition Form</a>
 									</g:else>
-									<a class="course_remove removethis isites-button" style="font-size: small" title="" href="javascript:void(0);">Remove</a>
+									<a class="course_remove removethis" style="font-size: small" title="" href="javascript:void(0);">Remove</a>
 								</td>
 							</tr>
 						</g:each>
@@ -279,5 +306,7 @@
 				</table>
 			</fieldset>
 		</g:each>
+		</div>
+		</div>
     </body>
 </html>

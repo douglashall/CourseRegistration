@@ -8,6 +8,8 @@
         <meta name="layout" content="main" />
     </head>
     <body>
+    	<div class="course_catalog_tool">
+    	<div class="result">
     	<g:each in="${model}" var="entry">
 	    	<fieldset>
 				<legend>${entry.key}</legend>
@@ -31,14 +33,10 @@
 								</td>
 								<td rowspan="1" colspan="1">${studentCourse.student.school}</td>
 								<td rowspan="1" colspan="1">
-									<g:if test="${studentCourse.studentCourseAttributes['levelOption']}">
-										${studentCourse.studentCourseAttributes['levelOption']}
-									</g:if>
+									${studentCourse.levelOption}
 								</td>
 								<td rowspan="1" colspan="1">
-									<g:if test="${studentCourse.studentCourseAttributes['gradingOption']}">
-										${studentCourse.studentCourseAttributes['gradingOption']}
-									</g:if>
+									${studentCourse.gradingOption}
 								</td>
 								<td rowspan="1" colspan="1">
 									<a class="course_approve approvethis" style="font-size: small" title="" href="javascript:void(0);" shape="rect">Approve</a>
@@ -50,5 +48,7 @@
 				</table>
 			</fieldset>
 		</g:each>
+		</div>
+		</div>
     </body>
 </html>

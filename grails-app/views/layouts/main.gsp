@@ -10,7 +10,12 @@
         <script src="http://isites.harvard.edu/js/ext/ext-all-debug.js"></script>
         <g:layoutHead />
     </head>
-    <body class="course_catalog_tool">
+    <body>
+    	<style>
+    		td.status a {
+				white-space: nowrap;
+			}
+    	</style>
         <g:layoutBody />
     </body>
 </html>

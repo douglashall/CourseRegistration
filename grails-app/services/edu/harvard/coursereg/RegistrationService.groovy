@@ -21,6 +21,14 @@ class RegistrationService {
 		}
 		if (!studentCourse) {
 			studentCourse = new StudentCourse(userId:userId, courseInstance:ci)
+			def levelOptions = studentCourse.levelOptions
+			if (levelOptions.size() == 1) {
+				studentCourse.levelOption = levelOptions[0].name
+			}
+			def gradingOptions = studentCourse.gradingOptions
+			if (gradingOptions.size() == 1) {
+				studentCourse.gradingOption = gradingOptions[0].name
+			}
 			studentCourse.save(flush:true)
 		}
 		return studentCourse
