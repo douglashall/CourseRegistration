@@ -27,16 +27,38 @@ class StudentController {
 	}
 	
 	def register = {
-		//def p = new Petition(new JSONObject(params.petition))
-		p.userId = request.userId
-		this.petitionService.create(p)
+		def studentCourse = StudentCourse.findAllByUserIdAndActive(request.userId, 1).find {
+			!it.state &&
+			it.courseInstance.id.equals(Long.parseLong(params.id))
+		}
 		
-		def result = ['state': p.state().title]
+		if (studentCourse) {
+			if (!studentCourse.levelOption && params.levelOption) {
+				studentCourse.levelOption = studentCourse.getLevelOptions().find {it.id == Integer.parseInt(params.levelOption)}.name
+			}
+			if (!studentCourse.gradingOption && params.gradingOption) {
+				studentCourse.gradingOption = studentCourse.getGradingOptions().find {it.id == Integer.parseInt(params.gradingOption)}.name
+			}
+			if (!studentCourse.homeSchoolId && params.homeSchoolId) {
+				studentCourse.homeSchoolId = Long.parseLong(params.homeSchoolId)
+			}
+			
+			def ctx = this.registrationService.createRegistrationContext([studentCourse])
+		}
+		
 		withFormat {
 			form {redirect(action:list)}
 			html {redirect(action:list)}
-			json {render(contentType: "application/json"){result} as JSON}
-			xml {render(contentType: "application/xml"){result} as XML}
+			json {
+				JSON.use("deep") {
+					render(contentType: "application/json"){studentCourse} as JSON
+				}
+			}
+			xml {
+				XML.use("deep") {
+					render(contentType: "application/xml"){studentCourse} as XML
+				}
+			}
 		}
 	}
 	

@@ -21,10 +21,12 @@ class BootStrap {
 					'id': it.id,
 					'student': it.student,
 					'courseInstance': it.courseInstance,
+					'levelOption': it.levelOption,
+					'gradingOption': it.gradingOption,
 					'registrationStates': it.registrationStates,
-					'studentCourseAttributes': it.studentCourseAttributes,
 					'dateCreated': it.dateCreated,
-					'active': it.active
+					'active': it.active,
+					'state': it.state
 				]
 			}
 			JSON.registerObjectMarshaller(CourseInstance) {
@@ -62,10 +64,12 @@ class BootStrap {
 					'id': it.id,
 					'student': it.student,
 					'courseInstance': it.courseInstance,
+					'levelOption': it.levelOption,
+					'gradingOption': it.gradingOption,
 					'registrationStates': it.registrationStates,
-					'studentCourseAttributes': it.studentCourseAttributes,
 					'dateCreated': it.dateCreated,
-					'active': it.active
+					'active': it.active,
+					'state': it.state
 				]
 			}
 			XML.registerObjectMarshaller(CourseInstance) {

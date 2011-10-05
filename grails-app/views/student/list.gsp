@@ -6,7 +6,6 @@
 <html>
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-        <meta name="layout" content="main" />
         <script>
         	// <![CDATA[
 	        Ext.namespace('CourseRegistration');
@@ -40,58 +39,8 @@
 	        	studentCourse: undefined,
 	        	
 	        	initComponent: function(){
-		        	var levelOptions = this.studentCourse.get('levelOptions');
-		        	var gradingOptions = this.studentCourse.get('gradingOptions');
 		        	var schoolOptions = this.studentCourse.get('schoolOptions');
 		        	this.items = [];
-		        	if (levelOptions.length > 1) {
-			        	this.items.push({
-		        	    	id: 'level-option-combo',
-		        	    	xtype: 'combo',
-		        	        fieldLabel: 'Credit Level',
-		        	        name: 'levelOption',
-		        	        store: new Ext.data.JsonStore({
-		        	            root: 'options',
-		        	            idProperty: 'id',
-		        	            fields: ['id', 'name'],
-		        	            data: {options: levelOptions}
-		        	        }),
-		        	        value: levelOptions.length == 1 ? levelOptions[0].id : undefined,
-		    	        	disabled: levelOptions.length == 1,
-		        	        displayField: 'name',
-		        	        valueField: 'id',
-		        	        mode: 'local',
-		        	        triggerAction: 'all',
-		        	        forceSelection: true,
-		        	        allowBlank: false,
-		        	        msgTarget: 'side',
-		        	        emptyText: 'Please select...'
-		        	    });
-			        }
-		        	if (gradingOptions.length > 1) {
-		        		this.items.push({
-		        			id: 'grading-option-combo',
-		        			xtype: 'combo',
-		        	        fieldLabel: 'Grading Option',
-		        	        name: 'gradingOption',
-		        	        store: new Ext.data.JsonStore({
-		        	            root: 'options',
-		        	            idProperty: 'id',
-		        	            fields: ['id', 'name'],
-		        	            data: {options: this.studentCourse.get('gradingOptions')}
-		        	        }),
-		        	        value: gradingOptions.length == 1 ? gradingOptions[0].id : undefined,
-				    	    disabled: gradingOptions.length == 1,
-		        	        displayField: 'name',
-		        	        valueField: 'id',
-		        	        mode: 'local',
-		        	        triggerAction: 'all',
-		        	        forceSelection: true,
-		        	        allowBlank: false,
-		        	        msgTarget: 'side',
-		        	        emptyText: 'Please select...'
-		        	    });
-		        	}
 		        	if (schoolOptions.length > 1) {
 		        	    this.items.push({
 		        	    	id: 'home-school-combo',
@@ -142,14 +91,32 @@
 	        				});
 	        				
 	        				if (isValid) {
-	        					var p = {
-	                                courseId: this.studentCourse.get('courseId'),
-	                                levelOption: Ext.getCmp('level-option-combo').getValue(),
-	                                gradingOption: Ext.getCmp('grading-option-combo').getValue(),
-	                                homeSchoolId: Ext.getCmp('home-school-combo').getValue()
-	                            };
-	        					this.fireEvent('createpetition', p);
-	        					this.close();
+	        					var options = {};
+	        					var levelOptionCombo = Ext.getCmp('level-option-combo');
+	        					var gradingOptionCombo = Ext.getCmp('grading-option-combo');
+	        					var homeSchoolCombo = Ext.getCmp('home-school-combo');
+	        					if (levelOptionCombo) {
+		        					var combo = Ext.getCmp('level-option-combo');
+		        					var store = combo.getStore();
+		        					var selected = store.getById(combo.getValue());
+	                                options.levelOption = {
+	    	                        	id: selected.id,
+	    	                        	name: selected.get('name')
+	                                };
+	        					}
+	        					if (gradingOptionCombo) {
+	        						var combo = Ext.getCmp('grading-option-combo');
+		        					var store = combo.getStore();
+		        					var selected = store.getById(combo.getValue());
+	                                options.gradingOption = {
+	    	                        	id: selected.id,
+	    	                        	name: selected.get('name')
+	                                };
+	        					}
+	        					if (homeSchoolCombo) {
+	                                options.homeSchoolId = Ext.getCmp('home-school-combo').getValue();
+	        					}
+	        					this.fireEvent('createpetition', options);
 	        				}
 	        			},
 	        			scope: this
@@ -171,6 +138,39 @@
         	// <![CDATA[
         	$(document).ready(function(){
         		Ext.QuickTips.init();
+
+        		$('.level-option-combo').each(function(){
+	        		var combo = new Ext.form.ComboBox({
+		        		transform: this,
+	        			id: this.id,
+	        			value: undefined,
+	        	        triggerAction: 'all',
+	        	        forceSelection: true,
+	        	        allowBlank: false,
+	        	        msgTarget: 'under',
+	        	        emptyText: 'Please select...',
+	        	        emptyClass: '',
+		        	    validationEvent: false
+	        	    });
+	        	    combo.setRawValue('Please select...');
+        		});
+        		
+        		$('.grading-option-combo').each(function(){
+	        		var combo = new Ext.form.ComboBox({
+		        		transform: this,
+	        			id: this.id,
+	        			value: undefined,
+	        	        triggerAction: 'all',
+	        	        forceSelection: true,
+	        	        allowBlank: false,
+	        	        msgTarget: 'under',
+	        	        emptyText: 'Please select...',
+	        	        emptyClass: '',
+		        	    validationEvent: false
+	        	    });
+	        	    combo.setRawValue('Please select...');
+        		});
+        	    
         		var topicId = '${topicId}';
         		var data = [];
             	<g:each in="${model}" var="entry">
@@ -201,36 +201,68 @@
                 });
                 store.loadData(data);
 
-            	$('.course_create').click(function(){
+            	$('.course_create a').click(function(){
             		var tr = $(this).parents('tr').first();
+            		var trEl = tr[0];
                 	var rec = store.getAt(store.find('id', tr.attr('id')));
+
+                	var id = rec.get('id');
+                	var levelCombo = Ext.getCmp('level_option_' + id);
+                	var gradingCombo = Ext.getCmp('grading_option_' + id);
+                	var levelValid = !levelCombo || levelCombo.validate();
+                	var gradingValid = !gradingCombo || gradingCombo.validate();
+                	if (!levelValid || !gradingValid) {
+                    	return;
+                    }
+                    
                     var win = new CourseRegistration.CreatePetitionWindow({
                         studentCourse: rec,
                         listeners: {
-                            'createpetition': function(petition){
-                            	/*$.ajax({
-        	                    	url: CourseRegistration.constructUrl('petition/create?format=json', topicId),
-        	                    	type: CourseRegistration.requestType('PUT'),
+                            'createpetition': function(options){
+                            	var mask = new Ext.LoadMask(this.body, {msg:"Please wait...", removeMask:true});
+                            	mask.show();
+                            	$.ajax({
+        	                    	url: CourseRegistration.constructUrl('student/register/' + rec.get('courseInstanceId') + '?format=json', topicId),
+        	                    	type: CourseRegistration.requestType('POST'),
         	                    	headers: {
         	                        	'Accept': 'application/json'
         	                        },
         	                        dataType: 'json',
         	                        data: {
-            	                        petition: JSON.stringify(petition)
+            	                        levelOption: levelCombo ? levelCombo.getValue() : undefined,
+            	                        gradingOption: gradingCombo ? gradingCombo.getValue() : undefined,
+            	                        homeSchoolId: options.homeSchoolId ? options.homeSchoolId : undefined
         	                        },
         	                    	success: function(data){
-            	                    	rec.set('state', data.state);
-            	                    	grid.getStore().commitChanges();
-            	                    	grid.loadMask.hide();
+            	                    	mask.hide();
+            	                    	win.close();
+            	                    	if (data.state) {
+                	                    	var state = data.state;
+            	                    		rec.set('state', state);
+            	                    		store.commitChanges();
+
+            	                    		if (levelCombo) {
+                	                    		levelCombo.destroy();
+                	                    		$('.course_level_option div', trEl).html(data.levelOption);
+                	                    	}
+                	                    	if (gradingCombo) {
+                    	                    	gradingCombo.destroy();
+                	                    		$('.course_grading_option div', trEl).html(data.gradingOption);
+                    	                    }
+                    	                    
+            	                    		$('.course_create', trEl).remove();
+            	                    		$('.course_remove', trEl).before(state + ' ');
+            	                    	}
+            	                    	$(trEl).effect('highlight', 1000);
         	                        }
-        	                    });*/
+        	                    });
                             }
                         }
                     });
                     win.show();
                 });
 
-                $('.course_remove').click(function(){
+                $('.course_remove a').click(function(){
                     var tr = $(this).parents('tr').first();
                 	var rec = store.getAt(store.find('id', tr.attr('id')));
                 	$.ajax({
@@ -247,7 +279,7 @@
 	                            	$(this).remove();
 	                            });
                             } else {
-	                        	tr.slideUp(500, function(){
+	                        	tr.first().slideUp(500, function(){
 	                        		$(this).remove();
 	                            });
                             }
@@ -255,9 +287,29 @@
                     });
                 });
 
-                $('.course_create').click(function(){
-            		var tr = $(this).parents('tr').first();
+                $('.course_print a').click(function(){
+                	var tr = $(this).parents('tr').first();
+            		var trEl = tr[0];
                 	var rec = store.getAt(store.find('id', tr.attr('id')));
+
+                	var id = rec.get('id');
+                	var levelCombo = Ext.getCmp('level_option_' + id);
+                	var gradingCombo = Ext.getCmp('grading_option_' + id);
+                	var levelValid = !levelCombo || levelCombo.validate();
+                	var gradingValid = !gradingCombo || gradingCombo.validate();
+                	if (!levelValid || !gradingValid) {
+                    	return;
+                    }
+                    
+                    var win = new CourseRegistration.CreatePetitionWindow({
+                        studentCourse: rec,
+                        listeners: {
+                            'createpetition': function(options){
+                            	win.close();
+                            }
+                        }
+                    });
+                    win.show();
                 });
             });
         	// ]]>
@@ -285,20 +337,47 @@
 									<span>${studentCourse.courseInstance.title} - ${studentCourse.courseInstance.subTitle} (${studentCourse.courseInstance.course.registrarCodeDisplay})</span>
 									<br/>${studentCourse.courseInstance.instructorsDisplay}<br/>${studentCourse.courseInstance.meetingTime}
 								</td>
-								<td rowspan="1" colspan="1">
-									${studentCourse.levelOption}
+								<td class="course_level_option" rowspan="1" colspan="1">
+									<div>
+										<g:if test="${studentCourse.levelOption}">
+											${studentCourse.levelOption}
+										</g:if>
+										<g:else>
+											<select id="level_option_${studentCourse.id}" class="level-option-combo">
+												<g:each in="${studentCourse.levelOptions}" var="option">
+													<option value="${option.id}">${option.name}</option>
+												</g:each>
+											</select>
+										</g:else>
+									</div>
 								</td>
-								<td rowspan="1" colspan="1">
-									${studentCourse.gradingOption}
+								<td class="course_grading_option" rowspan="1" colspan="1">
+									<div>
+										<g:if test="${studentCourse.gradingOption}">
+											${studentCourse.gradingOption}
+										</g:if>
+										<g:else>
+											<select id="grading_option_${studentCourse.id}" class="grading-option-combo">
+												<g:each in="${studentCourse.gradingOptions}" var="option">
+													<option value="${option.id}">${option.name}</option>
+												</g:each>
+											</select>
+										</g:else>
+									</div>
 								</td>
 								<td class="status" rowspan="1" colspan="1">
-									<g:if test="${studentCourse.checkPilot()}">
-										<a class="course_create createthis" style="font-size: small" title="" href="javascript:void(0);">Create Petition</a>
+									<g:if test="${studentCourse.state}">
+										<div class="course_status">${studentCourse.state}</div>
 									</g:if>
 									<g:else>
-										<a class="course_print printthis" style="font-size: small" title="" href="javascript:void(0);">Create PDF Petition Form</a>
+										<g:if test="${studentCourse.checkPilot()}">
+											<div class="course_create"><a style="font-size: small" title="" href="javascript:void(0);">Create Petition</a></div>
+										</g:if>
+										<g:else>
+											<div class="course_print"><a style="font-size: small" title="" href="javascript:void(0);">Create PDF Petition Form</a></div>
+										</g:else>
 									</g:else>
-									<a class="course_remove removethis" style="font-size: small" title="" href="javascript:void(0);">Remove</a>
+									<div class="course_remove"><a style="font-size: small" title="" href="javascript:void(0);">Remove</a></div>
 								</td>
 							</tr>
 						</g:each>

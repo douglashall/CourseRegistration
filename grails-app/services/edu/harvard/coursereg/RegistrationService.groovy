@@ -46,8 +46,18 @@ class RegistrationService {
 		}
 	}
 	
-	def findPeopleForStudentCourses(List<StudentCourse> studentCourses) {
+	def createRegistrationContext(List<Long> studentCourses) {
+		if (!studentCourses || studentCourses.size() == 0) {
+			return null;
+		}
 		
+		def ctx = new RegistrationContext()
+		studentCourses.each {
+			it.addToRegistrationStates(new RegistrationState(state: 'pending', createdBy: it.userId))
+			ctx.addToStudentCourses(it)
+		}
+		ctx.save(flush:true)
+		return ctx
 	}
 	
 }

@@ -20,6 +20,7 @@ class StudentCourse implements Serializable {
 	Map student
 	String termDisplay
 	Map instructor
+	String state
 	List<Map> levelOptions
 	List<Map> gradingOptions
 	List<Map> schoolOptions
@@ -28,13 +29,15 @@ class StudentCourse implements Serializable {
 		'student',
 		'termDisplay',
 		'instructor',
+		'state',
 		'levelOptions',
 		'gradingOptions',
 		'schoolOptions'
 	]
 	
 	static belongsTo = [
-		courseInstance : CourseInstance
+		courseInstance : CourseInstance,
+		registrationContext : RegistrationContext
 	]
 	
 	static hasMany = [
@@ -53,6 +56,7 @@ class StudentCourse implements Serializable {
 		homeSchoolId(nullable: true)
 		levelOption(nullable: true)
 		gradingOption(nullable: true)
+		registrationContext(nullable: true)
     }
 	
 	public String getTermDisplay() {
@@ -99,6 +103,14 @@ class StudentCourse implements Serializable {
 			}
 		}
 		return instructor
+	}
+	
+	public String getState() {
+		def states = this.registrationStates.sort {a,b -> b.dateCreated.compareTo(a.dateCreated)}
+		if (states.size() > 0) {
+			state = states[0].state
+		}
+		return state
 	}
 	
 	public List<Map> getLevelOptions() {
