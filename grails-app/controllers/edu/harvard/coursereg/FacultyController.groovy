@@ -15,8 +15,14 @@ class FacultyController {
 			join sc.courseInstance as ci \
 			join ci.staff as staff \
 				with staff.userId = ? \
-			where sc.active = 1", [request.userId])
-		def model = new TreeMap(studentCourses.groupBy {it.courseInstance.shortTitle + " / " + it.courseInstance.term.displayName})
+			where sc.active = 1", [request.userId]
+		).findAll {
+			it.state
+		}
+		def model = new TreeMap(studentCourses.groupBy {
+			def prefix = it.courseInstance.shortTitle ? it.courseInstance.shortTitle : it.courseInstance.course.registrarCode
+			prefix + " / " + it.courseInstance.term.displayName
+		})
 		withFormat {
 			html {[model:model, topicId:params.topicId]}
 			json {
