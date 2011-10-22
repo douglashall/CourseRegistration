@@ -32,3 +32,11 @@ BEGIN
 	UPDATE school SET school_primary_key = school_id_seq.nextval WHERE ROWID = s_REC.ROWID;
    END LOOP;
 END;
+
+INSERT INTO registration_state (id, state, terminal) VALUES (registration_state_id_seq.nextval, 'Approved', 1);
+INSERT INTO registration_state (id, state, terminal) VALUES (registration_state_id_seq.nextval, 'Denied', 1);
+INSERT INTO registration_state (id, state, terminal) VALUES (registration_state_id_seq.nextval, 'Awaiting Faculty Approval', 0);
+
+INSERT INTO registration_action (id, school_id, action, state_before_id, state_after_id) VALUES (registration_action_id_seq.nextval, null, 'register', null, 3);
+INSERT INTO registration_action (id, school_id, action, state_before_id, state_after_id) VALUES (registration_action_id_seq.nextval, null, 'faculty_approve', 3, 1);
+INSERT INTO registration_action (id, school_id, action, state_before_id, state_after_id) VALUES (registration_action_id_seq.nextval, null, 'faculty_deny', 3, 2);

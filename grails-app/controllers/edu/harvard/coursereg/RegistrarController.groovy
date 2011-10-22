@@ -5,14 +5,22 @@ import org.codehaus.groovy.grails.web.json.*
 
 class RegistrarController {
 	
-	def registrationService
+	RegistrationService registrationService
 	
 	def list = {
-		def petitions = this.petitionService.findAllByUserIdForFaculty(request.userId)
+		def studentCourses = this.registrationService.searchStudentCourses()
 		withFormat {
-			html {[petitionList:petitions, topicId:params.topicId]}
-			json {render petitions as JSON}
-			xml {render petitions as XML}
+			html {[studentCourses: studentCourses, topicId:params.topicId]}
+			json {
+				JSON.use("deep") {
+					render studentCourses as JSON
+				}
+			}
+			xml {
+				XML.use("deep") {
+					render studentCourses as XML
+				}
+			}
 		}
 	}
 	

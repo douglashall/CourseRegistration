@@ -61,7 +61,8 @@ environments {
 	}
 	development {
 		grails.serverURL = "http://localhost:8080/${appName}"
-		icommonsapi.url = "http://tool2.isites.harvard.edu:8971/icommonsapi"
+		icommonsapi.url = "http://qa.isites.harvard.edu:8861/icommonsapi"
+		solr.url = "http://localhost:8983/solr"
 	}
 	test {
 		grails.serverURL = "http://localhost:8080/${appName}"
@@ -91,8 +92,13 @@ log4j = {
 		   'org.hibernate',
 		   'net.sf.ehcache.hibernate'
 
-	warn   'org.mortbay.log',
-		   'grails.app.controller',
+	warn   'org.mortbay.log'
+    
+    info   'grails.app.controller',
 		   'grails.app.service',
 		   'grails.app.domain'
+		   
+    //debug  'org.apache.http.headers',
+	//       'org.apache.http.wire'
+		   
 }

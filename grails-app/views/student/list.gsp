@@ -55,7 +55,8 @@
 	                       	${item.levelOptions as JSON},
 	                       	${item.gradingOptions as JSON},
 	                    	${item.schoolOptions as JSON},
-	                       	${item.instructor as JSON}
+	                       	${item.instructor as JSON},
+	                       	${item.state as JSON}
 	            		]);
 	            	</g:each>
             	</g:each>
@@ -68,7 +69,8 @@
 						{name: 'levelOptions'},
 						{name: 'gradingOptions'},
 						{name: 'schoolOptions'},
-						{name: 'instructor'}
+						{name: 'instructor'},
+						{name: 'state'}
 					]
                 });
                 store.loadData(data);
@@ -94,7 +96,7 @@
                             	var mask = new Ext.LoadMask(this.body, {msg:"Please wait...", removeMask:true});
                             	mask.show();
                             	$.ajax({
-        	                    	url: CourseRegistration.constructUrl('student/register/' + rec.get('courseInstanceId') + '?format=json', topicId),
+        	                    	url: CourseRegistration.constructUrl('student/register/' + rec.get('courseInstanceId') + '?format=json', topicId, rec.get('userId')),
         	                    	type: CourseRegistration.requestType('POST'),
         	                    	headers: {
         	                        	'Accept': 'application/json'
@@ -109,8 +111,13 @@
             	                    	mask.hide();
             	                    	win.close();
             	                    	if (data.state) {
-                	                    	var state = data.state;
-            	                    		rec.set('state', state);
+                	                    	var state = data.state.state;
+                	                    	var stateTerminal = data.state.terminal;
+                	                    	var stateType = data.state.type;
+            	                    		var stateRec = rec.get('state');
+            	                    		stateRec.state = state;
+            	                    		stateRec.terminal = stateTerminal;
+            	                    		stateRec.type = stateType;
             	                    		store.commitChanges();
 
             	                    		if (levelCombo) {
@@ -123,7 +130,7 @@
                     	                    }
                     	                    
             	                    		$('.course_create', trEl).remove();
-            	                    		$('.course_remove', trEl).before('<div class="course_status">' + state + '</div>');
+            	                    		$('.status div', trEl).html(String.format('<div class="course_status icon-text {0}">{1}</div>', stateType, state));
             	                    	}
             	                    	$(trEl).effect('highlight', 1000);
         	                        }
@@ -138,7 +145,7 @@
                     var tr = $(this).parents('tr').first();
                 	var rec = store.getAt(store.find('id', tr.attr('id')));
                 	$.ajax({
-                    	url: CourseRegistration.constructUrl('course/remove/' + rec.get('courseInstanceId') + '?format=json', topicId),
+                    	url: CourseRegistration.constructUrl('course/remove/' + rec.get('courseInstanceId') + '?format=json', topicId, rec.get('userId')),
                     	type: CourseRegistration.requestType('DELETE'),
                     	headers: {
                         	'Accept': 'application/json'
@@ -200,6 +207,7 @@
 							<th rowspan="1" colspan="1">Level</th>
 							<th rowspan="1" colspan="1">Grading&nbsp;Option</th>
 							<th rowspan="1" colspan="1">Status</th>
+							<th style="width: 100px" rowspan="1" colspan="1"></th>
 						</tr>
 					</thead>
 					<tbody>
@@ -238,18 +246,26 @@
 									</div>
 								</td>
 								<td class="status" rowspan="1" colspan="1">
-									<g:if test="${studentCourse.state}">
-										<div class="course_status">${studentCourse.state}</div>
-									</g:if>
-									<g:else>
-										<g:if test="${studentCourse.checkPilot()}">
-											<div class="course_create"><a style="font-size: small" title="" href="javascript:void(0);">Create Petition</a></div>
+									<div>
+										<g:if test="${studentCourse.state}">
+											<div class="course_status icon-text ${studentCourse.state.type}">${studentCourse.state.state}</div>
 										</g:if>
-										<g:else>
-											<div class="course_print"><a style="font-size: small" title="" href="javascript:void(0);">Create PDF Petition Form</a></div>
-										</g:else>
-									</g:else>
-									<div class="course_remove"><a style="font-size: small" title="" href="javascript:void(0);">Remove</a></div>
+									</div>
+								</td>
+								<td class="registration_action" rowspan="1" colspan="1">
+									<div>
+										<g:if test="${!studentCourse.state}">
+											<g:if test="${studentCourse.checkPilot()}">
+												<div class="course_create"><a style="font-size: small" title="" href="javascript:void(0);">Create Petition</a></div>
+											</g:if>
+											<g:else>
+												<div class="course_print"><a style="font-size: small" title="" href="javascript:void(0);">Create PDF Petition Form</a></div>
+											</g:else>
+										</g:if>
+										<g:if test="${!studentCourse.state || (studentCourse.state && studentCourse.state.terminal == 0)}">
+											<div class="course_remove"><a style="font-size: small" title="" href="javascript:void(0);">Remove</a></div>
+										</g:if>
+									</div>
 								</td>
 							</tr>
 						</g:each>

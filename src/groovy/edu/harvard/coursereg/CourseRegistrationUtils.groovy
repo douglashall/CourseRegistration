@@ -1,6 +1,8 @@
 package edu.harvard.coursereg
 
 import static groovyx.net.http.ContentType.JSON
+import groovyx.net.http.HTTPBuilder
+import groovyx.net.http.Method
 
 import java.security.InvalidKeyException
 import java.security.NoSuchAlgorithmException
@@ -83,6 +85,20 @@ class CourseRegistrationUtils {
 			nspe.printStackTrace();
 		}
 		return null;
+	}
+	
+	def static findPerson(String userId) {
+		def person
+		def http = new HTTPBuilder(config.icommonsapi.url + "/people/by_id/" + userId)
+		http.request(Method.GET, JSON) {
+			response.success = {resp, json ->
+				person = json.people[0]
+				if (person.unknown) {
+					log.error("Failed to find person for userId ${userId}")
+				}
+			}
+		}
+		return person
 	}
 	
 }

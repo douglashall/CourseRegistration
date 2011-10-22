@@ -18,21 +18,25 @@ class StudentCourse implements Serializable {
 	int active = 1
 	
 	Map student
+	School courseSchool
 	String termDisplay
 	Map instructor
-	String state
+	RegistrationContextState registrationContextState
 	List<Map> levelOptions
 	List<Map> gradingOptions
 	List<Map> schoolOptions
+	RegistrationState state
 	
 	static transients = [
 		'student',
+		'courseSchool',
 		'termDisplay',
 		'instructor',
-		'state',
+		'registrationContextState',
 		'levelOptions',
 		'gradingOptions',
-		'schoolOptions'
+		'schoolOptions',
+		'state'
 	]
 	
 	static belongsTo = [
@@ -40,15 +44,11 @@ class StudentCourse implements Serializable {
 		registrationContext : RegistrationContext
 	]
 	
-	static hasMany = [
-		registrationStates : RegistrationState
-	]
-	
 	static mapping = {
 		version false
 		id generator:'sequence', params:[sequence:'student_course_id_seq']
 		courseInstance fetch: 'join'
-		registrationStates lazy: false
+		registrationContext fetch: 'join'
 	}
 	
     static constraints = {
@@ -58,6 +58,13 @@ class StudentCourse implements Serializable {
 		gradingOption(nullable: true)
 		registrationContext(nullable: true)
     }
+	
+	public School getCourseSchool() {
+		if (!courseSchool) {
+			courseSchool = School.findBySchoolId(this.courseInstance.course.schoolId)
+		}
+		return courseSchool
+	}
 	
 	public String getTermDisplay() {
 		if (!termDisplay) {
@@ -69,20 +76,15 @@ class StudentCourse implements Serializable {
 	
 	public Map getStudent() {
 		if (!student) {
-			def http = new HTTPBuilder(grailsApplication.config.icommonsapi.url + "/people/by_id/" + userId)
-			http.request(Method.GET, JSON) {
-				response.success = {resp, json ->
-					json.people.each {person ->
-						this.student = [
-							'id': person.id,
-							'firstName': person.firstName,
-							'lastName': person.lastName,
-							'email': person.email,
-							'school': 'EXT'
-						]
-					}
-				}
-			}
+			def person = CourseRegistrationUtils.findPerson(this.userId)
+			this.student = [
+				'id': person.id,
+				'firstName': person.firstName,
+				'lastName': person.lastName,
+				'email': person.email,
+				'phone': person.phone,
+				'school': this.homeSchoolId ? School.get(this.homeSchoolId).titleLong : ''
+			]
 		}
 		return student
 	}
@@ -91,9 +93,12 @@ class StudentCourse implements Serializable {
 		if (!instructor) {
 			def courseStaff = this.courseInstance.staff.find {it.roleId == 1}
 			if (courseStaff) {
+				def person = CourseRegistrationUtils.findPerson(courseStaff.userId)
 				instructor = [
 					'userId': courseStaff.userId,
-					'name': courseStaff.displayName ? courseStaff.displayName : this.courseInstance.instructorsDisplay
+					'name': courseStaff.displayName ? courseStaff.displayName : this.courseInstance.instructorsDisplay,
+					'email': person.email,
+					'phone': person.phone
 				]
 			} else {
 				instructor = [
@@ -105,10 +110,9 @@ class StudentCourse implements Serializable {
 		return instructor
 	}
 	
-	public String getState() {
-		def states = this.registrationStates.sort {a,b -> b.dateCreated.compareTo(a.dateCreated)}
-		if (states.size() > 0) {
-			state = states[0].state
+	public RegistrationState getState() {
+		if (this.registrationContext && this.registrationContext.currentState) {
+			state = this.registrationContext.currentState
 		}
 		return state
 	}

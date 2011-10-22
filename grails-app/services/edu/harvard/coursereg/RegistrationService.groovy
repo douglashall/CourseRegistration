@@ -2,10 +2,13 @@ package edu.harvard.coursereg
 
 import static groovyx.net.http.ContentType.JSON
 
+import java.util.List;
+
 import org.codehaus.groovy.grails.commons.ConfigurationHolder
 
 import edu.harvard.icommons.coursedata.CourseInstance
 import groovyx.net.http.*
+import org.apache.commons.lang.builder.*
 
 class RegistrationService {
 
@@ -44,20 +47,97 @@ class RegistrationService {
 			it.active = 0
 			it.save()
 		}
+		this.deleteFromStudentCourseIndex(studentCourses)
 	}
 	
-	def createRegistrationContext(List<Long> studentCourses) {
-		if (!studentCourses || studentCourses.size() == 0) {
-			return null;
+	def updateRegistrationContextState(String action, RegistrationContext ctx, String userId) {
+		def studentCourse = ctx.studentCourses.toArray()[0]
+		def registrationAction = RegistrationAction.findAllByAction(action).find {
+			if (it.stateBefore == ctx.currentState) {
+				if (it.school) {
+					return it.school.id == studentCourse.homeSchoolId
+				} else {
+					return true
+				}
+			}
+			return false
 		}
 		
-		def ctx = new RegistrationContext()
-		studentCourses.each {
-			it.addToRegistrationStates(new RegistrationState(state: 'pending', createdBy: it.userId))
-			ctx.addToStudentCourses(it)
+		if (registrationAction) {
+			def registrationContextState = new RegistrationContextState(
+				createdBy: userId,
+				registrationState: registrationAction.stateAfter
+			)
+			
+			ctx.addToRegistrationContextStates(registrationContextState)
+			ctx.save(flush:true)
+			this.updateStudentCourseIndex(ctx.studentCourses.toList())
 		}
-		ctx.save(flush:true)
-		return ctx
+	}
+	
+	def updateStudentCourseIndex(List<StudentCourse> studentCourses) {
+		def docs = []
+		studentCourses.each {
+			docs << [
+				id: it.id,
+				state: it.state.state,
+				stateTerminal: it.state.terminal,
+				stateType: it.state.type,
+				studentHuid: it.userId,
+				studentFirstName: it.student.firstName,
+				studentLastName: it.student.lastName,
+				studentEmail: it.student.email,
+				studentPhone: it.student.phone,
+				homeSchool: it.student.school,
+				courseSchool: it.courseSchool.titleLong,
+				courseInstanceId: it.courseInstance.id,
+				courseShortTitle: it.courseInstance.shortTitle ? it.courseInstance.shortTitle : it.courseInstance.course.registrarCode,
+				term: it.courseInstance.term.displayName,
+				instructorName: it.instructor.name,
+				instructorEmail: it.instructor.email,
+				instructorPhone: it.instructor.phone
+			]
+		}
+		
+		def http = new HTTPBuilder(config.solr.url + "/update/json?commit=true")
+		http.request(Method.POST) {
+			requestContentType = JSON
+			body = docs
+			response.success = {resp ->
+				println "updating index"
+				log.info("Indexed ${docs.size()} student courses with status code ${resp.statusLine.statusCode}")
+			}
+		}
+	}
+	
+	def deleteFromStudentCourseIndex(List<StudentCourse> studentCourses) {
+		def ids = new StringBuffer()
+		studentCourses.each {
+			ids << "<id>${it.id}</id>"
+		}
+		
+		def http = new HTTPBuilder(config.solr.url + "/update?commit=true")
+		http.request(Method.POST) {
+			requestContentType = JSON
+			body = "<delete>${ids}</delete>"
+			response.success = {resp ->
+				println "deleting from index"
+				log.info("Removed ${studentCourses.size()} student courses with status code ${resp.statusLine.statusCode}")
+			}
+		}
+	}
+	
+	def searchStudentCourses() {
+		def result = []
+		def http = new HTTPBuilder(config.solr.url + "/select?wt=json&q=*:*&rows=5000")
+		http.request(Method.GET, JSON) {
+			response.success = {resp, json ->
+				json.response.docs.each {
+					result << it
+				}
+			}
+		}
+		return result
 	}
 	
 }

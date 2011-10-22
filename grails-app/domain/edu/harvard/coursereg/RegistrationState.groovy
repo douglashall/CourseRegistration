@@ -1,22 +1,33 @@
 package edu.harvard.coursereg
 
+import org.apache.commons.lang.builder.EqualsBuilder
+import org.apache.commons.lang.builder.HashCodeBuilder
+
 class RegistrationState implements Serializable {
 
 	String state
-	Date dateCreated
-	String createdBy
-	
-	static belongsTo = [
-		studentCourse : StudentCourse
-	]
+	Integer terminal
+	String type
 	
 	static mapping = {
 		version false
+		id generator:'sequence', params:[sequence:'registration_state_id_seq']
 	}
 	
     static constraints = {
 		state(blank: false)
-		createdBy(blank: false)
+		terminal(blank: false)
+		type(blank: false)
     }
+	
+	@Override
+	boolean equals(final Object that) {
+		EqualsBuilder.reflectionEquals(this, that, ["id"])
+	}
+
+	@Override
+	int hashCode() {
+		HashCodeBuilder.reflectionHashCode(this, ["id"])
+	}
 	
 }

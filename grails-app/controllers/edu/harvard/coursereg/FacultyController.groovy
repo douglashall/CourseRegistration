@@ -38,4 +38,52 @@ class FacultyController {
 		}
 	}
 	
+	def approve = {
+		def studentCourse = StudentCourse.get(params.id)
+		
+		if (studentCourse) {
+			def ctx = studentCourse.registrationContext
+			this.registrationService.updateRegistrationContextState("faculty_approve", ctx, request.userId)
+		}
+		
+		withFormat {
+			form {redirect(action:list)}
+			html {redirect(action:list)}
+			json {
+				JSON.use("deep") {
+					render(contentType: "application/json"){studentCourse} as JSON
+				}
+			}
+			xml {
+				XML.use("deep") {
+					render(contentType: "application/xml"){studentCourse} as XML
+				}
+			}
+		}
+	}
+	
+	def deny = {
+		def studentCourse = StudentCourse.get(params.id)
+		
+		if (studentCourse) {
+			def ctx = studentCourse.registrationContext
+			this.registrationService.updateRegistrationContextState("faculty_deny", ctx, request.userId)
+		}
+		
+		withFormat {
+			form {redirect(action:list)}
+			html {redirect(action:list)}
+			json {
+				JSON.use("deep") {
+					render(contentType: "application/json"){studentCourse} as JSON
+				}
+			}
+			xml {
+				XML.use("deep") {
+					render(contentType: "application/xml"){studentCourse} as XML
+				}
+			}
+		}
+	}
+	
 }

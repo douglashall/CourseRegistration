@@ -23,7 +23,6 @@ class BootStrap {
 					'courseInstance': it.courseInstance,
 					'levelOption': it.levelOption,
 					'gradingOption': it.gradingOption,
-					'registrationStates': it.registrationStates,
 					'dateCreated': it.dateCreated,
 					'active': it.active,
 					'state': it.state
@@ -66,7 +65,6 @@ class BootStrap {
 					'courseInstance': it.courseInstance,
 					'levelOption': it.levelOption,
 					'gradingOption': it.gradingOption,
-					'registrationStates': it.registrationStates,
 					'dateCreated': it.dateCreated,
 					'active': it.active,
 					'state': it.state

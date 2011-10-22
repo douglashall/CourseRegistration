@@ -22,7 +22,8 @@
 	                       	${item.levelOptions as JSON},
 	                       	${item.gradingOptions as JSON},
 	                    	${item.schoolOptions as JSON},
-	                       	${item.instructor as JSON}
+	                       	${item.instructor as JSON},
+	                       	${item.state as JSON}
 	            		]);
 	            	</g:each>
             	</g:each>
@@ -35,19 +36,50 @@
 						{name: 'levelOptions'},
 						{name: 'gradingOptions'},
 						{name: 'schoolOptions'},
-						{name: 'instructor'}
+						{name: 'instructor'},
+						{name: 'state'}
 					]
                 });
                 store.loadData(data);
 
                 $('.course_approve a').click(function(){
                 	var tr = $(this).parents('tr').first();
+            		var trEl = tr[0];
                 	var rec = store.getAt(store.find('id', tr.attr('id')));
                 	var win = new CourseRegistration.ApprovePetitionWindow({
                         studentCourse: rec,
                         listeners: {
                             'approvepetition': function(){
-                            	win.close();
+                            	var mask = new Ext.LoadMask(this.body, {msg:"Please wait...", removeMask:true});
+                            	mask.show();
+                            	$.ajax({
+        	                    	url: CourseRegistration.constructUrl('faculty/approve/' + rec.get('id') + '?format=json', topicId, rec.get('userId')),
+        	                    	type: CourseRegistration.requestType('POST'),
+        	                    	headers: {
+        	                        	'Accept': 'application/json'
+        	                        },
+        	                        dataType: 'json',
+        	                    	success: function(data){
+            	                    	mask.hide();
+            	                    	win.close();
+            	                    	if (data.state) {
+                	                    	var state = data.state.state;
+                	                    	var stateTerminal = data.state.terminal;
+                	                    	var stateType = data.state.type;
+            	                    		var stateRec = rec.get('state');
+            	                    		stateRec.state = state;
+            	                    		stateRec.terminal = stateTerminal;
+            	                    		stateRec.type = stateType;
+            	                    		store.commitChanges();
+                    	                    
+            	                    		$('.course_approve', trEl).remove();
+            	                    		$('.course_deny', trEl).remove();
+            	                    		$('.bulk_select input', trEl).remove();
+            	                    		$('.status div', trEl).html(String.format('<div class="course_status icon-text {0}{1}">{2}</div>', stateType, stateTerminal ? ' terminal' : '', state));
+            	                    	}
+            	                    	$(trEl).effect('highlight', 1000);
+        	                        }
+        	                    });
                             }
                         }
                     });
@@ -70,8 +102,10 @@
                     var val = $(this).val();
                     if (val.indexOf('Hide') >= 0) {
                         $(this).val('Show Approved/Denied');
+                        $('.terminal').parents('tr.course').hide();
                     } else {
                     	$(this).val('Hide Approved/Denied');
+                    	$('.terminal').parents('tr.course').show();
                     }
                 });
                 
@@ -112,6 +146,7 @@
 							<th rowspan="1" colspan="1">Level</th>
 							<th rowspan="1" colspan="1">Grading&nbsp;Option</th>
 							<th rowspan="1" colspan="1">Status</th>
+							<th rowspan="1" colspan="1"></th>
 							<th rowspan="1" colspan="1"><input type="checkbox" class="bulk-select" /></th>
 						</tr>
 					</thead>
@@ -133,14 +168,24 @@
 									<div>${studentCourse.gradingOption}</div>
 								</td>
 								<td class="status" rowspan="1" colspan="1">
-									<g:if test="${studentCourse.state}">
-										<div class="course_status">${studentCourse.state}</div>
-									</g:if>
-									<div class="course_approve"><a style="font-size: small" title="" href="javascript:void(0);">Approve</a></div>
-									<div class="course_deny"><a style="font-size: small" title="" href="javascript:void(0);">Deny</a></div>
+									<div>
+										<g:if test="${studentCourse.state}">
+											<div class="course_status icon-text ${studentCourse.state.type}<g:if test="${studentCourse.state.terminal == 1}"> terminal</g:if>">${studentCourse.state.state}</div>
+										</g:if>
+									</div>
 								</td>
-								<td>
-									<input type="checkbox"/>
+								<td class="registration_action" rowspan="1" colspan="1">
+									<div>
+										<g:if test="${studentCourse.state && !studentCourse.state.terminal}">
+											<div class="course_approve"><a style="font-size: small" title="" href="javascript:void(0);">Approve</a></div>
+											<div class="course_deny"><a style="font-size: small" title="" href="javascript:void(0);">Deny</a></div>
+										</g:if>
+									</div>
+								</td>
+								<td class="bulk_select">
+									<g:if test="${studentCourse.state && !studentCourse.state.terminal}">
+										<input type="checkbox"/>
+									</g:if>
 								</td>
 							</tr>
 						</g:each>
