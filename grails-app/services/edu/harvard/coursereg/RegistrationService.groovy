@@ -104,7 +104,6 @@ class RegistrationService {
 			requestContentType = JSON
 			body = docs
 			response.success = {resp ->
-				println "updating index"
 				log.info("Indexed ${docs.size()} student courses with status code ${resp.statusLine.statusCode}")
 			}
 		}
@@ -121,8 +120,7 @@ class RegistrationService {
 			requestContentType = JSON
 			body = "<delete>${ids}</delete>"
 			response.success = {resp ->
-				println "deleting from index"
-				log.info("Removed ${studentCourses.size()} student courses with status code ${resp.statusLine.statusCode}")
+				log.info("Removed ${studentCourses.size()} student courses from solr index with status code ${resp.statusLine.statusCode}")
 			}
 		}
 	}
