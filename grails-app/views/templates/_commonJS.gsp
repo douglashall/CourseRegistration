@@ -2,10 +2,20 @@
 	// <![CDATA[
 	Ext.namespace('CourseRegistration');
 	
-	CourseRegistration.constructUrl = function(url, topicId, userId) {
+	CourseRegistration.constructUrl = function(url, topicId) {
 		try {
 			return Isites.constructUrl(url) + '&topicId=' + topicId;
 		} catch(e) {
+			var userId;
+			var params = location.href.substring(location.href.indexOf('?') + 1).split('&');
+			$(params).each(function(index, param){
+				var keyValue = param.split('=');
+				var key = keyValue[0];
+				if (key == 'userid') {
+					userId = keyValue[1];
+					return false;
+				}
+			});
 			return '/CourseRegistration/' + url + '&userid=' + userId;
 		}
 	}
@@ -23,7 +33,95 @@
 			return type;
 		}
 	}
-	
+
+	CourseRegistration.approvePetitions = function(records, store, mask, win, topicId) {
+		var ids = '';
+		$(records).each(function(){
+			ids += ' ' + this.get('id');
+		});
+    	$.ajax({
+        	url: CourseRegistration.constructUrl('faculty/approve?format=json', topicId),
+        	type: CourseRegistration.requestType('POST'),
+        	headers: {
+            	'Accept': 'application/json'
+            },
+            data: {
+                ids: ids
+            },
+            dataType: 'json',
+        	success: function(data){
+            	if (mask) {
+            		mask.hide();
+            	}
+            	if (win) {
+            		win.close();
+            	}
+            	var trEls = [];
+            	$(data).each(function(){
+                	var rec = store.getAt(store.find('id', this.id));
+            		var state = this.state.state;
+                	var stateTerminal = this.state.terminal;
+                	var stateType = this.state.type;
+            		var stateRec = rec.get('state');
+            		stateRec.state = state;
+            		stateRec.terminal = stateTerminal;
+            		stateRec.type = stateType;
+            		store.commitChanges();
+
+            		trEls.push('#' + this.id);
+            		$('#' + this.id + ' .course_approve').remove();
+            		$('#' + this.id + ' .course_deny').remove();
+            		$('#' + this.id + ' .bulk_select input').remove();
+            		$('#' + this.id + ' .status div').html(String.format('<div class="course_status icon-text {0}{1}">{2}</div>', stateType, stateTerminal ? ' terminal' : '', state));
+                });
+            	$(trEls.join(',')).effect('highlight', 1000);
+            }
+        });
+    }
+    
+    CourseRegistration.denyPetitions = function(btn) {
+        if (btn != 'yes') {
+            return;
+        }
+        var store = this.store;
+    	var ids = '';
+		$(this.records).each(function(){
+			ids += ' ' + this.get('id');
+		});
+    	$.ajax({
+        	url: CourseRegistration.constructUrl('faculty/deny?format=json', this.topicId),
+        	type: CourseRegistration.requestType('POST'),
+        	headers: {
+            	'Accept': 'application/json'
+            },
+            data: {
+                ids: ids
+            },
+            dataType: 'json',
+        	success: function(data){
+            	var trEls = [];
+            	$(data).each(function(){
+                	var rec = store.getAt(store.find('id', this.id));
+            		var state = this.state.state;
+                	var stateTerminal = this.state.terminal;
+                	var stateType = this.state.type;
+            		var stateRec = rec.get('state');
+            		stateRec.state = state;
+            		stateRec.terminal = stateTerminal;
+            		stateRec.type = stateType;
+            		store.commitChanges();
+
+            		trEls.push('#' + this.id);
+            		$('#' + this.id + ' .course_approve').remove();
+            		$('#' + this.id + ' .course_deny').remove();
+            		$('#' + this.id + ' .bulk_select input').remove();
+            		$('#' + this.id + ' .status div').html(String.format('<div class="course_status icon-text {0}{1}">{2}</div>', stateType, stateTerminal ? ' terminal' : '', state));
+                });
+            	$(trEls.join(',')).effect('highlight', 1000);
+            }
+        });
+    }
+    
 	CourseRegistration.CreatePetitionFormPanel = Ext.extend(Ext.form.FormPanel, {
 		border: false,
 		labelWidth: 125,

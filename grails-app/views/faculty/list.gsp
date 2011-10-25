@@ -44,7 +44,6 @@
 
                 $('.course_approve a').click(function(){
                 	var tr = $(this).parents('tr').first();
-            		var trEl = tr[0];
                 	var rec = store.getAt(store.find('id', tr.attr('id')));
                 	var win = new CourseRegistration.ApprovePetitionWindow({
                         studentCourse: rec,
@@ -52,34 +51,7 @@
                             'approvepetition': function(){
                             	var mask = new Ext.LoadMask(this.body, {msg:"Please wait...", removeMask:true});
                             	mask.show();
-                            	$.ajax({
-        	                    	url: CourseRegistration.constructUrl('faculty/approve/' + rec.get('id') + '?format=json', topicId, rec.get('userId')),
-        	                    	type: CourseRegistration.requestType('POST'),
-        	                    	headers: {
-        	                        	'Accept': 'application/json'
-        	                        },
-        	                        dataType: 'json',
-        	                    	success: function(data){
-            	                    	mask.hide();
-            	                    	win.close();
-            	                    	if (data.state) {
-                	                    	var state = data.state.state;
-                	                    	var stateTerminal = data.state.terminal;
-                	                    	var stateType = data.state.type;
-            	                    		var stateRec = rec.get('state');
-            	                    		stateRec.state = state;
-            	                    		stateRec.terminal = stateTerminal;
-            	                    		stateRec.type = stateType;
-            	                    		store.commitChanges();
-                    	                    
-            	                    		$('.course_approve', trEl).remove();
-            	                    		$('.course_deny', trEl).remove();
-            	                    		$('.bulk_select input', trEl).remove();
-            	                    		$('.status div', trEl).html(String.format('<div class="course_status icon-text {0}{1}">{2}</div>', stateType, stateTerminal ? ' terminal' : '', state));
-            	                    	}
-            	                    	$(trEl).effect('highlight', 1000);
-        	                        }
-        	                    });
+                            	CourseRegistration.approvePetitions([rec], store, mask, win, topicId);
                             }
                         }
                     });
@@ -87,8 +59,63 @@
                 });
 
                 $('.course_deny a').click(function(){
+                	var tr = $(this).parents('tr').first();
+                	var rec = store.getAt(store.find('id', tr.attr('id')));
+                	Ext.MessageBox.confirm(
+                        'Deny Cross Registration Petition', 
+                        'Are you sure you want to deny this petition?', 
+                        CourseRegistration.denyPetitions,
+                        {
+                            records: [rec],
+                            store: store,
+                            topicId: topicId
+                        }
+                    );
                 });
 
+                $('.bulk-operations .course_approve').click(function(){
+                	var records = [];
+                    $(this).parents('fieldset').find('tbody input:checked').each(function(){
+                    	var tr = $(this).parents('tr').first();
+                    	var rec = store.getAt(store.find('id', tr.attr('id')));
+                        records.push(rec);
+                    });
+
+					var multiple = records.length > 1;
+					var win = new CourseRegistration.ApprovePetitionWindow({
+                        studentCourse: records[0],
+                        listeners: {
+                            'approvepetition': function(){
+                            	var mask = new Ext.LoadMask(this.body, {msg:"Please wait...", removeMask:true});
+                            	mask.show();
+                            	CourseRegistration.approvePetitions(records, store, mask, win, topicId);
+                            }
+                        }
+                    });
+                    win.show();
+                });
+
+                $('.bulk-operations .course_deny').click(function(){
+                    var records = [];
+                    $(this).parents('fieldset').find('tbody input:checked').each(function(){
+                    	var tr = $(this).parents('tr').first();
+                    	var rec = store.getAt(store.find('id', tr.attr('id')));
+                        records.push(rec);
+                    });
+
+					var multiple = records.length > 1;
+                    Ext.MessageBox.confirm(
+                        String.format('Deny Cross Registration Petition{0}', multiple ? 's' : ''), 
+                        String.format('Are you sure you want to deny the selected petition{0}?', multiple ? 's' : ''), 
+                        CourseRegistration.denyPetitions,
+                        {
+                            records: records,
+                            store: store,
+                            topicId: topicId
+                        }
+                    );
+                });
+                
                 $('.bulk-select').click(function(){
                     if (!$(this).attr('checked')) {
                     	$(this).parents('table.petition_form').find('input:checkbox').removeAttr('checked');
@@ -103,8 +130,14 @@
                     if (val.indexOf('Hide') >= 0) {
                         $(this).val('Show Approved/Denied');
                         $('.terminal').parents('tr.course').hide();
+                        $('.terminal').parents('fieldset').each(function(){
+                        	if ($('tr.course:visible', this).length == 0) {
+                                $(this).hide();
+                            }
+                        });
                     } else {
                     	$(this).val('Hide Approved/Denied');
+                    	$('.terminal').parents('fieldset').show();
                     	$('.terminal').parents('tr.course').show();
                     }
                 });
@@ -135,8 +168,8 @@
 	    	<fieldset>
 				<legend>${entry.key}</legend>
 				<div class="bulk-operations">
-					<input type="button" value="Approve All Selected" disabled="disabled" />
-					<input type="button" value="Deny All Selected" disabled="disabled" />
+					<input type="button" class="course_approve" value="Approve All Selected" disabled="disabled" />
+					<input type="button" class="course_deny" value="Deny All Selected" disabled="disabled" />
 				</div>
 				<table class="grid petition_form">
 					<thead>

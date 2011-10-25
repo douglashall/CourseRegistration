@@ -39,11 +39,14 @@ class FacultyController {
 	}
 	
 	def approve = {
-		def studentCourse = StudentCourse.get(params.id)
+		def model = []
+		def ids = params.ids.trim().tokenize().collect {Long.parseLong(it)}
+		def studentCourses = StudentCourse.findAllByIdInList(ids)
 		
-		if (studentCourse) {
-			def ctx = studentCourse.registrationContext
+		studentCourses.each {
+			def ctx = it.registrationContext
 			this.registrationService.updateRegistrationContextState("faculty_approve", ctx, request.userId)
+			model << it
 		}
 		
 		withFormat {
@@ -51,23 +54,26 @@ class FacultyController {
 			html {redirect(action:list)}
 			json {
 				JSON.use("deep") {
-					render(contentType: "application/json"){studentCourse} as JSON
+					render(contentType: "application/json"){model} as JSON
 				}
 			}
 			xml {
 				XML.use("deep") {
-					render(contentType: "application/xml"){studentCourse} as XML
+					render(contentType: "application/xml"){model} as XML
 				}
 			}
 		}
 	}
 	
 	def deny = {
-		def studentCourse = StudentCourse.get(params.id)
+		def model = []
+		def ids = params.ids.trim().tokenize().collect {Long.parseLong(it)}
+		def studentCourses = StudentCourse.findAllByIdInList(ids)
 		
-		if (studentCourse) {
-			def ctx = studentCourse.registrationContext
+		studentCourses.each {
+			def ctx = it.registrationContext
 			this.registrationService.updateRegistrationContextState("faculty_deny", ctx, request.userId)
+			model << it
 		}
 		
 		withFormat {
@@ -75,12 +81,12 @@ class FacultyController {
 			html {redirect(action:list)}
 			json {
 				JSON.use("deep") {
-					render(contentType: "application/json"){studentCourse} as JSON
+					render(contentType: "application/json"){model} as JSON
 				}
 			}
 			xml {
 				XML.use("deep") {
-					render(contentType: "application/xml"){studentCourse} as XML
+					render(contentType: "application/xml"){model} as XML
 				}
 			}
 		}
