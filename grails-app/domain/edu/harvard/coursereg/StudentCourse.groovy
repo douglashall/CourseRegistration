@@ -77,6 +77,9 @@ class StudentCourse implements Serializable {
 	public Map getStudent() {
 		if (!student) {
 			def person = CourseRegistrationUtils.findPerson(this.userId)
+			if (this.userId == '10564158') {
+				this.homeSchoolId = 7
+			}
 			this.student = [
 				'id': person.id,
 				'firstName': person.firstName,
@@ -94,9 +97,13 @@ class StudentCourse implements Serializable {
 			def courseStaff = this.courseInstance.staff.find {it.roleId == 1}
 			if (courseStaff) {
 				def person = CourseRegistrationUtils.findPerson(courseStaff.userId)
+				def name = courseStaff.displayName ? courseStaff.displayName : this.courseInstance.instructorsDisplay
+				if (!name || name == '') {
+					name = person.firstName + ' ' + person.lastName
+				}
 				instructor = [
 					'userId': courseStaff.userId,
-					'name': courseStaff.displayName ? courseStaff.displayName : this.courseInstance.instructorsDisplay,
+					'name': name,
 					'email': person.email,
 					'phone': person.phone
 				]

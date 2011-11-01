@@ -79,17 +79,13 @@
         });
     }
     
-    CourseRegistration.denyPetitions = function(btn) {
-        if (btn != 'yes') {
-            return;
-        }
-        var store = this.store;
-    	var ids = '';
-		$(this.records).each(function(){
+    CourseRegistration.denyPetitions = function(records, store, topicId) {
+        var ids = '';
+		$(records).each(function(){
 			ids += ' ' + this.get('id');
 		});
     	$.ajax({
-        	url: CourseRegistration.constructUrl('faculty/deny?format=json', this.topicId),
+        	url: CourseRegistration.constructUrl('faculty/deny?format=json', topicId),
         	type: CourseRegistration.requestType('POST'),
         	headers: {
             	'Accept': 'application/json'
@@ -167,7 +163,7 @@
 				layout: 'fit', 
 				border: false,
 				padding: 10,
-				html: String.format('<p>Submitting this form will begin the cross-registration process for {0}. {1} will receive a notification and either approve or deny your request. The faculty member may require a separate application process.</p>', this.studentCourse.get('courseShortTitle'), this.studentCourse.get('instructor').name)
+				html: String.format('<p>Submitting this form will begin the cross-registration process. {1} will receive a notification and either approve or deny your request. The faculty member may require a separate application process.</p>', this.studentCourse.get('courseShortTitle'), this.studentCourse.get('instructor').name)
 			}, new CourseRegistration.CreatePetitionFormPanel({region: 'center', id: 'create-petition-form-panel', studentCourse: this.studentCourse})];
 			this.buttons = [{
 				text: 'Create',
@@ -427,5 +423,53 @@
 	        callback.call(scope, result, options, true);
 	    }
 	});
+
+	 Ext.ns('Ext.ux.form');
+
+	 Ext.ux.form.SearchField = Ext.extend(Ext.form.TwinTriggerField, {
+	     initComponent : function(){
+	         Ext.ux.form.SearchField.superclass.initComponent.call(this);
+	         this.on('specialkey', function(f, e){
+	             if(e.getKey() == e.ENTER){
+	                 this.onTrigger2Click();
+	             }
+	         }, this);
+	     },
+
+	     validationEvent:false,
+	     validateOnBlur:false,
+	     trigger1Class:'x-form-clear-trigger',
+	     trigger2Class:'x-form-search-trigger',
+	     hideTrigger1:true,
+	     width:180,
+	     hasSearch : false,
+	     paramName : 'query',
+
+	     onTrigger1Click : function(){
+	         if(this.hasSearch){
+	             this.el.dom.value = '';
+	             var o = {start: 0};
+	             this.store.baseParams = this.store.baseParams || {};
+	             this.store.baseParams[this.paramName] = '';
+	             this.store.reload({params:o});
+	             this.triggers[0].hide();
+	             this.hasSearch = false;
+	         }
+	     },
+
+	     onTrigger2Click : function(){
+	         var v = this.getRawValue();
+	         if(v.length < 1){
+	             this.onTrigger1Click();
+	             return;
+	         }
+	         var o = {start: 0};
+	         this.store.baseParams = this.store.baseParams || {};
+	         this.store.baseParams[this.paramName] = v;
+	         this.store.reload({params:o});
+	         this.hasSearch = true;
+	         this.triggers[0].show();
+	     }
+	 });
 	// ]]>
 </script>

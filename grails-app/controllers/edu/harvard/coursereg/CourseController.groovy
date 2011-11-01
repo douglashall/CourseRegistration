@@ -11,23 +11,25 @@ class CourseController {
 	
 	def add = {
 		def ci = CourseInstance.get(params.id)
-		def studentCourse = this.registrationService.addCourseForStudent(request.userId, ci)
+		this.registrationService.addCourseForStudent(request.userId, ci)
+		def studentCourses = StudentCourse.findAllByUserIdAndActive(request.userId, 1)
 		withFormat {
-			form {render(contentType: "application/json"){studentCourse} as JSON}
-			html {render(contentType: "application/json"){studentCourse} as JSON}
-			json {render(contentType: "application/json"){studentCourse} as JSON}
-			xml {render(contentType: "application/xml"){studentCourse} as XML}
+			form {render(contentType: "application/json"){studentCourses} as JSON}
+			html {render(contentType: "application/json"){studentCourses} as JSON}
+			json {render(contentType: "application/json"){studentCourses} as JSON}
+			xml {render(contentType: "application/xml"){studentCourses} as XML}
 		}
 	}
 	
 	def remove = {
 		def ci = CourseInstance.get(params.id)
 		this.registrationService.removeCourseForStudent(request.userId, ci)
+		def studentCourses = StudentCourse.findAllByUserIdAndActive(request.userId, 1)
 		withFormat {
-			form {render(contentType: "application/json"){[success:true]} as JSON}
-			html {render(contentType: "application/json"){[success:true]} as JSON}
-			json {render(contentType: "application/json"){[success:true]} as JSON}
-			xml {render(contentType: "application/xml"){[success:true]} as XML}
+			form {render(contentType: "application/json"){studentCourses} as JSON}
+			html {render(contentType: "application/json"){studentCourses} as JSON}
+			json {render(contentType: "application/json"){studentCourses} as JSON}
+			xml {render(contentType: "application/xml"){studentCourses} as XML}
 		}
 	}
 	

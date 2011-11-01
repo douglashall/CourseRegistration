@@ -32,30 +32,34 @@
                        	"${item.stateType}"
             		]);
             	</g:each>
-				var store = new Ext.data.Store({
-					proxy: new Ext.ux.data.PagingMemoryProxy(data),
-					reader: new Ext.data.ArrayReader({
+            	var params = {};
+				var store = new Ext.data.JsonStore({
+					url: CourseRegistration.constructUrl('registrar/list?format=json', topicId),
+					root: 'root',
+					//proxy: new Ext.ux.data.PagingMemoryProxy(data),
+					//reader: new Ext.data.ArrayReader({
 						fields: [
-							{name: 'id'},
-							{name: 'userId'},
-							{name: 'name'},
-							{name: 'email'},
-							{name: 'phone'},
-							{name: 'homeSchool'},
-							{name: 'courseSchool'},
-							{name: 'courseInstanceId'},
-							{name: 'courseShortTitle'},
-							{name: 'term'},
-							{name: 'instructorName'},
-							{name: 'instructorEmail'},
-							{name: 'instructorPhone'},
-							{name: 'state'},
-							{name: 'stateTerminal'},
-							{name: 'stateType'}
+							{name: 'id', mapping: 'id'},
+							{name: 'userId', mapping: 'studentHuid'},
+							{name: 'firstName', mapping: 'studentFirstName'},
+							{name: 'lastName', mapping: 'studentLastName'},
+							{name: 'email', mapping: 'studentEmail'},
+							{name: 'phone', mapping: 'studentPhone'},
+							{name: 'homeSchool', mapping: 'homeSchool'},
+							{name: 'courseSchool', mapping: 'courseSchool'},
+							{name: 'courseInstanceId', mapping: 'courseInstanceId'},
+							{name: 'courseShortTitle', mapping: 'courseShortTitle'},
+							{name: 'term', mapping: 'term'},
+							{name: 'instructorName', mapping: 'instructorName'},
+							{name: 'instructorEmail', mapping: 'instructorEmail'},
+							{name: 'instructorPhone', mapping: 'instructorPhone'},
+							{name: 'state', mapping: 'state'},
+							{name: 'stateTerminal', mapping: 'stateTerminal'},
+							{name: 'stateType', mapping: 'stateType'}
 						]
-					})
+					//})
                 });
-                store.load({params:{start:0, limit:1000}});
+                store.load({params:{start:0, limit:50}});
 
                 var sm = new Ext.grid.CheckboxSelectionModel();
                 var dataPnl = new Ext.grid.GridPanel({
@@ -71,16 +75,44 @@
 						        id: 'actionMenu',
 						        items: [{
 						        	iconCls: 'approve',
-						            text: 'Approve'
+						            text: 'Approve',
+						            handler: function(){
+							            CourseRegistration.approvePetitions(sm.getSelections(), store, undefined, undefined, topicId);
+							        }
 						        },{
 						        	iconCls: 'deny',
-						            text: 'Deny'
+						            text: 'Deny',
+						            handler: function(){
+						            	CourseRegistration.denyPetitions(sm.getSelections(), store, topicId);
+							        }
 						        },{
 						        	iconCls: 'export',
-						            text: 'Export'
+						            text: 'Export',
+						            menu: new Ext.menu.Menu({
+							            id: 'exportMenu',
+							            items: [{
+							            	iconCls: 'excel',
+								            text: 'Excel',
+								            handler: function(){
+									            window.open('http://localhost:8080/CourseRegistration/registrar/export?userid=10564158', '_self');
+									        }
+								        },{
+							            	iconCls: 'pdf',
+								            text: 'PDF'
+								        },{
+							            	iconCls: 'xml',
+								            text: 'XML'
+								        },{
+							            	iconCls: 'json',
+								            text: 'JSON'
+								        }]
+							        })
 						        }]
 						    })
-						}, '->', 'Status:', {
+						}, ' ', new Ext.ux.form.SearchField({
+			                store: store,
+			                width:200
+			            }), '->', 'Status:', {
                             xtype: 'combo',
                             store: new Ext.data.ArrayStore({
                                 autoDestroy: true,
@@ -100,7 +132,17 @@
                             triggerAction: 'all',
                             selectOnFocus: true,
                             width: 175,
-                            value: '1'
+                            value: '1',
+                            listeners: {
+                                select: function(combo, record, index) {
+                                	if (index == 0) {
+                                        delete params["status"];
+                                    } else {
+                                        params["status"] = record.get('name');
+                                    }
+                                	store.load({params:params});
+                                }
+                            }
                         }, ' ', 'School:', {
                             xtype: 'combo',
                             store: new Ext.data.ArrayStore({
@@ -130,9 +172,19 @@
                             forceSelection: true,
                             triggerAction: 'all',
                             selectOnFocus: true,
-                            width: 225,
-                            value: '1'
-                        }, ' ', 'Students:', {
+                            width: 250,
+                            value: '8',
+                            listeners: {
+                                select: function(combo, record, index) {
+                                    if (index == 0) {
+                                        delete params["school"];
+                                    } else {
+                                        params["school"] = record.get('name');
+                                    }
+                                    store.load({params:params});
+                                }
+                            }
+                        }/*, ' ', 'Students:', {
                             xtype: 'combo',
                             store: new Ext.data.ArrayStore({
                                 autoDestroy: true,
@@ -151,11 +203,11 @@
                             triggerAction: 'all',
                             selectOnFocus: true,
                             width: 150,
-                            value: '1'
-                        }]
+                            value: '2'
+                        }*/]
                     },
                     bbar: new Ext.PagingToolbar({
-                        pageSize: 1000,
+                        pageSize: 50,
                         store: store,
                         displayInfo: true,
                         plugins: new Ext.ux.SlidingPager()
@@ -196,10 +248,10 @@
 							},
                             {
                                 header: 'Student', 
-                                dataIndex: 'name', 
+                                dataIndex: 'lastName', 
                                 renderer: function(value, metadata, record){
-                                    return String.format('{0}<br/><a href="mailto:{1}">{1}</a><br/>{2}<br/>', 
-                                            value, record.get('email'), record.get('phone'));
+                                    return String.format('{0}, {1}<br/><a href="mailto:{2}">{2}</a><br/>{3}<br/>', 
+                                            value, record.get('firstName'), record.get('email'), record.get('phone'));
                                 }
                             },
                             {header: 'Home School', dataIndex: 'homeSchool'},

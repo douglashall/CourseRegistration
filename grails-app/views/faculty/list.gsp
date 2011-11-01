@@ -64,11 +64,11 @@
                 	Ext.MessageBox.confirm(
                         'Deny Cross Registration Petition', 
                         'Are you sure you want to deny this petition?', 
-                        CourseRegistration.denyPetitions,
-                        {
-                            records: [rec],
-                            store: store,
-                            topicId: topicId
+                        function(btn) {
+                        	if (btn != 'yes') {
+                                return;
+                            }
+                            CourseRegistration.denyPetitions([rec], store, topicId);
                         }
                     );
                 });
@@ -159,10 +159,15 @@
         </script>
     </head>
     <body>
-    	<div class="course_catalog_tool">
-    	<div class="approved-denied-toggle">
-    		<input type="button" value="Hide Approved/Denied" />
-    	</div>
+    	<div class="course_catalog_tool faculty">
+    	<g:if test="${model.size() > 0}">
+	    	<div class="approved-denied-toggle">
+	    		<input type="button" value="Hide Approved/Denied" />
+	    	</div>
+	    </g:if>
+	    <g:else>
+	    	<div><p>You currently do not have any cross registration petitions.</p></div>
+	    </g:else>
     	<div class="result">
     	<g:each in="${model}" var="entry">
 	    	<fieldset>

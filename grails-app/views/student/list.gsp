@@ -197,6 +197,9 @@
     <body>
     	<div class="course_catalog_tool">
     	<div class="result">
+    	<g:if test="${model.size() == 0}">
+    		<p>Use the <a href="/CourseCatalog">University Course Catalog</a> to find courses and add them to this list.</p>
+    	</g:if>
     	<g:each in="${model}" var="entry">
 	    	<fieldset>
 				<legend>${entry.key}</legend>

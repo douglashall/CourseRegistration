@@ -5,6 +5,9 @@
 	.school_option div, .course_level_option div, .course_grading_option div, .status div, .registration_action div {
  		width: 167px;
  	}
+ 	.faculty .course_level_option div, .faculty .course_grading_option div, .faculty .registration_action div {
+ 		width: 97px;
+ 	}
  	.approved-denied-toggle, .bulk-operations {
  		float: right;
  		padding: 0 0 4px 0;
@@ -38,7 +41,19 @@
 	    background-image:url(http://isites.harvard.edu/js/isites/resources/images/fugue/exclamation--frame.png) !important;
 	}
 	.export {
-	    background-image:url(http://isites.harvard.edu/js/isites/resources/images/fugue/document-excel.png) !important;
+	    background-image:url(http://isites.harvard.edu/js/isites/resources/images/fugue/drive-download.png) !important;
+	}
+	.xml {
+	    background-image:url(http://isites.harvard.edu/js/isites/resources/images/coquette/xml_file.png) !important;
+	}
+	.json {
+	    background-image:url(http://isites.harvard.edu/js/isites/resources/images/coquette/json_file.png) !important;
+	}
+	.excel {
+		background-image:url(http://isites.harvard.edu/js/isites/resources/images/fugue/document-excel.png) !important;
+	}
+	.pdf {
+		background-image:url(http://isites.harvard.edu/js/isites/resources/images/fugue/document-pdf.png) !important;
 	}
 	.column-btn {
 		padding: 0 4px 0 0;

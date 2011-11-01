@@ -125,9 +125,15 @@ class RegistrationService {
 		}
 	}
 	
-	def searchStudentCourses() {
+	def searchStudentCourses(String query, String state, String school) {
 		def result = []
-		def http = new HTTPBuilder(config.solr.url + "/select?wt=json&q=*:*&rows=5000")
+		def queryString = []
+		if (query) {queryString << ('"' + query + '"')}
+		if (state) {queryString << ('state:"' + state + '"')}
+		if (school) {queryString << ('courseSchool:"' + school + '"')}
+		
+		def q = queryString.size() == 0 ? "*:*" : URLEncoder.encode(queryString.join(" AND "), 'UTF-8')
+		def http = new HTTPBuilder(config.solr.url + "/select?wt=json&q=${q}&rows=5000")
 		http.request(Method.GET, JSON) {
 			response.success = {resp, json ->
 				json.response.docs.each {
