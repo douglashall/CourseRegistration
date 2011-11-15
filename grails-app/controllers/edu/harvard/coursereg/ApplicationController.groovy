@@ -2,6 +2,7 @@ package edu.harvard.coursereg
 
 import org.codehaus.groovy.grails.web.json.*
 
+import edu.harvard.grails.plugins.baseline.BaselineUtils
 import edu.harvard.icommons.coursedata.CourseInstance
 import grails.converters.*
 import groovyx.net.http.HTTPBuilder
@@ -308,7 +309,7 @@ class ApplicationController {
 		}
 		
 		enrollees.each {
-			def person = CourseRegistrationUtils.findPerson(it)
+			def person = BaselineUtils.findPerson(it)
 			if (!person.unknown && ['FAS','FGS','COL'].contains(person.schoolAffiliations[0])) {
 				students << person
 			}
@@ -351,7 +352,7 @@ class ApplicationController {
 		}
 		
 		enrollees.each {
-			def person = CourseRegistrationUtils.findPerson(it)
+			def person = BaselineUtils.findPerson(it)
 			if (!person.unknown && ['EDU'].contains(person.schoolAffiliations[0])) {
 				students << person
 			}
@@ -394,7 +395,7 @@ class ApplicationController {
 		}
 		
 		enrollees.each {
-			def person = CourseRegistrationUtils.findPerson(it)
+			def person = BaselineUtils.findPerson(it)
 			if (!person.unknown && ['DIV'].contains(person.schoolAffiliations[0])) {
 				students << person
 			}
@@ -437,7 +438,7 @@ class ApplicationController {
 		}
 		
 		enrollees.each {
-			def person = CourseRegistrationUtils.findPerson(it)
+			def person = BaselineUtils.findPerson(it)
 			if (!person.unknown && ['SPH'].contains(person.schoolAffiliations[0])) {
 				students << person
 			}

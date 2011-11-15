@@ -1,11 +1,9 @@
 package edu.harvard.coursereg
 
+import static groovyx.net.http.ContentType.JSON
+import edu.harvard.grails.plugins.baseline.BaselineUtils
 import edu.harvard.icommons.coursedata.CourseInstance
 import edu.harvard.icommons.coursedata.School
-
-import static groovyx.net.http.ContentType.JSON
-import groovyx.net.http.HTTPBuilder
-import groovyx.net.http.Method
 
 class StudentCourse implements Serializable {
 
@@ -76,7 +74,7 @@ class StudentCourse implements Serializable {
 	
 	public Map getStudent() {
 		if (!student) {
-			def person = CourseRegistrationUtils.findPerson(this.userId)
+			def person = BaselineUtils.findPerson(this.userId)
 			if (this.userId == '10564158') {
 				this.homeSchoolId = 7
 			}
@@ -96,7 +94,7 @@ class StudentCourse implements Serializable {
 		if (!instructor) {
 			def courseStaff = this.courseInstance.staff.find {it.roleId == 1}
 			if (courseStaff) {
-				def person = CourseRegistrationUtils.findPerson(courseStaff.userId)
+				def person = BaselineUtils.findPerson(courseStaff.userId)
 				def name = courseStaff.displayName ? courseStaff.displayName : this.courseInstance.instructorsDisplay
 				if (!name || name == '') {
 					name = person.firstName + ' ' + person.lastName

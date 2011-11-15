@@ -73,6 +73,8 @@ environments {
 }
 
 // log4j configuration
+def catalinaBase = System.properties.getProperty('catalina.base')
+if (!catalinaBase) {catalinaBase = "target"}
 log4j = {
 	// Example of changing the log pattern for the default console
 	// appender:
@@ -80,6 +82,12 @@ log4j = {
 	//appenders {
 	//    console name:'stdout', layout:pattern(conversionPattern: '%c{2} %m%n')
 	//}
+	appenders {
+		rollingFile name: "requestLog",
+					maxFileSize: 1024,
+					layout: pattern(conversionPattern: "%d %m%n"),
+					file: "${catalinaBase}/logs/request.log"
+	}
 
 	error  'org.codehaus.groovy.grails.web.servlet',  //  controllers
 		   'org.codehaus.groovy.grails.web.pages', //  GSP
@@ -98,6 +106,9 @@ log4j = {
     info   'grails.app.controller',
 		   'grails.app.service',
 		   'grails.app.domain'
+		   
+	info additivity: false,
+		 requestLog: 'grails.app.filters.RequestLogFilters'
 		   
     //debug  'org.apache.http.headers',
 	//       'org.apache.http.wire'
