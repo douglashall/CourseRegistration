@@ -61,8 +61,9 @@ environments {
 	}
 	development {
 		grails.serverURL = "http://localhost:8080/${appName}"
-		icommonsapi.url = "http://tool2.isites.harvard.edu:8971/icommonsapi"
+		icommonsapi.url = "http://qa.isites.harvard.edu:8861/icommonsapi"
 		solr.url = "http://localhost:8983/solr"
+		registrar.group.id = "18470"
 	}
 	test {
 		grails.serverURL = "http://localhost:8080/${appName}"

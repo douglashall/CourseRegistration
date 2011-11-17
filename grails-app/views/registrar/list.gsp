@@ -29,7 +29,8 @@
                        	"${item.instructorPhone}",
                        	"${item.state}",
                        	"${item.stateTerminal}",
-                       	"${item.stateType}"
+                       	"${item.stateType}",
+                       	"${item.petitionCreated}"
             		]);
             	</g:each>
             	var params = {};
@@ -55,7 +56,8 @@
 							{name: 'instructorPhone', mapping: 'instructorPhone'},
 							{name: 'state', mapping: 'state'},
 							{name: 'stateTerminal', mapping: 'stateTerminal'},
-							{name: 'stateType', mapping: 'stateType'}
+							{name: 'stateType', mapping: 'stateType'},
+							{name: 'petitionCreated', mapping: 'petitionCreated'}
 						]
 					//})
                 });
@@ -254,6 +256,7 @@
                                             value, record.get('firstName'), record.get('email'), record.get('phone'));
                                 }
                             },
+                            {header: 'Submitted On', dataIndex: 'petitionCreated'},
                             {header: 'Home School', dataIndex: 'homeSchool'},
                             {header: 'School', dataIndex: 'courseSchool'},
                             {header: 'Course', dataIndex: 'courseShortTitle'},

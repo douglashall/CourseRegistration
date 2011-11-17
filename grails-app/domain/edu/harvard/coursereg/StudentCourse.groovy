@@ -19,7 +19,6 @@ class StudentCourse implements Serializable {
 	School courseSchool
 	String termDisplay
 	Map instructor
-	RegistrationContextState registrationContextState
 	List<Map> levelOptions
 	List<Map> gradingOptions
 	List<Map> schoolOptions
@@ -30,7 +29,6 @@ class StudentCourse implements Serializable {
 		'courseSchool',
 		'termDisplay',
 		'instructor',
-		'registrationContextState',
 		'levelOptions',
 		'gradingOptions',
 		'schoolOptions',

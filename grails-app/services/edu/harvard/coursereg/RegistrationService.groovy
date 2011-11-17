@@ -2,17 +2,20 @@ package edu.harvard.coursereg
 
 import static groovyx.net.http.ContentType.JSON
 
-import java.util.List;
+import java.text.SimpleDateFormat
+import java.util.List
 
+import org.apache.commons.lang.builder.*
 import org.codehaus.groovy.grails.commons.ConfigurationHolder
 
 import edu.harvard.icommons.coursedata.CourseInstance
 import groovyx.net.http.*
-import org.apache.commons.lang.builder.*
 
 class RegistrationService {
 
     static transactional = true
+	
+	SimpleDateFormat solrIndexDateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'")
 	
 	def config = ConfigurationHolder.config
 	
@@ -78,11 +81,13 @@ class RegistrationService {
 	def updateStudentCourseIndex(List<StudentCourse> studentCourses) {
 		def docs = []
 		studentCourses.each {
+			def initialState = it.registrationContext.getInitialState()
 			docs << [
 				id: it.id,
 				state: it.state.state,
 				stateTerminal: it.state.terminal,
 				stateType: it.state.type,
+				petitionCreated: initialState ? solrIndexDateFormat.format(initialState.dateCreated) : "",
 				studentHuid: it.userId,
 				studentFirstName: it.student.firstName,
 				studentLastName: it.student.lastName,
@@ -134,9 +139,11 @@ class RegistrationService {
 		
 		def q = queryString.size() == 0 ? "*:*" : URLEncoder.encode(queryString.join(" AND "), 'UTF-8')
 		def http = new HTTPBuilder(config.solr.url + "/select?wt=json&q=${q}&rows=5000")
+		SimpleDateFormat sdf = new SimpleDateFormat("MMM d, yyyy HH:mm:ss")
 		http.request(Method.GET, JSON) {
 			response.success = {resp, json ->
 				json.response.docs.each {
+					it.petitionCreated = sdf.format(solrIndexDateFormat.parse(it.petitionCreated))
 					result << it
 				}
 			}

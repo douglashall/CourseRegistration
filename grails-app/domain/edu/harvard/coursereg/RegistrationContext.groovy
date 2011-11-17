@@ -2,6 +2,7 @@ package edu.harvard.coursereg
 
 class RegistrationContext implements Serializable {
 	
+	RegistrationContextState initialState
 	RegistrationState currentState
 	
 	static transients = [
@@ -28,6 +29,14 @@ class RegistrationContext implements Serializable {
 			this.currentState = states[0].registrationState
 		}
 		return this.currentState
+	}
+	
+	public RegistrationContextState getInitialState() {
+		if (this.registrationContextStates && this.registrationContextStates.size() > 0) {
+			def states = this.registrationContextStates.sort {a,b -> a.dateCreated.compareTo(b.dateCreated)}
+			this.initialState = states[0]
+		}
+		return this.initialState
 	}
 	
 }
