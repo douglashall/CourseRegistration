@@ -62,6 +62,7 @@ class StudentController {
 			def ctx = new RegistrationContext()
 			ctx.addToStudentCourses(studentCourse)
 			ctx.save(flush:true)
+			
 			this.registrationService.updateRegistrationContextState("register", ctx, request.userId)
 		}
 		

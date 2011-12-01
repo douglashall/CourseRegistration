@@ -6,6 +6,7 @@ class RegistrationContext implements Serializable {
 	RegistrationState currentState
 	
 	static transients = [
+		'initialState',
 		'currentState'
 	]
 	

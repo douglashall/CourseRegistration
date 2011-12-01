@@ -161,9 +161,9 @@
     <body>
     	<div class="course_catalog_tool faculty">
     	<g:if test="${model.size() > 0}">
-	    	<div class="approved-denied-toggle">
+	    	<!-- <div class="approved-denied-toggle">
 	    		<input type="button" value="Hide Approved/Denied" />
-	    	</div>
+	    	</div> -->
 	    </g:if>
 	    <g:else>
 	    	<div><p>You currently do not have any cross registration petitions.</p></div>
