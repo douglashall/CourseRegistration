@@ -63,12 +63,15 @@ environments {
 		grails.serverURL = "http://localhost:8080/${appName}"
 		icommonsapi.url = "http://qa.isites.harvard.edu:8861/icommonsapi"
 		solr.url = "http://localhost:8983/solr"
+		catalog.url = "http://qa.isites.harvard.edu:8986/solr"
 		registrar.group.id = "18470"
 	}
 	test {
 		grails.serverURL = "http://localhost:8080/${appName}"
 		icommonsapi.url = "http://qa.isites.harvard.edu:8861/icommonsapi"
 		solr.url = "http://qa.isites.harvard.edu:8955/solr"
+		catalog.url = "http://qa.isites.harvard.edu:8986/solr"
+		registrar.group.id = "18470"
 	}
 
 }

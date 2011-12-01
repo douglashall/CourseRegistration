@@ -179,16 +179,21 @@
                 	if (!levelValid || !gradingValid) {
                     	return;
                     }
-                    
-                    var win = new CourseRegistration.CreatePetitionWindow({
-                        studentCourse: rec,
-                        listeners: {
-                            'createpetition': function(options){
-                            	win.close();
-                            }
+
+                	var params = '';
+                	if (levelCombo) {
+                    	params += 'levelOption=' + levelCombo.getValue();
+                    }
+                    if (gradingCombo) {
+                        if (levelCombo) {
+                            params += '&';
                         }
-                    });
-                    win.show();
+                        params += 'gradingOption=' + gradingCombo.getValue();
+                    }
+                    if (params.length > 0) {
+                        params = '?' +  params;
+                    }
+                	window.open(CourseRegistration.constructUrl('student/showPetitionForm/' + rec.get('id') + params, topicId), '_blank');
                 });
             });
         	// ]]>
@@ -262,7 +267,7 @@
 												<div class="course_create"><a style="font-size: small" title="" href="javascript:void(0);">Create Petition</a></div>
 											</g:if>
 											<g:else>
-												<div class="course_print"><a style="font-size: small" title="" href="javascript:void(0);">Create PDF Petition Form</a></div>
+												<div class="course_print"><a style="font-size: small" title="" href="javascript:void(0);" target="">Create PDF Petition Form</a></div>
 											</g:else>
 										</g:if>
 										<g:if test="${!studentCourse.state || (studentCourse.state && studentCourse.state.terminal == 0)}">

@@ -1,0 +1,106 @@
+<data>
+<person>
+<name>${firstName}</name>
+<last_name>${lastName}</last_name>
+<formatted_name>${formattedName}</formatted_name>
+<huid>${huid}</huid>
+<home_school>${homeSchool}</home_school>
+<phone>${phone}</phone>
+<email>${email}</email>
+</person>
+<course_list size="1" >
+<course course_id="${courseId}" level_option="${levelOption}" grading_option="${gradingOption}" >
+</course>
+</course_list>
+<schools>
+	<school code="hbs">
+		<name>Harvard Business School</name>
+                <short_name>Business</short_name>
+		<ldap>BUS</ldap>
+		<ldap>PMD</ldap>
+		<ldap>AMP</ldap>
+	</school>
+	<school code="hbsmba">
+		<name>Harvard Business School - MBA Program</name>
+                <short_name>Business - MBA Program</short_name>
+		<ldap>MBA</ldap>
+	</school>
+	<school code="hbsdoctoral">
+		<name>Harvard Business School - Doctoral Program</name>
+                <short_name>Business - Doctoral Program</short_name>
+		<ldap>HBD</ldap>
+	</school>
+	<school code="gsd">
+		<name>Harvard Graduate School of Design</name>
+                <short_name>Design</short_name>
+		<ldap>DES</ldap>
+	</school>
+	<school code="hsph">
+		<name>Harvard School of Public Health</name>
+                <short_name>Public Health</short_name>
+		<ldap>SPH</ldap>
+	</school>
+	<school code="hms">
+		<name>Harvard Medical School</name>
+                <short_name>Medical</short_name>
+		<ldap>HMS</ldap>
+	</school>
+	<school code="hks">
+		<name>Harvard Kennedy School</name>
+                <short_name>Government</short_name>
+		<ldap>KSG</ldap>
+	</school>
+	<school code="gse">
+		<name>Harvard Graduate School of Education</name>
+                <short_name>Education</short_name>
+		<ldap>EDU</ldap>
+	</school>
+	<school code="hds">
+		<name>Harvard Divinity School</name>
+                <short_name>Divinity</short_name>
+		<ldap>DIV</ldap>
+	</school>
+	<school code="ext">
+		<name>Harvard Extension School</name>
+                <short_name>Continuing Education</short_name>
+		<ldap>ECS</ldap>
+		<ldap>EXT</ldap>
+	</school>
+	<school code="hss">
+		<name>Harvard Summer School</name>
+                <short_name>Harvard Summer School</short_name>
+		<ldap>SUM</ldap>
+	</school>
+	<school code="sum">
+		<name>Harvard Summer School</name>
+                <short_name>Harvard Summer School</short_name>
+		<ldap>SUM</ldap>
+	</school>
+	<school code="gsas">
+		<name>Graduate School of Arts and Sciences</name>
+                <short_name>Graduate School of Arts and Sciences</short_name>
+	</school>
+	<school code="hls">
+		<name>Harvard Law School</name>
+                <short_name>Law</short_name>
+		<ldap>LAW</ldap>
+		<ldap>HJD</ldap>
+		<ldap>LLM</ldap>
+	</school>
+	<school code="fas">
+		<name>Faculty of Arts and Sciences</name>
+		<short_name>Faculty of Arts and Sciences</short_name>
+		<ldap>FAS</ldap>
+		<ldap>FGS</ldap>
+		<ldap>COL</ldap>
+		<ldap>FSP</ldap>
+	</school>
+	<school code="hsdm">
+		<name>Harvard School of Dental Medicine</name>
+		<short_name>Dental</short_name>
+		<ldap>SDM</ldap>
+		<ldap>DMD</ldap>
+		<ldap>AGE</ldap>
+	</school>
+</schools>
+</data>
