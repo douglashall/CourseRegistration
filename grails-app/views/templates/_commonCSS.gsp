@@ -15,6 +15,9 @@
  	table.grid, div.result {
  		clear: both;
  	}
+ 	#petition-data-pnl .x-grid3-cell-inner {
+ 		white-space: normal;
+ 	}
  	.x-panel-resize {
         height:5px;
         background:transparent no-repeat center bottom;
