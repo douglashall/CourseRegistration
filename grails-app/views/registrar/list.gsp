@@ -242,7 +242,14 @@
 							    }]
 							},*/
 							{
-                            	header: 'Status', 
+                            	header: 'Registrar Status', 
+                                dataIndex: 'state', 
+                                renderer: function(value, metadata, record){
+                                    return String.format('<div class="icon-text {0}">{1}</div>', record.get('stateType'), value);
+                                }
+							},
+							{
+                            	header: 'Faculty Status', 
                                 dataIndex: 'state', 
                                 renderer: function(value, metadata, record){
                                     return String.format('<div class="icon-text {0}">{1}</div>', record.get('stateType'), value);
@@ -258,7 +265,7 @@
                             },
                             {header: 'Submitted On', dataIndex: 'petitionCreated'},
                             {header: 'Home School', dataIndex: 'homeSchool'},
-                            {header: 'School', dataIndex: 'courseSchool'},
+                            {header: 'Host School', dataIndex: 'courseSchool'},
                             {header: 'Course', dataIndex: 'courseShortTitle'},
                             {header: 'Term', dataIndex: 'term'},
                             {

@@ -227,30 +227,34 @@
 								</td>
 								<td class="course_level_option" rowspan="1" colspan="1">
 									<div>
-										<g:if test="${studentCourse.levelOption}">
-											${studentCourse.levelOption}
+										<g:if test="${studentCourse.courseSchool.schoolId != 'hks' && studentCourse.courseSchool.schoolId != 'ksg'}">
+											<g:if test="${studentCourse.levelOption}">
+												${studentCourse.levelOption}
+											</g:if>
+											<g:else>
+												<select id="level_option_${studentCourse.id}" class="level-option-combo">
+													<g:each in="${studentCourse.levelOptions}" var="option">
+														<option value="${option.id}">${option.name}</option>
+													</g:each>
+												</select>
+											</g:else>
 										</g:if>
-										<g:else>
-											<select id="level_option_${studentCourse.id}" class="level-option-combo">
-												<g:each in="${studentCourse.levelOptions}" var="option">
-													<option value="${option.id}">${option.name}</option>
-												</g:each>
-											</select>
-										</g:else>
 									</div>
 								</td>
 								<td class="course_grading_option" rowspan="1" colspan="1">
 									<div>
-										<g:if test="${studentCourse.gradingOption}">
-											${studentCourse.gradingOption}
+										<g:if test="${studentCourse.courseSchool.schoolId != 'hks' && studentCourse.courseSchool.schoolId != 'ksg'}">
+											<g:if test="${studentCourse.gradingOption}">
+												${studentCourse.gradingOption}
+											</g:if>
+											<g:else>
+												<select id="grading_option_${studentCourse.id}" class="grading-option-combo">
+													<g:each in="${studentCourse.gradingOptions}" var="option">
+														<option value="${option.id}">${option.name}</option>
+													</g:each>
+												</select>
+											</g:else>
 										</g:if>
-										<g:else>
-											<select id="grading_option_${studentCourse.id}" class="grading-option-combo">
-												<g:each in="${studentCourse.gradingOptions}" var="option">
-													<option value="${option.id}">${option.name}</option>
-												</g:each>
-											</select>
-										</g:else>
 									</div>
 								</td>
 								<td class="status" rowspan="1" colspan="1">
@@ -262,14 +266,19 @@
 								</td>
 								<td class="registration_action" rowspan="1" colspan="1">
 									<div>
-										<g:if test="${!studentCourse.state}">
-											<g:if test="${studentCourse.checkPilot()}">
-												<div class="course_create"><a style="font-size: small" title="" href="javascript:void(0);">Create Petition</a></div>
+										<g:if test="${studentCourse.courseSchool.schoolId != 'hks' && studentCourse.courseSchool.schoolId != 'ksg'}">
+											<g:if test="${!studentCourse.state}">
+												<g:if test="${studentCourse.checkPilot()}">
+													<div class="course_create"><a style="font-size: small" title="" href="javascript:void(0);">Create Petition</a></div>
+												</g:if>
+												<g:else>
+													<div class="course_print"><a style="font-size: small" title="" href="javascript:void(0);" target="">Create PDF Petition Form</a></div>
+												</g:else>
 											</g:if>
-											<g:else>
-												<div class="course_print"><a style="font-size: small" title="" href="javascript:void(0);" target="">Create PDF Petition Form</a></div>
-											</g:else>
 										</g:if>
+										<g:else>
+											<a href="https://secure.ksg.harvard.edu/degrees/HKSCrossRegistration/Default.aspx">Use HKS online cross registration system</a>
+										</g:else>
 										<g:if test="${!studentCourse.state || (studentCourse.state && studentCourse.state.terminal == 0)}">
 											<div class="course_remove"><a style="font-size: small" title="" href="javascript:void(0);">Remove</a></div>
 										</g:if>
