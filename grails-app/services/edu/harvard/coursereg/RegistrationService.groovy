@@ -87,6 +87,7 @@ class RegistrationService {
 				state: it.state.state,
 				stateTerminal: it.state.terminal,
 				stateType: it.state.type,
+				processed: it.registrationContext.processed > 0,
 				petitionCreated: initialState ? solrIndexDateFormat.format(initialState.dateCreated) : "",
 				studentHuid: it.userId,
 				studentFirstName: it.student.firstName,
@@ -94,10 +95,13 @@ class RegistrationService {
 				studentEmail: it.student.email,
 				studentPhone: it.student.phone,
 				homeSchool: it.student.school,
-				courseSchool: it.courseSchool.titleLong,
+				homeSchoolDisplay: it.student.schoolDisplay,
+				hostSchool: it.courseSchool.schoolId,
+				hostSchoolDisplay: it.courseSchool.titleLong,
 				courseInstanceId: it.courseInstance.id,
 				courseShortTitle: it.courseInstance.shortTitle ? it.courseInstance.shortTitle : it.courseInstance.course.registrarCode,
 				term: it.courseInstance.term.displayName,
+				instructorHuid: it.instructor.userId,
 				instructorName: it.instructor.name,
 				instructorEmail: it.instructor.email,
 				instructorPhone: it.instructor.phone
@@ -130,25 +134,36 @@ class RegistrationService {
 		}
 	}
 	
-	def searchStudentCourses(String query, String state, String school) {
+	def searchStudentCourses(Map searchParams) {
+		def total
 		def result = []
 		def queryString = []
-		if (query) {queryString << ('"' + query + '"')}
-		if (state) {queryString << ('state:"' + state + '"')}
-		if (school) {queryString << ('courseSchool:"' + school + '"')}
+		if (searchParams.query) {queryString << ('"' + searchParams.query + '"')}
+		if (searchParams.state) {queryString << ('state:"' + searchParams.state + '"')}
+		if (searchParams.homeSchool) {queryString << ('homeSchoolDisplay:"' + searchParams.homeSchool + '"')}
+		queryString << ('hostSchool:"' + searchParams.hostSchool + '"')
+		
+		def start = searchParams.start ? searchParams.start : 0
+		def rows = searchParams.limit ? searchParams.limit : 5000
+		def sort = URLEncoder.encode((searchParams.sort ? searchParams.sort : "petitionCreated desc"), 'UTF-8')
 		
 		def q = queryString.size() == 0 ? "*:*" : URLEncoder.encode(queryString.join(" AND "), 'UTF-8')
-		def http = new HTTPBuilder(config.solr.url + "/select?wt=json&q=${q}&rows=5000")
+		def http = new HTTPBuilder(config.solr.url + "/select?wt=json&q=${q}&start=${start}&rows=${rows}&sort=${sort}")
 		SimpleDateFormat sdf = new SimpleDateFormat("MMM d, yyyy HH:mm:ss")
 		http.request(Method.GET, JSON) {
 			response.success = {resp, json ->
+				total = json.response.numFound
 				json.response.docs.each {
+					it.processed = it.processed ? "Processed" : "Not Processed"
 					it.petitionCreated = sdf.format(solrIndexDateFormat.parse(it.petitionCreated))
 					result << it
 				}
 			}
 		}
-		return result
+		return [
+			"total": total,
+			"records": result
+		]
 	}
 	
 }

@@ -43,6 +43,9 @@
 	.pending {
 	    background-image:url(http://isites.harvard.edu/js/isites/resources/images/fugue/exclamation--frame.png) !important;
 	}
+	.process {
+	    background-image:url(http://isites.harvard.edu/js/isites/resources/images/fugue/tick.png) !important;
+	}
 	.export {
 	    background-image:url(http://isites.harvard.edu/js/isites/resources/images/fugue/drive-download.png) !important;
 	}
@@ -65,5 +68,8 @@
 		background-repeat: no-repeat;
 		line-height: 16px;
 		padding: 0 0 0 21px;
+	}
+	.x-panel-bbar .x-toolbar-left {
+		visibility: hidden;
 	}
 </style>

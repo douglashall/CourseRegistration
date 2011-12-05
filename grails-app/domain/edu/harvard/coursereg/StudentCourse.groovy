@@ -82,7 +82,8 @@ class StudentCourse implements Serializable {
 				'lastName': person.lastName,
 				'email': person.email,
 				'phone': person.phone,
-				'school': this.homeSchoolId ? School.get(this.homeSchoolId).titleLong : ''
+				'school': this.homeSchoolId ? School.get(this.homeSchoolId).schoolId : '',
+				'schoolDisplay': this.homeSchoolId ? School.get(this.homeSchoolId).titleLong : ''
 			]
 		}
 		return student

@@ -33,7 +33,7 @@
 			return type;
 		}
 	}
-
+    
 	CourseRegistration.approvePetitions = function(records, store, mask, win, topicId) {
 		var ids = '';
 		$(records).each(function(){

@@ -4,6 +4,9 @@ class RegistrationContext implements Serializable {
 	
 	RegistrationContextState initialState
 	RegistrationState currentState
+	int processed = 0
+	Date dateProcessed
+	String processedBy
 	
 	static transients = [
 		'initialState',
@@ -22,6 +25,8 @@ class RegistrationContext implements Serializable {
 	}
 	
     static constraints = {
+		dateProcessed(nullable: true)
+		processedBy(nullable: true)
     }
 	
 	public RegistrationState getCurrentState() {

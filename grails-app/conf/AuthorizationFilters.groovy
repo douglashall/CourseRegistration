@@ -10,6 +10,15 @@ class AuthorizationFilters {
         authorize(controller:'*', action:'*') {
             before = {
 				request.isRegistrarStaff = BaselineUtils.isGroupMember(request.userId, "IcGroup", config.registrar.group.id)
+				if (request.isRegistrarStaff) {
+					def whitelist = config.courseregistration.registrarwhitelist[request.userId]
+					if (whitelist) {
+						request.schoolAffiliation = whitelist.school
+					} else {
+						def person = BaselineUtils.findPerson(request.userId)
+						request.schoolAffiliation = BaselineUtils.ldapCodes[person.departmentAffiliation]
+					}
+				}
 				return true
             }
         }
