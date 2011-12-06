@@ -56,24 +56,50 @@ grails.exceptionresolver.params.exclude = ['password']
 // set per-environment serverURL stem for creating absolute links
 environments {
 	production {
-		grails.serverURL = "http://www.changeme.com"
+		grails.serverURL = "http://localhost:8935/${appName}"
 		icommonsapi.url = "http://tool2.isites.harvard.edu:8971/icommonsapi"
+		solr.url = "http://tool2.isites.harvard.edu:8935/solr"
+		catalog.url = "http://tool2.isites.harvard.edu:8000/hucc_prod_solr"
+		pilot.schools = "gse,hds,hsph"
+		registrar {
+			group.id = "20466"
+			whitelist {
+				"10564158" {
+					school = "gse"
+				}
+			}
+		}
+	}
+	test {
+		grails.serverURL = "http://localhost:8935/${appName}"
+		icommonsapi.url = "http://tool2.isites.harvard.edu:8971/icommonsapi"
+		solr.url = "http://tool2.isites.harvard.edu:8935/solr"
+		catalog.url = "http://tool2.isites.harvard.edu:8000/hucc_prod_solr"
+		pilot.schools = "gse,hds,hsph"
+		registrar {
+			group.id = "20466"
+			whitelist {
+				"10564158" {
+					school = "gse"
+				}
+			}
+		}
 	}
 	development {
 		grails.serverURL = "http://localhost:8080/${appName}"
 		icommonsapi.url = "http://qa.isites.harvard.edu:8861/icommonsapi"
 		solr.url = "http://localhost:8983/solr"
 		catalog.url = "http://qa.isites.harvard.edu:8986/solr"
-		registrar.group.id = "18470"
+		pilot.schools = "gse,hds,hsph"
+		registrar {
+			group.id = "18470"
+			whitelist {
+				"10564158" {
+					school = "gse"
+				}
+			}
+		}
 	}
-	test {
-		grails.serverURL = "http://localhost:8080/${appName}"
-		icommonsapi.url = "http://qa.isites.harvard.edu:8861/icommonsapi"
-		solr.url = "http://qa.isites.harvard.edu:8955/solr"
-		catalog.url = "http://qa.isites.harvard.edu:8986/solr"
-		registrar.group.id = "18470"
-	}
-
 }
 
 // log4j configuration

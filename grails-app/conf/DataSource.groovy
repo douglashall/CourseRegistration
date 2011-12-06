@@ -1,5 +1,5 @@
 dataSource {
-    dbCreate = "update" // one of 'create', 'create-drop','update'
+    dbCreate = "none" // one of 'create', 'create-drop','update'
 	dialect = "org.hibernate.dialect.OracleDialect"
     jndiName = "java:comp/env/jdbc/cmDS"
 }

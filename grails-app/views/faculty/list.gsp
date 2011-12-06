@@ -182,9 +182,9 @@
 							<th style="width: 100%" rowspan="1" colspan="1">Student</th>
 							<th rowspan="1" colspan="1">School</th>
 							<th rowspan="1" colspan="1">Level</th>
-							<th rowspan="1" colspan="1">Grading&nbsp;Option</th>
+							<th rowspan="1" colspan="1">Grading Option</th>
 							<th rowspan="1" colspan="1">Status</th>
-							<th rowspan="1" colspan="1"></th>
+							<th rowspan="1" colspan="1">Action</th>
 							<th rowspan="1" colspan="1"><input type="checkbox" class="bulk-select" /></th>
 						</tr>
 					</thead>

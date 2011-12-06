@@ -9,9 +9,11 @@ class AuthorizationFilters {
     def filters = {
         authorize(controller:'*', action:'*') {
             before = {
+				println config.registrar.group.id
 				request.isRegistrarStaff = BaselineUtils.isGroupMember(request.userId, "IcGroup", config.registrar.group.id)
 				if (request.isRegistrarStaff) {
-					def whitelist = config.courseregistration.registrarwhitelist[request.userId]
+					def whitelist = config.registrar.whitelist[request.userId]
+					println whitelist
 					if (whitelist) {
 						request.schoolAffiliation = whitelist.school
 					} else {

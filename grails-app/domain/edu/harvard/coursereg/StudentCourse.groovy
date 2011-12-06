@@ -161,9 +161,9 @@ class StudentCourse implements Serializable {
 	}
 	
 	public boolean checkPilot() {
-		def config= grailsApplication.config.courseregistration.pilot.schools
+		def config= grailsApplication.config.pilot.schools
 		if (!config) {
-			log.warn("missing courseregistration.pilot.schools config")
+			log.warn("missing pilot.schools config")
 			return false
 		}
 
