@@ -74,7 +74,7 @@ environments {
 		grails.serverURL = "http://localhost:8935/${appName}"
 		icommonsapi.url = "http://tool2.isites.harvard.edu:8971/icommonsapi"
 		solr.url = "http://tool2.isites.harvard.edu:8935/solr"
-		catalog.url = "http://tool2.isites.harvard.edu:8000/hucc_prod_solr"
+		catalog.url = "http://tool2.isites.harvard.edu:8987/solr"
 		pilot.schools = "gse,hds,hsph"
 		registrar {
 			group.id = "20466"

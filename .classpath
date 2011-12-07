@@ -28,7 +28,7 @@
 			<attribute name="com.springsource.sts.grails.core.SOURCE_FOLDER" value="true"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry kind="src" path=".link_to_grails_plugins/isites-coursedata-0.1/grails-app/domain">
+	<classpathentry kind="src" path=".link_to_grails_plugins/isites-coursedata-0.3/grails-app/domain">
 		<attributes>
 			<attribute name="com.springsource.sts.grails.core.SOURCE_FOLDER" value="true"/>
 		</attributes>

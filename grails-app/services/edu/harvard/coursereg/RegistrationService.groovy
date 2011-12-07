@@ -96,7 +96,7 @@ class RegistrationService {
 				studentPhone: it.student.phone,
 				homeSchool: it.student.school,
 				homeSchoolDisplay: it.student.schoolDisplay,
-				hostSchool: it.courseSchool.schoolId,
+				hostSchool: it.courseSchool.id,
 				hostSchoolDisplay: it.courseSchool.titleLong,
 				courseInstanceId: it.courseInstance.id,
 				courseShortTitle: it.courseInstance.shortTitle ? it.courseInstance.shortTitle : it.courseInstance.course.registrarCode,

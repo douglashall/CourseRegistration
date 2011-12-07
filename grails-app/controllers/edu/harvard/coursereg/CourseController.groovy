@@ -4,6 +4,8 @@ import org.codehaus.groovy.grails.web.json.*
 
 import edu.harvard.icommons.coursedata.CourseInstance
 import grails.converters.*
+import groovyx.net.http.HTTPBuilder
+import groovyx.net.http.Method
 
 class CourseController {
 	
@@ -12,29 +14,48 @@ class CourseController {
 	def add = {
 		def ci = CourseInstance.get(params.id)
 		this.registrationService.addCourseForStudent(request.userId, ci)
-		def studentCourses = StudentCourse.findAllByUserIdAndActive(request.userId, 1)
-		withFormat {
-			form {render(contentType: "application/json"){studentCourses} as JSON}
-			html {render(contentType: "application/json"){studentCourses} as JSON}
-			json {render(contentType: "application/json"){studentCourses} as JSON}
-			xml {render(contentType: "application/xml"){studentCourses} as XML}
-		}
+		forward(action: "catalogList")
 	}
 	
 	def remove = {
 		def ci = CourseInstance.get(params.id)
 		this.registrationService.removeCourseForStudent(request.userId, ci)
-		def studentCourses = StudentCourse.findAllByUserIdAndActive(request.userId, 1)
-		withFormat {
-			form {render(contentType: "application/json"){studentCourses} as JSON}
-			html {render(contentType: "application/json"){studentCourses} as JSON}
-			json {render(contentType: "application/json"){studentCourses} as JSON}
-			xml {render(contentType: "application/xml"){studentCourses} as XML}
-		}
+		forward(action: "catalogList")
 	}
 	
-	def client = {
+	def catalogList = {
+		def result = []
+		def studentCourses = StudentCourse.findAllByUserIdAndActive(request.userId, 1)
 		
+		if (studentCourses.size() > 0) {
+			def queryString = []
+			studentCourses.each {
+				queryString << ('course_instance_id:' + it.courseInstance.id)
+			}
+			def http = new HTTPBuilder(grailsApplication.config.catalog.url + "/select?q=" + URLEncoder.encode(queryString.join(" OR "), 'UTF-8'))
+			http.request(Method.GET, groovyx.net.http.ContentType.XML) {
+				response.success = {resp, xml ->
+					xml.result.doc.each {
+						result.add(it.str.find {it.@name.text() == "id"}.text())
+					}
+				}
+			}
+		}
+		
+		withFormat {
+			json {
+				render result as JSON
+			}
+			xml {
+				render(contentType:"application/xml"){
+					courselist(size: result.size()){
+						for(c in result) {
+							course(course_id: c)
+						}
+					}
+				}
+			}
+		}
 	}
 	
 }

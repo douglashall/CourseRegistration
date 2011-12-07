@@ -8,6 +8,7 @@ class RegistrationStudent {
 	
     static mapping = {
 		version false
+		id generator:'sequence', params:[sequence:'registration_student_id_seq']
 	}
 	
     static constraints = {

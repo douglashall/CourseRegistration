@@ -227,7 +227,7 @@
 								</td>
 								<td class="course_level_option" rowspan="1" colspan="1">
 									<div>
-										<g:if test="${studentCourse.courseSchool.schoolId != 'hks' && studentCourse.courseSchool.schoolId != 'ksg'}">
+										<g:if test="${studentCourse.courseSchool.id != 'hks' && studentCourse.courseSchool.schoolId != 'ksg'}">
 											<g:if test="${studentCourse.levelOption}">
 												${studentCourse.levelOption}
 											</g:if>
@@ -243,7 +243,7 @@
 								</td>
 								<td class="course_grading_option" rowspan="1" colspan="1">
 									<div>
-										<g:if test="${studentCourse.courseSchool.schoolId != 'hks' && studentCourse.courseSchool.schoolId != 'ksg'}">
+										<g:if test="${studentCourse.courseSchool.id != 'hks' && studentCourse.courseSchool.schoolId != 'ksg'}">
 											<g:if test="${studentCourse.gradingOption}">
 												${studentCourse.gradingOption}
 											</g:if>
@@ -266,7 +266,7 @@
 								</td>
 								<td class="registration_action" rowspan="1" colspan="1">
 									<div>
-										<g:if test="${studentCourse.courseSchool.schoolId != 'hks' && studentCourse.courseSchool.schoolId != 'ksg'}">
+										<g:if test="${studentCourse.courseSchool.id != 'hks' && studentCourse.courseSchool.schoolId != 'ksg'}">
 											<g:if test="${!studentCourse.state}">
 												<g:if test="${studentCourse.checkPilot()}">
 													<div class="course_create"><a style="font-size: small" title="" href="javascript:void(0);">Create Petition</a></div>

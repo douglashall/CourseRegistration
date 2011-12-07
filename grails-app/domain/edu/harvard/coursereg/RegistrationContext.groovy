@@ -20,6 +20,7 @@ class RegistrationContext implements Serializable {
 	
 	static mapping = {
 		version false
+		id generator:'sequence', params:[sequence:'registration_ctx_id_seq']
 		studentCourses fetch: 'join'
 		registrationContextStates fetch: 'join'
 	}

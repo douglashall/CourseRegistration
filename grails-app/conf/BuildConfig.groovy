@@ -30,7 +30,7 @@ grails.project.dependency.resolution = {
         compile(
 			'org.codehaus.groovy.modules.http-builder:http-builder:0.5.1',
 			'org.apache.httpcomponents:httpclient:4.1.2',
-			'edu.harvard.icommons.grails.plugins:isites-coursedata:0.1',
+			'edu.harvard.icommons.grails.plugins:isites-coursedata:0.3',
 			'edu.harvard.grails.plugins:baseline:0.1',
 			'net.sourceforge.saxon:saxon:9.1.0.8',
 			'org.apache.xmlgraphics:fop:0.93'

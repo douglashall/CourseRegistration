@@ -8,7 +8,7 @@ import edu.harvard.icommons.coursedata.School
 class StudentCourse implements Serializable {
 
 	String userId
-	Long homeSchoolId
+	String homeSchoolId
 	String levelOption
 	String gradingOption
 	Date dateCreated
@@ -57,14 +57,14 @@ class StudentCourse implements Serializable {
 	
 	public School getCourseSchool() {
 		if (!courseSchool) {
-			courseSchool = School.findBySchoolId(this.courseInstance.course.schoolId)
+			courseSchool = School.get(this.courseInstance.course.schoolId)
 		}
 		return courseSchool
 	}
 	
 	public String getTermDisplay() {
 		if (!termDisplay) {
-			def school = School.findBySchoolId(this.courseInstance.course.schoolId)
+			def school = School.get(this.courseInstance.course.schoolId)
 			return this.courseInstance.term.displayName + ", " + school.titleLong
 		}
 		return termDisplay
@@ -74,7 +74,7 @@ class StudentCourse implements Serializable {
 		if (!student) {
 			def person = BaselineUtils.findPerson(this.userId)
 			if (this.userId == '10564158') {
-				this.homeSchoolId = 7
+				this.homeSchoolId = 'fas'
 			}
 			this.student = [
 				'id': person.id,
@@ -82,7 +82,7 @@ class StudentCourse implements Serializable {
 				'lastName': person.lastName,
 				'email': person.email,
 				'phone': person.phone,
-				'school': this.homeSchoolId ? School.get(this.homeSchoolId).schoolId : '',
+				'school': this.homeSchoolId ? School.get(this.homeSchoolId).id : '',
 				'schoolDisplay': this.homeSchoolId ? School.get(this.homeSchoolId).titleLong : ''
 			]
 		}
@@ -168,8 +168,8 @@ class StudentCourse implements Serializable {
 		}
 
 		def schools = Arrays.asList(config.split(','));
-		def school = School.findBySchoolId(this.courseInstance.course.schoolId)
-		return schools.contains(school.schoolId)
+		def school = School.get(this.courseInstance.course.schoolId)
+		return schools.contains(school.id)
 	}
 	
 }

@@ -12,7 +12,7 @@ class RegistrationContextState implements Serializable {
 	
 	static mapping = {
 		version false
-		id generator:'sequence', params:[sequence:'student_course_state_id_seq']
+		id generator:'sequence', params:[sequence:'registration_ctx_state_id_seq']
 		registrationState fetch: 'join'
 	}
 	
