@@ -67,7 +67,7 @@ class StudentController {
 		
 		if (studentCourse) {
 			studentCourse.programDepartment = params.programDepartment
-			studentCourse.degreeYear = Long.parseLong(params.degreeYear)
+			studentCourse.degreeYear = params.degreeYear ? Long.parseLong(params.degreeYear) : null
 			if (!studentCourse.levelOption && params.levelOption) {
 				studentCourse.levelOption = studentCourse.getLevelOptions().find {it.id == Integer.parseInt(params.levelOption)}.name
 			}
@@ -82,16 +82,16 @@ class StudentController {
 			if (!regStudent) {
 				regStudent = new RegistrationStudent(userId: request.userId)
 			}
-			regStudent.homeSchoolId = params.homeSchoolId
-			regStudent.programDepartment = params.programDepartment
-			regStudent.degreeYear = Long.parseLong(params.degreeYear)
+			regStudent.homeSchoolId = studentCourse.homeSchoolId
+			regStudent.programDepartment = studentCourse.programDepartment
+			regStudent.degreeYear = studentCourse.degreeYear
 			regStudent.save()
 			
 			def ctx = new RegistrationContext()
 			ctx.addToStudentCourses(studentCourse)
 			ctx.save(flush:true)
 			
-			this.registrationService.updateRegistrationContextState("register", ctx, request.userId)
+			this.registrationService.submit(ctx, request.userId)
 		}
 		
 		withFormat {

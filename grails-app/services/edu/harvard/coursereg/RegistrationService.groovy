@@ -57,7 +57,27 @@ class RegistrationService {
 		this.deleteFromStudentCourseIndex(studentCourses)
 	}
 	
-	def updateRegistrationContextState(String action, RegistrationContext ctx, String userId) {
+	public void submit(RegistrationContext ctx, String userId) {
+		def isApprovalRequired = false
+		ctx.studentCourses.each {
+			if (it.courseInstance.xregInstructorSigReqd == 1) {
+				isApprovalRequired = true
+				return false
+			}
+		}
+		
+		this.updateRegistrationContextState(isApprovalRequired ? "submit" : "register", ctx, userId)
+	}
+	
+	public void facultyApprove(RegistrationContext ctx, String userId) {
+		this.updateRegistrationContextState("faculty_approve", ctx, userId)
+	}
+	
+	public void facultyDeny(RegistrationContext ctx, String userId) {
+		this.updateRegistrationContextState("faculty_deny", ctx, userId)
+	}
+	
+	private void updateRegistrationContextState(String action, RegistrationContext ctx, String userId) {
 		def studentCourse = ctx.studentCourses.toArray()[0]
 		def registrationAction = RegistrationAction.findAllByAction(action).find {
 			if (it.stateBefore == ctx.currentState) {

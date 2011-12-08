@@ -59,6 +59,7 @@
 							'${item.userId}',
 	                       	'${item.courseInstance.id}',
 	                       	'${item.courseInstance.shortTitle}',
+	                       	${item.courseInstance.xregInstructorSigReqd == 1},
 	                       	${item.levelOptions as JSON},
 	                       	${item.gradingOptions as JSON},
 	                    	${item.schoolOptions as JSON},
@@ -73,6 +74,7 @@
 						{name: 'userId'},
 						{name: 'courseInstanceId'},
 						{name: 'courseShortTitle'},
+						{name: 'approvalRequired'},
 						{name: 'levelOptions'},
 						{name: 'gradingOptions'},
 						{name: 'schoolOptions'},
@@ -118,8 +120,8 @@
             	                        levelOption: levelCombo ? levelCombo.getValue() : undefined,
             	                        gradingOption: gradingCombo ? gradingCombo.getValue() : undefined,
             	                        homeSchoolId: options.homeSchoolId ? options.homeSchoolId : undefined,
-                    	                programDepartment: options.programDepartment,
-                    	                degreeYear: options.degreeYear
+                    	                programDepartment: options.programDepartment ? options.programDepartment : undefined,
+                    	                degreeYear: options.degreeYear ? options.degreeYear : undefined
         	                        },
         	                    	success: function(data){
             	                    	mask.hide();
@@ -142,7 +144,10 @@
                     	                    	gradingCombo.destroy();
                 	                    		$('.course_grading_option div', trEl).html(data.gradingOption);
                     	                    }
-                    	                    
+
+                    	                    if (stateTerminal) {
+                        	                    $('.course_remove', trEl).remove();
+                        	                }
             	                    		$('.course_create', trEl).remove();
             	                    		$('.status div', trEl).html(String.format('<div class="course_status icon-text {0}">{1}</div>', stateType, state));
             	                    	}

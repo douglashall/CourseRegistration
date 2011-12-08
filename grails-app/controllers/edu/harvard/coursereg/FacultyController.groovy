@@ -45,7 +45,7 @@ class FacultyController {
 		
 		studentCourses.each {
 			def ctx = it.registrationContext
-			this.registrationService.updateRegistrationContextState("faculty_approve", ctx, request.userId)
+			this.registrationService.facultyApprove(ctx, request.userId)
 			model << it
 		}
 		
@@ -72,7 +72,7 @@ class FacultyController {
 		
 		studentCourses.each {
 			def ctx = it.registrationContext
-			this.registrationService.updateRegistrationContextState("faculty_deny", ctx, request.userId)
+			this.registrationService.facultyDeny(ctx, request.userId)
 			model << it
 		}
 		

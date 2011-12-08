@@ -154,46 +154,47 @@
 		 	        validationEvent: false
 		 	    });
 			}
-			this.items.push({
-				id: 'program-department-field',
-				xtype: 'textfield',
-				fieldLabel: 'Program/Department',
-		 	    labelSeparator: '',
-		 	    name: 'programDepartment',
-		 	    value: this.programDepartment,
-		 	    allowBlank: false,
-		 	    msgTarget: 'side',
-		 	    width: 225,
-		 	    validationEvent: false
-			});
-			this.items.push({
-	 	    	id: 'degree-year-combo',
-	 	    	xtype: 'combo',
-	 	    	width: 225,
-	 	        fieldLabel: 'Degree Year',
-	 	        labelSeparator: '',
-	 	        name: 'degreeYear',
-	 	        value: this.degreeYear,
-	 	        store: new Ext.data.ArrayStore({
-			        fields: ['id', 'name'],
-			        data : [
-			        	['2012', '2012'],
-			        	['2013', '2013'],
-			        	['2014', '2014'],
-			        	['2015', '2015'],
-			        	['2016', '2016'],
-			        ]
-			    }),
-	 	        displayField: 'name',
-	 	        valueField: 'id',
-	 	        mode: 'local',
-	 	        triggerAction: 'all',
-	 	        forceSelection: true,
-	 	        allowBlank: false,
-	 	        msgTarget: 'side',
-	 	        emptyText: 'Please select...',
-	 	        validationEvent: false
-	 	    });
+			if (this.studentCourse.get('approvalRequired')) {
+				this.items.push({
+					id: 'program-department-field',
+					xtype: 'textfield',
+					fieldLabel: 'Program/Department',
+			 	    labelSeparator: '',
+			 	    name: 'programDepartment',
+			 	    value: this.programDepartment,
+			 	    allowBlank: false,
+			 	    msgTarget: 'side',
+			 	    width: 225,
+			 	    validationEvent: false
+				},{
+		 	    	id: 'degree-year-combo',
+		 	    	xtype: 'combo',
+		 	    	width: 225,
+		 	        fieldLabel: 'Degree Year',
+		 	        labelSeparator: '',
+		 	        name: 'degreeYear',
+		 	        value: this.degreeYear,
+		 	        store: new Ext.data.ArrayStore({
+				        fields: ['id', 'name'],
+				        data : [
+				        	['2012', '2012'],
+				        	['2013', '2013'],
+				        	['2014', '2014'],
+				        	['2015', '2015'],
+				        	['2016', '2016'],
+				        ]
+				    }),
+		 	        displayField: 'name',
+		 	        valueField: 'id',
+		 	        mode: 'local',
+		 	        triggerAction: 'all',
+		 	        forceSelection: true,
+		 	        allowBlank: false,
+		 	        msgTarget: 'side',
+		 	        emptyText: 'Please select...',
+		 	        validationEvent: false
+		 	    });
+		 	}
 	
 			CourseRegistration.CreatePetitionFormPanel.superclass.initComponent.apply(this);
 		}
@@ -216,26 +217,45 @@
 		degreeYear: undefined,
 		
 		initComponent: function(){
-			this.items = [
-				{
-					layout: 'fit',
-					border: false,
-					padding: '2px 10px 0px 10px',
-					html: '<p>Please let the faculty member know your:</p>'
-				},
-				new CourseRegistration.CreatePetitionFormPanel({
-					id: 'create-petition-form-panel', 
-					studentCourse: this.studentCourse,
-					homeSchoolId: this.homeSchoolId,
-					programDepartment: this.programDepartment,
-					degreeYear: this.degreeYear
-				}),
-				{
-					border: false,
-					padding: '0px 10px 0px 10px',
-					html: '<p>The faculty member may require a separate application process.</p><p>You will receive a confirmation email, once the faculty member takes action on your petition.</p><p>Please click confirm to finalize your Cross Registration Petition.</p>'
-				}
-			];
+			this.items = [];
+			if (this.studentCourse.get('approvalRequired')) {
+				this.items.push(
+					{
+						layout: 'fit',
+						border: false,
+						padding: '2px 10px 0px 10px',
+						html: '<p>Please let the faculty member know your:</p>'
+					},
+					new CourseRegistration.CreatePetitionFormPanel({
+						id: 'create-petition-form-panel', 
+						studentCourse: this.studentCourse,
+						homeSchoolId: this.homeSchoolId,
+						programDepartment: this.programDepartment,
+						degreeYear: this.degreeYear
+					}),
+					{
+						border: false,
+						padding: '0px 10px 0px 10px',
+						html: '<p>The faculty member may require a separate application process.</p><p>You will receive a confirmation email, once the faculty member takes action on your petition.</p><p>Please click confirm to finalize your Cross Registration Petition.</p>'
+					}
+				);
+			} else {
+				this.items.push(
+					new CourseRegistration.CreatePetitionFormPanel({
+						id: 'create-petition-form-panel', 
+						studentCourse: this.studentCourse,
+						homeSchoolId: this.homeSchoolId,
+						programDepartment: this.programDepartment,
+						degreeYear: this.degreeYear
+					}),
+					{
+						layout: 'fit',
+						border: false,
+						padding: '2px 10px 0px 10px',
+						html: '<p>Please click confirm to finalize your Cross Registration Petition.</p>'
+					}
+				)
+			}
 			this.buttons = [{
 				text: 'Confirm',
 				handler: function(){
@@ -250,11 +270,17 @@
 					if (isValid) {
 						var options = {};
 						var homeSchoolCombo = Ext.getCmp('home-school-combo');
+						var programDepartmentField = Ext.getCmp('program-department-field');
+						var degreeYearCombo = Ext.getCmp('degree-year-combo')
 						if (homeSchoolCombo) {
 	                        options.homeSchoolId = Ext.getCmp('home-school-combo').getValue();
 						}
-						options.programDepartment = Ext.getCmp('program-department-field').getValue();
-						options.degreeYear = Ext.getCmp('degree-year-combo').getValue();
+						if (programDepartmentField) {
+							options.programDepartment = Ext.getCmp('program-department-field').getValue();
+						}
+						if (degreeYearCombo) {
+							options.degreeYear = Ext.getCmp('degree-year-combo').getValue();
+						}
 						this.fireEvent('createpetition', options);
 					}
 				},
