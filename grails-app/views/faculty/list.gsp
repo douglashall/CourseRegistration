@@ -197,7 +197,7 @@
 									<a href="mailto:${studentCourse.student.email}">${studentCourse.student.email}</a>
 								</td>
 								<td class="school_option" rowspan="1" colspan="1">
-									<div>${studentCourse.student.school}</div>
+									<div>${studentCourse.student.schoolDisplay}</div>
 								</td>
 								<td class="course_level_option" rowspan="1" colspan="1">
 									<div>${studentCourse.levelOption}</div>

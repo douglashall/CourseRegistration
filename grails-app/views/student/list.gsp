@@ -44,6 +44,12 @@
         		});
         	    
         		var topicId = '${topicId}';
+        		var regStudent = {
+	        		<g:if test="${regStudent}">
+		        		programDepartment: '${regStudent.programDepartment}',
+		        		degreeYear: '${regStudent.degreeYear}'
+		        	</g:if>
+        		};
         		var data = [];
             	<g:each in="${model}" var="entry">
             		<g:each in="${entry.value}" var="item">
@@ -91,8 +97,12 @@
                     
                     var win = new CourseRegistration.CreatePetitionWindow({
                         studentCourse: rec,
+                        programDepartment: regStudent.programDepartment,
+                        degreeYear: regStudent.degreeYear,
                         listeners: {
                             'createpetition': function(options){
+                                regStudent.programDepartment = options.programDepartment;
+                                regStudent.degreeYear = options.degreeYear;
                             	var mask = new Ext.LoadMask(this.body, {msg:"Please wait...", removeMask:true});
                             	mask.show();
                             	$.ajax({
@@ -105,7 +115,9 @@
         	                        data: {
             	                        levelOption: levelCombo ? levelCombo.getValue() : undefined,
             	                        gradingOption: gradingCombo ? gradingCombo.getValue() : undefined,
-            	                        homeSchoolId: options.homeSchoolId ? options.homeSchoolId : undefined
+            	                        homeSchoolId: options.homeSchoolId ? options.homeSchoolId : undefined,
+                    	                programDepartment: options.programDepartment,
+                    	                degreeYear: options.degreeYear
         	                        },
         	                    	success: function(data){
             	                    	mask.hide();
@@ -269,15 +281,15 @@
 										<g:if test="${studentCourse.courseSchool.id != 'hks' && studentCourse.courseSchool.schoolId != 'ksg'}">
 											<g:if test="${!studentCourse.state}">
 												<g:if test="${studentCourse.checkPilot()}">
-													<div class="course_create"><a style="font-size: small" title="" href="javascript:void(0);">Create Petition</a></div>
+													<div class="course_create"><a style="font-size: small" title="" href="javascript:void(0);">Submit Online Petition</a></div>
 												</g:if>
 												<g:else>
-													<div class="course_print"><a style="font-size: small" title="" href="javascript:void(0);" target="">Create PDF Petition Form</a></div>
+													<div class="course_print"><a style="font-size: small" title="" href="javascript:void(0);" target="">Create and Print Petition</a></div>
 												</g:else>
 											</g:if>
 										</g:if>
 										<g:else>
-											<a href="https://secure.ksg.harvard.edu/degrees/HKSCrossRegistration/Default.aspx">Use HKS online cross registration system</a>
+											<a href="https://secure.ksg.harvard.edu/degrees/HKSCrossRegistration/Default.aspx">Use HKS Online Cross Registration System</a>
 										</g:else>
 										<g:if test="${!studentCourse.state || (studentCourse.state && studentCourse.state.terminal == 0)}">
 											<div class="course_remove"><a style="font-size: small" title="" href="javascript:void(0);">Remove</a></div>

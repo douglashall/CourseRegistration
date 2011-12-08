@@ -27,6 +27,10 @@ class RegistrationService {
 		}
 		if (!studentCourse) {
 			studentCourse = new StudentCourse(userId:userId, courseInstance:ci)
+			def schoolOptions = studentCourse.schoolOptions
+			if (schoolOptions.size() == 1) {
+				studentCourse.homeSchoolId = schoolOptions[0].id
+			}
 			def levelOptions = studentCourse.levelOptions
 			if (levelOptions.size() == 1) {
 				studentCourse.levelOption = levelOptions[0].name

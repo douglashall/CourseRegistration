@@ -55,6 +55,15 @@ class StudentCourse implements Serializable {
 		registrationContext(nullable: true)
     }
 	
+	public static gradingOptionMap = [
+		"letter/ordinal": 	["id": 1, "name": "Letter/Ordinal"],
+		"pass/fail": 		["id": 2, "name": "Pass/Fail"],
+		"sat/unsat": 		["id": 3, "name": "Satisfactory/Unsatisfactory"],
+		"sat/ncr": 			["id": 4, "name": "Satisfactory/No Credit"],
+		"ungraded": 		["id": 5, "name": "Ungraded"],
+		"audit": 			["id": 6, "name": "Audit"]
+	]
+	
 	public School getCourseSchool() {
 		if (!courseSchool) {
 			courseSchool = School.get(this.courseInstance.course.schoolId)
@@ -73,20 +82,22 @@ class StudentCourse implements Serializable {
 	public Map getStudent() {
 		if (!student) {
 			def person = BaselineUtils.findPerson(this.userId)
-			if (this.userId == '10564158') {
-				this.homeSchoolId = 'fas'
-			}
 			this.student = [
 				'id': person.id,
 				'firstName': person.firstName,
 				'lastName': person.lastName,
 				'email': person.email,
 				'phone': person.phone,
+				'schoolAffiliations': person.schoolAffiliations,
 				'school': this.homeSchoolId ? School.get(this.homeSchoolId).id : '',
 				'schoolDisplay': this.homeSchoolId ? School.get(this.homeSchoolId).titleLong : ''
 			]
 		}
 		return student
+	}
+	
+	public void setStudent(Map student) {
+		this.student = student
 	}
 	
 	public Map getInstructor() {
@@ -144,18 +155,26 @@ class StudentCourse implements Serializable {
 	
 	public List<Map> getGradingOptions() {
 		if (!gradingOptions) {
-			gradingOptions = [
-				["id": 1, "name": "Letter"],
-				["id": 2, "name": "Sat-Unsat"],
-				["id": 3, "name": "Audit"]
-			]
+			def xregGradingOptions = this.courseInstance.xregGradingOptions
+			if (xregGradingOptions) {
+				def optionKeys = this.courseInstance.xregGradingOptions.tokenize("|")
+				gradingOptions = optionKeys.collect {
+					gradingOptionMap[it]
+				}
+			} else {
+				gradingOptions = gradingOptionMap.values().toList()
+			}
 		}
 		return gradingOptions
 	}
 	
 	public List<Map> getSchoolOptions() {
 		if (!schoolOptions) {
-			schoolOptions = []
+			def student = this.getStudent()
+			schoolOptions = student.schoolAffiliations.collect {
+				def school = School.get(BaselineUtils.ldapCodes[it])
+				[school.id, school.titleLong]
+			}
 		}
 		return schoolOptions
 	}

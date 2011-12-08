@@ -1,6 +1,7 @@
 package edu.harvard.coursereg
 
 import static groovyx.net.http.ContentType.XML
+import edu.harvard.icommons.coursedata.School
 import grails.converters.*
 import groovy.text.GStringTemplateEngine
 import groovy.xml.XmlUtil
@@ -26,9 +27,31 @@ class StudentController {
 	
 	def list = {
 		def studentCourses = StudentCourse.findAllByUserIdAndActive(request.userId, 1)
+		
+		if (studentCourses.size() > 1) {
+			def student = studentCourses[0].student
+			studentCourses.each {
+				it.student = student
+			}
+		}
+		
+		def schools
+		studentCourses.each {
+			if (it.schoolOptions.size() == 0) {
+				if (!schools) {
+					schools = School.list().collect {
+						[it.id, it.titleLong]
+					}
+				}
+				it.schoolOptions = schools
+			}
+		}
+		
+		def regStudent = RegistrationStudent.findByUserId(request.userId)
+		
 		def model = new TreeMap(studentCourses.groupBy {it.termDisplay})
 		withFormat {
-			html {[model: model, topicId:params.topicId]}
+			html {[model: model, topicId:params.topicId, regStudent: regStudent]}
 			json {
 				JSON.use("deep") {
 					render model as JSON
@@ -56,8 +79,16 @@ class StudentController {
 				studentCourse.gradingOption = studentCourse.getGradingOptions().find {it.id == Integer.parseInt(params.gradingOption)}.name
 			}
 			if (!studentCourse.homeSchoolId && params.homeSchoolId) {
-				studentCourse.homeSchoolId = Long.parseLong(params.homeSchoolId)
+				studentCourse.homeSchoolId = params.homeSchoolId
 			}
+			
+			def regStudent = RegistrationStudent.findByUserId(request.userId)
+			if (!regStudent) {
+				regStudent = new RegistrationStudent(userId: request.userId)
+			}
+			regStudent.programDepartment = params.programDepartment
+			regStudent.degreeYear = Long.parseLong(params.degreeYear)
+			regStudent.save()
 			
 			def ctx = new RegistrationContext()
 			ctx.addToStudentCourses(studentCourse)
