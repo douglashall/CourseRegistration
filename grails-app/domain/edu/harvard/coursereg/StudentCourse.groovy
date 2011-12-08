@@ -134,20 +134,11 @@ class StudentCourse implements Serializable {
 	
 	public List<Map> getLevelOptions() {
 		if (!levelOptions) {
-			if (this.courseInstance.undergraduateCreditFlag == 0 &&
-					this.courseInstance.graduateCreditFlag == 0) {
-				levelOptions = [
-					["id": 1, "name": "Undergraduate"],
-					["id": 2, "name": "Graduate"]
-				]
-			} else {
-				levelOptions = []
-				if (this.courseInstance.undergraduateCreditFlag == 1) {
-					levelOptions << ["id": 1, "name": "Undergraduate"]
-				}
-				if (this.courseInstance.graduateCreditFlag == 1) {
-					levelOptions << ["id": 2, "name": "Graduate"]
-				}
+			levelOptions = [
+				["id": 1, "name": "Graduate"]
+			]
+			if (this.courseInstance.undergraduateCreditFlag == 1) {
+				levelOptions << ["id": 2, "name": "Undergraduate"]
 			}
 		}
 		return levelOptions
@@ -171,10 +162,14 @@ class StudentCourse implements Serializable {
 	public List<Map> getSchoolOptions() {
 		if (!schoolOptions) {
 			def student = this.getStudent()
-			schoolOptions = student.schoolAffiliations.collect {
-				def school = School.get(BaselineUtils.ldapCodes[it])
-				[school.id, school.titleLong]
+			schoolOptions = student.schoolAffiliations.each {
+				def schoolId = BaselineUtils.ldapCodes[it]
+				if (schoolId) {
+					def school = School.get(schoolId)
+					schoolOptions << [school.id, school.titleShort]
+				}
 			}
+			schoolOptions.sort {it[1]}
 		}
 		return schoolOptions
 	}

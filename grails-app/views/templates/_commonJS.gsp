@@ -133,6 +133,7 @@
 		 	    this.items.push({
 		 	    	id: 'home-school-combo',
 		 	    	xtype: 'combo',
+		 	    	width: 225,
 		 	        fieldLabel: 'School Affiliation',
 		 	        labelSeparator: '',
 		 	        name: 'homeSchoolId',
@@ -160,12 +161,13 @@
 		 	    value: this.programDepartment,
 		 	    allowBlank: false,
 		 	    msgTarget: 'side',
-		 	    width: 166,
+		 	    width: 225,
 		 	    validationEvent: false
 			});
 			this.items.push({
 	 	    	id: 'degree-year-combo',
 	 	    	xtype: 'combo',
+	 	    	width: 225,
 	 	        fieldLabel: 'Degree Year',
 	 	        labelSeparator: '',
 	 	        name: 'degreeYear',

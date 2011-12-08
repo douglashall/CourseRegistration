@@ -1,7 +1,7 @@
 package edu.harvard.coursereg
 
 import static groovyx.net.http.ContentType.XML
-import edu.harvard.icommons.coursedata.School
+import edu.harvard.grails.plugins.baseline.BaselineUtils
 import grails.converters.*
 import groovy.text.GStringTemplateEngine
 import groovy.xml.XmlUtil
@@ -35,15 +35,9 @@ class StudentController {
 			}
 		}
 		
-		def schools
 		studentCourses.each {
 			if (it.schoolOptions.size() == 0) {
-				if (!schools) {
-					schools = School.list().collect {
-						[it.id, it.titleLong]
-					}
-				}
-				it.schoolOptions = schools
+				it.schoolOptions = BaselineUtils.schools
 			}
 		}
 		
