@@ -307,13 +307,14 @@
 		width: 400,
 		modal: true,
 		studentCourse: undefined,
+		content: '',
 		
 		initComponent: function(){
 			this.items = [{
 				layout: 'fit', 
 				border: false,
 				padding: 10,
-				html: 'Approving this cross-registration petition will submit it to the Registrar for processing.'
+				html: this.content
 			}];
 			this.buttons = [{
 				text: 'Approve',
@@ -335,6 +336,43 @@
 		}
 	});
 
+	CourseRegistration.DenyPetitionWindow = Ext.extend(Ext.Window, {
+		layout: 'fit',
+		title: 'Deny Cross Registration Petition',
+		buttonAlign: 'center',
+		height: 300,
+		width: 400,
+		modal: true,
+		studentCourse: undefined,
+		content: '',
+		
+		initComponent: function(){
+			this.items = [{
+				layout: 'fit', 
+				border: false,
+				padding: 10,
+				html: this.content
+			}];
+			this.buttons = [{
+				text: 'Deny',
+				handler: function(){
+					this.fireEvent('denypetition');
+				},
+				scope: this
+			},{
+				text: 'Cancel',
+				handler: function(){
+					this.close();
+				},
+				scope: this
+			}];
+			
+			CourseRegistration.DenyPetitionWindow.superclass.initComponent.apply(this);
+			
+			this.addEvents('denypetition');
+		}
+	});
+	
 	Ext.ux.SlidingPager = Ext.extend(Object, {
 	    init : function(pbar){
 	        var idx = pbar.items.indexOf(pbar.inputItem);

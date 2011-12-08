@@ -19,9 +19,7 @@
 							'${item.userId}',
 	                       	'${item.courseInstance.id}',
 	                       	'${item.courseInstance.shortTitle}',
-	                       	${item.levelOptions as JSON},
-	                       	${item.gradingOptions as JSON},
-	                    	${item.schoolOptions as JSON},
+	                       	'${item.courseSchool.id}'
 	                       	${item.instructor as JSON},
 	                       	${item.state as JSON}
 	            		]);
@@ -33,20 +31,29 @@
 						{name: 'userId'},
 						{name: 'courseInstanceId'},
 						{name: 'courseShortTitle'},
-						{name: 'levelOptions'},
-						{name: 'gradingOptions'},
-						{name: 'schoolOptions'},
+						{name: 'courseSchoolId'},
 						{name: 'instructor'},
 						{name: 'state'}
 					]
                 });
                 store.loadData(data);
 
+                var approvalText = [];
+                <g:each in="${approvalText}" var="entry">
+                    approvalText.push({${entry.key}:'${entry.value}'});
+                </g:each>
+
+                var denialText = [];
+                <g:each in="${denialText}" var="entry">
+                    approvalText.push({${entry.key}:'${entry.value}'});
+                </g:each>
+
                 $('.course_approve a').click(function(){
                 	var tr = $(this).parents('tr').first();
                 	var rec = store.getAt(store.find('id', tr.attr('id')));
                 	var win = new CourseRegistration.ApprovePetitionWindow({
                         studentCourse: rec,
+                        content: approvalText[rec.get('courseSchoolId')],
                         listeners: {
                             'approvepetition': function(){
                             	var mask = new Ext.LoadMask(this.body, {msg:"Please wait...", removeMask:true});
@@ -61,16 +68,18 @@
                 $('.course_deny a').click(function(){
                 	var tr = $(this).parents('tr').first();
                 	var rec = store.getAt(store.find('id', tr.attr('id')));
-                	Ext.MessageBox.confirm(
-                        'Deny Cross Registration Petition', 
-                        'Are you sure you want to deny this petition?', 
-                        function(btn) {
-                        	if (btn != 'yes') {
-                                return;
+                	var win = new CourseRegistration.DenyPetitionWindow({
+                        studentCourse: rec,
+                        content: denialText[rec.get('courseSchoolId')],
+                        listeners: {
+                            'denypetition': function(){
+                            	var mask = new Ext.LoadMask(this.body, {msg:"Please wait...", removeMask:true});
+                            	mask.show();
+                            	CourseRegistration.denyPetitions([rec], store, mask, win, topicId);
                             }
-                            CourseRegistration.denyPetitions([rec], store, topicId);
                         }
-                    );
+                    });
+                    win.show();
                 });
 
                 $('.bulk-operations .course_approve').click(function(){
@@ -180,9 +189,12 @@
 					<thead>
 						<tr>
 							<th style="width: 100%" rowspan="1" colspan="1">Student</th>
-							<th rowspan="1" colspan="1">School</th>
+							<th rowspan="1" colspan="1">Student&nbsp;Home&nbsp;School</th>
+							<th rowspan="1" colspan="1">Program/Department</th>
+							<th rowspan="1" colspan="1">Degree&nbsp;Year</th>
+							<th rowspan="1" colspan="1">Date&nbsp;Submitted</th>
 							<th rowspan="1" colspan="1">Level</th>
-							<th rowspan="1" colspan="1">Grading Option</th>
+							<th rowspan="1" colspan="1">Grading&nbsp;Option</th>
 							<th rowspan="1" colspan="1">Status</th>
 							<th rowspan="1" colspan="1">Action</th>
 							<th rowspan="1" colspan="1"><input type="checkbox" class="bulk-select" /></th>
@@ -196,8 +208,17 @@
 									<br/>
 									<a href="mailto:${studentCourse.student.email}">${studentCourse.student.email}</a>
 								</td>
-								<td class="school_option" rowspan="1" colspan="1">
+								<td rowspan="1" colspan="1">
 									<div>${studentCourse.student.schoolDisplay}</div>
+								</td>
+								<td rowspan="1" colspan="1">
+									<div>${studentCourse.programDepartment}</div>
+								</td>
+								<td rowspan="1" colspan="1">
+									<div>${studentCourse.degreeYear}</div>
+								</td>
+								<td rowspan="1" colspan="1">
+									<div>${studentCourse.dateSubmitted}</div>
 								</td>
 								<td class="course_level_option" rowspan="1" colspan="1">
 									<div>${studentCourse.levelOption}</div>

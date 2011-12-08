@@ -144,3 +144,37 @@ log4j = {
 	//       'org.apache.http.wire'
 		   
 }
+
+standard.faculty.approval.text = """\
+<p>Approving these cross-registration petitions will submit them for to the Registrar’s Office for processing. It does not guarantee that there will be space in the class for the students</p>
+<p>If you need to change your selections after you click confirm, please contact the Registrar’s Office.</p>
+"""
+standard.faculty.denial.text = """\
+<p>Denying these cross-registration petitions will generate an email to the student letting them know their request cannot be accommodated this semester.</p>
+<p>If you need to change your selections after you click confirm, please contact the Registrar’s Office.</p>
+"""
+
+hds.faculty.approval.text = """\
+<p>By approving these petitions, you are guaranteeing the student(s) a space in the class therefore you should only take this action once you have determined who will be admitted into this limited enrollment course.</p>
+<p>If you need to change your selections after you click confirm, please contact the Registrar’s Office.</p>
+"""
+hds.faculty.denial.text = """\
+<p>Denying these cross-registration petitions will generate an email to the student letting them know their request cannot be accommodated this semester.</p>
+<p>If you need to change your selections after you click confirm, please contact the Registrar’s Office.</p>
+"""
+
+gse.faculty.approval.text = """\
+<p>By approving these petitions, you are guaranteeing the student(s) a seat in the course.</p>
+<p>If you need to change your selections after you click confirm, please contact the Registrar’s Office.</p>
+"""
+gse.faculty.denial.text = """\
+<p>Denying these cross registration petitions will generate email messages to the students letting them know that their petitions to cross register into this course have been denied.</p>
+<p>If you need to change your selections after you click confirm, please contact the Registrar’s Office.</p>
+"""
+
+hsph.faculty.approval.text = """\
+<p>Approving these cross-registration petitions will submit them for to the Registrar’s Office for processing. It does not guarantee that there will be space in the class for the students</p>
+"""
+hsph.faculty.denial.text = """\
+<p>Denying these cross-registration petitions will generate an email to the student letting them know their request cannot be accommodated this semester.</p>
+"""

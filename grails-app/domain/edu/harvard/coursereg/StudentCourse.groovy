@@ -1,6 +1,9 @@
 package edu.harvard.coursereg
 
 import static groovyx.net.http.ContentType.JSON
+
+import java.text.SimpleDateFormat
+
 import edu.harvard.grails.plugins.baseline.BaselineUtils
 import edu.harvard.icommons.coursedata.CourseInstance
 import edu.harvard.icommons.coursedata.School
@@ -25,6 +28,7 @@ class StudentCourse implements Serializable {
 	List<Map> gradingOptions
 	List<Map> schoolOptions
 	RegistrationState state
+	String dateSubmitted
 	
 	static transients = [
 		'student',
@@ -34,7 +38,8 @@ class StudentCourse implements Serializable {
 		'levelOptions',
 		'gradingOptions',
 		'schoolOptions',
-		'state'
+		'state',
+		'dateSubmitted'
 	]
 	
 	static belongsTo = [
@@ -176,6 +181,19 @@ class StudentCourse implements Serializable {
 			schoolOptions.sort {it[1]}
 		}
 		return schoolOptions
+	}
+	
+	public String getDateSubmitted() {
+		if (!this.dateSubmitted) {
+			if (this.registrationContext) {
+				SimpleDateFormat sdf = new SimpleDateFormat("MMM d, yyyy h:mm a")
+				def initialState = this.registrationContext.getInitialState()
+				if (initialState) {
+					this.dateSubmitted = sdf.format(initialState.dateCreated)
+				}
+			}
+		}
+		return this.dateSubmitted
 	}
 	
 	public boolean checkPilot() {

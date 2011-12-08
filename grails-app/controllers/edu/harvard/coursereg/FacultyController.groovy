@@ -23,8 +23,22 @@ class FacultyController {
 			def prefix = it.courseInstance.shortTitle ? it.courseInstance.shortTitle : it.courseInstance.course.registrarCode
 			prefix + " / " + it.courseInstance.term.displayName
 		})
+		
+		def approvalText = [
+			"standard": grailsApplication.config.standard.faculty.approval.text,
+			"hds": grailsApplication.config.hds.faculty.approval.text,
+			"gse": grailsApplication.config.gse.faculty.approval.text,
+			"hsph": grailsApplication.config.hsph.faculty.approval.text
+		]
+		def denialText = [
+			"standard": grailsApplication.config.standard.faculty.denial.text,
+			"hds": grailsApplication.config.hds.faculty.denial.text,
+			"gse": grailsApplication.config.gse.faculty.denial.text,
+			"hsph": grailsApplication.config.hsph.faculty.denial.text
+		]
+		
 		withFormat {
-			html {[model:model, topicId:params.topicId]}
+			html {[model:model, topicId:params.topicId, approvalText:approvalText, denialText:denialText]}
 			json {
 				JSON.use("deep") {
 					render model as JSON
