@@ -3,6 +3,7 @@ package edu.harvard.coursereg
 class RegistrationStudent {
 
 	String userId
+	String homeSchoolId
 	String programDepartment
 	Long degreeYear
 	

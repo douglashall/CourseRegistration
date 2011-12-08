@@ -46,6 +46,7 @@
         		var topicId = '${topicId}';
         		var regStudent = {
 	        		<g:if test="${regStudent}">
+	        			homeSchoolId: '${regStudent.homeSchoolId}',
 		        		programDepartment: '${regStudent.programDepartment}',
 		        		degreeYear: '${regStudent.degreeYear}'
 		        	</g:if>
@@ -97,6 +98,7 @@
                     
                     var win = new CourseRegistration.CreatePetitionWindow({
                         studentCourse: rec,
+                        homeSchoolId: regStudent.homeSchoolId,
                         programDepartment: regStudent.programDepartment,
                         degreeYear: regStudent.degreeYear,
                         listeners: {

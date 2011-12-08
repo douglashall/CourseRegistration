@@ -9,6 +9,8 @@ class StudentCourse implements Serializable {
 
 	String userId
 	String homeSchoolId
+	String programDepartment
+	Long degreeYear
 	String levelOption
 	String gradingOption
 	Date dateCreated
@@ -50,6 +52,8 @@ class StudentCourse implements Serializable {
     static constraints = {
 		userId(blank: false)
 		homeSchoolId(nullable: true)
+		programDepartment(nullable: true)
+		degreeYear(nullable: true)
 		levelOption(nullable: true)
 		gradingOption(nullable: true)
 		registrationContext(nullable: true)

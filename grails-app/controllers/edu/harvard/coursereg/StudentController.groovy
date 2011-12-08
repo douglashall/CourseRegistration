@@ -80,6 +80,7 @@ class StudentController {
 			if (!regStudent) {
 				regStudent = new RegistrationStudent(userId: request.userId)
 			}
+			regStudent.homeSchoolId = params.homeSchoolId
 			regStudent.programDepartment = params.programDepartment
 			regStudent.degreeYear = Long.parseLong(params.degreeYear)
 			regStudent.save()

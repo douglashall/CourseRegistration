@@ -123,6 +123,7 @@
 		labelWidth: 125,
 		padding: 10,
 		studentCourse: undefined,
+		homeSchoolId: undefined,
 		programDepartment: undefined,
 		degreeYear: undefined,
 		
@@ -137,6 +138,7 @@
 		 	        fieldLabel: 'School Affiliation',
 		 	        labelSeparator: '',
 		 	        name: 'homeSchoolId',
+		 	        value: this.homeSchoolId,
 		 	        store: new Ext.data.ArrayStore({
 				        fields: ['id', 'name'],
 				        data : this.studentCourse.get('schoolOptions')
@@ -209,6 +211,7 @@
 		modal: true,
 		bodyStyle: 'background-color: #FFFFFF',
 		studentCourse: undefined,
+		homeSchoolId: undefined,
 		programDepartment: undefined,
 		degreeYear: undefined,
 		
@@ -223,6 +226,7 @@
 				new CourseRegistration.CreatePetitionFormPanel({
 					id: 'create-petition-form-panel', 
 					studentCourse: this.studentCourse,
+					homeSchoolId: this.homeSchoolId,
 					programDepartment: this.programDepartment,
 					degreeYear: this.degreeYear
 				}),
