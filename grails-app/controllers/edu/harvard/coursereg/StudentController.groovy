@@ -66,11 +66,13 @@ class StudentController {
 		}
 		
 		if (studentCourse) {
+			studentCourse.programDepartment = params.programDepartment
+			studentCourse.degreeYear = Long.parseLong(params.degreeYear)
 			if (!studentCourse.levelOption && params.levelOption) {
 				studentCourse.levelOption = studentCourse.getLevelOptions().find {it.id == Integer.parseInt(params.levelOption)}.name
 			}
 			if (!studentCourse.gradingOption && params.gradingOption) {
-				studentCourse.gradingOption = studentCourse.getGradingOptions().find {it.id == Integer.parseInt(params.gradingOption)}.name
+				studentCourse.gradingOption = studentCourse.getGradingOptions().find {it.id == params.gradingOption}.name
 			}
 			if (!studentCourse.homeSchoolId && params.homeSchoolId) {
 				studentCourse.homeSchoolId = params.homeSchoolId

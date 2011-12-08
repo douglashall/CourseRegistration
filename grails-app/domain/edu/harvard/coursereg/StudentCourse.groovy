@@ -60,12 +60,12 @@ class StudentCourse implements Serializable {
     }
 	
 	public static gradingOptionMap = [
-		"letter/ordinal": 	["id": 1, "name": "Letter/Ordinal"],
-		"pass/fail": 		["id": 2, "name": "Pass/Fail"],
-		"sat/unsat": 		["id": 3, "name": "Satisfactory/Unsatisfactory"],
-		"sat/ncr": 			["id": 4, "name": "Satisfactory/No Credit"],
-		"ungraded": 		["id": 5, "name": "Ungraded"],
-		"audit": 			["id": 6, "name": "Audit"]
+		"letter/ordinal": 	["id": "letter/ordinal", "name": "Letter/Ordinal"],
+		"pass/fail": 		["id": "pass/fail", "name": "Pass/Fail"],
+		"sat/unsat": 		["id": "sat/unsat", "name": "Satisfactory/Unsatisfactory"],
+		"sat/ncr": 			["id": "sat/ncr", "name": "Satisfactory/No Credit"],
+		"ungraded": 		["id": "ungraded", "name": "Ungraded"],
+		"audit": 			["id": "audit", "name": "Audit"]
 	]
 	
 	public School getCourseSchool() {
