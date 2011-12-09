@@ -4,7 +4,7 @@
 	
 	CourseRegistration.constructUrl = function(url, topicId) {
 		try {
-			return Isites.constructUrl(url) + '&topicId=' + topicId;
+			return Isites.constructUrl(url, {topicId: topicId});
 		} catch(e) {
 			var userId;
 			var params = location.href.substring(location.href.indexOf('?') + 1).split('&');
@@ -16,7 +16,8 @@
 					return false;
 				}
 			});
-			return '/CourseRegistration/' + url + '&userid=' + userId;
+			var delimiter = url.indexOf('?') >= 0 ? '&' : '?';
+			return '/CourseRegistration/' + url + delimiter + 'userid=' + userId;
 		}
 	}
 	

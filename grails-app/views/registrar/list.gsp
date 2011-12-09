@@ -187,7 +187,7 @@
 							            	iconCls: 'excel',
 								            text: 'Excel',
 								            handler: function(){
-									            window.open(CourseRegistration.constructUrl('registrar/export?format=excel', topicId), '_self');
+									            window.open(CourseRegistration.constructUrl('registrar/list?format=xls', topicId), '_self');
 									        }
 								        },/*{
 							            	iconCls: 'pdf',
