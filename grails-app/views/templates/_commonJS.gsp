@@ -79,7 +79,7 @@
         });
     }
     
-    CourseRegistration.denyPetitions = function(records, store, topicId) {
+    CourseRegistration.denyPetitions = function(records, store, mask, win, topicId) {
         var ids = '';
 		$(records).each(function(){
 			ids += ' ' + this.get('id');
@@ -95,6 +95,12 @@
             },
             dataType: 'json',
         	success: function(data){
+        		if (mask) {
+            		mask.hide();
+            	}
+            	if (win) {
+            		win.close();
+            	}
             	var trEls = [];
             	$(data).each(function(){
                 	var rec = store.getAt(store.find('id', this.id));
@@ -306,7 +312,6 @@
 		height: 300,
 		width: 400,
 		modal: true,
-		studentCourse: undefined,
 		content: '',
 		
 		initComponent: function(){
@@ -343,7 +348,6 @@
 		height: 300,
 		width: 400,
 		modal: true,
-		studentCourse: undefined,
 		content: '',
 		
 		initComponent: function(){

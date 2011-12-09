@@ -19,7 +19,7 @@
 							'${item.userId}',
 	                       	'${item.courseInstance.id}',
 	                       	'${item.courseInstance.shortTitle}',
-	                       	'${item.courseSchool.id}'
+	                       	'${item.courseSchool.id}',
 	                       	${item.instructor as JSON},
 	                       	${item.state as JSON}
 	            		]);
@@ -38,21 +38,20 @@
                 });
                 store.loadData(data);
 
-                var approvalText = [];
+                var approvalText = {};
                 <g:each in="${approvalText}" var="entry">
-                    approvalText.push({${entry.key}:'${entry.value}'});
+                    approvalText['${entry.key}'] = '${entry.value}';
                 </g:each>
 
-                var denialText = [];
+                var denialText = {};
                 <g:each in="${denialText}" var="entry">
-                    approvalText.push({${entry.key}:'${entry.value}'});
+                	denialText['${entry.key}'] = '${entry.value}';
                 </g:each>
 
                 $('.course_approve a').click(function(){
                 	var tr = $(this).parents('tr').first();
                 	var rec = store.getAt(store.find('id', tr.attr('id')));
                 	var win = new CourseRegistration.ApprovePetitionWindow({
-                        studentCourse: rec,
                         content: approvalText[rec.get('courseSchoolId')],
                         listeners: {
                             'approvepetition': function(){
@@ -69,7 +68,6 @@
                 	var tr = $(this).parents('tr').first();
                 	var rec = store.getAt(store.find('id', tr.attr('id')));
                 	var win = new CourseRegistration.DenyPetitionWindow({
-                        studentCourse: rec,
                         content: denialText[rec.get('courseSchoolId')],
                         listeners: {
                             'denypetition': function(){
@@ -90,9 +88,8 @@
                         records.push(rec);
                     });
 
-					var multiple = records.length > 1;
 					var win = new CourseRegistration.ApprovePetitionWindow({
-                        studentCourse: records[0],
+                        content: approvalText[rec.get('courseSchoolId')],
                         listeners: {
                             'approvepetition': function(){
                             	var mask = new Ext.LoadMask(this.body, {msg:"Please wait...", removeMask:true});
@@ -112,17 +109,16 @@
                         records.push(rec);
                     });
 
-					var multiple = records.length > 1;
-                    Ext.MessageBox.confirm(
-                        String.format('Deny Cross Registration Petition{0}', multiple ? 's' : ''), 
-                        String.format('Are you sure you want to deny the selected petition{0}?', multiple ? 's' : ''), 
-                        CourseRegistration.denyPetitions,
-                        {
-                            records: records,
-                            store: store,
-                            topicId: topicId
+                    var win = new CourseRegistration.DenyPetitionWindow({
+                        content: denialText[rec.get('courseSchoolId')],
+                        listeners: {
+                            'denypetition': function(){
+                            	var mask = new Ext.LoadMask(this.body, {msg:"Please wait...", removeMask:true});
+                            	mask.show();
+                            	CourseRegistration.denyPetitions(records, store, mask, win, topicId);
+                            }
                         }
-                    );
+                    });
                 });
                 
                 $('.bulk-select').click(function(){
