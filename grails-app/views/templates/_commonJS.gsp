@@ -4,7 +4,7 @@
 	
 	CourseRegistration.constructUrl = function(url, topicId) {
 		try {
-			return Isites.constructUrl(url, {topicId: topicId});
+			return Isites.constructUrlWithParams(url, {topicId: topicId});
 		} catch(e) {
 			var userId;
 			var params = location.href.substring(location.href.indexOf('?') + 1).split('&');

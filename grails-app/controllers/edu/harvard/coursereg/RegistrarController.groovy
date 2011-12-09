@@ -24,7 +24,6 @@ class RegistrarController {
 				}
 			}
 			xls {
-				println "**** rendering xls..."
 				def buffer = new StringBuffer()
 				buffer.append("Status\tStudent HUID\tStudent First Name\tStudent Last Name\tStudent Email\tHome School\tSubmitted On\tGrading Option\tCourse\tFaculty Name\tFaculty Email\tTerm\n")
 				result.records.each {
@@ -36,19 +35,6 @@ class RegistrarController {
 				render(contentType: "application/vnd.ms-excel", text: buffer.toString())
 			}
 		}
-	}
-	
-	def export = {
-		def studentCourses = this.registrationService.searchStudentCourses(params).records
-		def buffer = new StringBuffer()
-		buffer.append("Status\tStudent HUID\tStudent First Name\tStudent Last Name\tStudent Email\tHome School\tSubmitted On\tGrading Option\tCourse\tFaculty Name\tFaculty Email\tTerm\n")
-		studentCourses.each {
-			buffer.append("${it.state}\t${it.studentHuid}\t${it.studentFirstName}\t${it.studentLastName}\t${it.studentEmail}\t${it.homeSchool}\t${it.petitionCreated}\t${it.gradingOption}\t${it.courseShortTitle}\t${it.instructorName}\t${it.instructorEmail}\t${it.term}\n")
-		}
-		
-		def now = new Date()
-		response.setHeader("Content-Disposition", "attachment; filename=crossreg_${now.getTime()}.xls")
-		render(contentType: "application/vnd.ms-excel", text: buffer.toString())
 	}
 	
 	def process = {
