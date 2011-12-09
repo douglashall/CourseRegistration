@@ -11,29 +11,6 @@
         	$(document).ready(function(){
         		Ext.QuickTips.init();
 				var topicId = '${topicId}';
-        		var data = [];
-            	<g:each in="${studentCourses}" var="item">
-            		data.push([
-						"${item.id}",
-						"${item.studentHuid}",
-						"${item.studentLastName}, ${item.studentFirstName}",
-						"${item.studentEmail}",
-						"${item.studentPhone}",
-						"${item.homeSchoolDisplay}",
-						"${item.hostSchoolDisplay}",
-                       	"${item.courseInstanceId}",
-                       	"${item.courseShortTitle}",
-                       	"${item.term}",
-                       	"${item.instructorName}",
-                       	"${item.instructorEmail}",
-                       	"${item.instructorPhone}",
-                       	"${item.state}",
-                       	"${item.stateTerminal}",
-                       	"${item.stateType}",
-                       	"${item.petitionCreated}",
-                       	"${item.processed}"
-            		]);
-            	</g:each>
             	var params = {};
 				var store = new Ext.data.JsonStore({
 					url: CourseRegistration.constructUrl('registrar/list?format=json', topicId),
@@ -59,6 +36,7 @@
 							{name: 'stateTerminal', mapping: 'stateTerminal'},
 							{name: 'stateType', mapping: 'stateType'},
 							{name: 'petitionCreated', mapping: 'petitionCreated'},
+							{name: 'gradingOption', mapping: 'gradingOption'},
 							{name: 'processed', mapping: 'processed'}
 						]
 					//})
@@ -230,7 +208,7 @@
 							        })
 						        }]
 						    })
-						}, '->', 'Status', {
+						}, '->', 'Petition Status', {
                             xtype: 'combo',
                             store: new Ext.data.ArrayStore({
                                 autoDestroy: true,
@@ -261,7 +239,7 @@
                                 	store.load({params:params});
                                 }
                             }
-                        }, ' ', 'Home School', {
+                        }, ' ', 'Student Home School', {
                             xtype: 'combo',
                             store: new Ext.data.ArrayStore({
                                 autoDestroy: true,
@@ -354,7 +332,7 @@
                                 }
 							},
 							{
-                            	header: 'Faculty Status', 
+                            	header: 'Petition Status', 
                                 dataIndex: 'state', 
                                 renderer: function(value, metadata, record){
                                     return String.format('<div class="icon-text {0}">{1}</div>', record.get('stateType'), value);
@@ -368,8 +346,9 @@
                                             value, record.get('firstName'), record.get('email'), record.get('phone'));
                                 }
                             },
-                            {header: 'Home School', dataIndex: 'homeSchool'},
-                            {header: 'Submitted On', dataIndex: 'petitionCreated'},
+                            {header: 'Student Home School', dataIndex: 'homeSchool'},
+                            {header: 'Date Submitted', dataIndex: 'petitionCreated'},
+                            {header: 'Grading Option', dataIndex: 'gradingOption'},
                             //{header: 'Host School', dataIndex: 'courseSchool'},
                             {header: 'Course', dataIndex: 'courseShortTitle'},
                             {

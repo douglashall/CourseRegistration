@@ -29,9 +29,9 @@ class RegistrarController {
 	def export = {
 		def studentCourses = this.registrationService.searchStudentCourses(params).records
 		def buffer = new StringBuffer()
-		buffer.append("Status\tStudent HUID\tStudent First Name\tStudent Last Name\tStudent Email\tHome School\tSubmitted On\tCourse\tFaculty Name\tFaculty Email\tTerm\n")
+		buffer.append("Status\tStudent HUID\tStudent First Name\tStudent Last Name\tStudent Email\tHome School\tSubmitted On\tGrading Option\tCourse\tFaculty Name\tFaculty Email\tTerm\n")
 		studentCourses.each {
-			buffer.append("${it.state}\t${it.studentHuid}\t${it.studentFirstName}\t${it.studentLastName}\t${it.studentEmail}\t${it.homeSchool}\t${it.petitionCreated}\t${it.courseShortTitle}\t${it.instructorName}\t${it.instructorEmail}\t${it.term}\n")
+			buffer.append("${it.state}\t${it.studentHuid}\t${it.studentFirstName}\t${it.studentLastName}\t${it.studentEmail}\t${it.homeSchool}\t${it.petitionCreated}\t${it.gradingOption}\t${it.courseShortTitle}\t${it.instructorName}\t${it.instructorEmail}\t${it.term}\n")
 		}
 		
 		def now = new Date()

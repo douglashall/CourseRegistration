@@ -113,6 +113,7 @@ class RegistrationService {
 				stateType: it.state.type,
 				processed: it.registrationContext.processed > 0,
 				petitionCreated: initialState ? solrIndexDateFormat.format(initialState.dateCreated) : "",
+				gradingOption: it.gradingOption,
 				studentHuid: it.userId,
 				studentFirstName: it.student.firstName,
 				studentLastName: it.student.lastName,
