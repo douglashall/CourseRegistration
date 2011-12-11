@@ -165,8 +165,8 @@ class RegistrationService {
 		def queryString = []
 		if (searchParams.query) {queryString << ('"' + searchParams.query + '"')}
 		if (searchParams.state) {queryString << ('state:"' + searchParams.state + '"')}
-		if (searchParams.homeSchool) {queryString << ('homeSchoolDisplay:"' + searchParams.homeSchool + '"')}
-		queryString << ('hostSchool:"' + searchParams.hostSchool + '"')
+		if (searchParams.homeSchool) {queryString << ('homeSchool:"' + searchParams.homeSchool + '"')}
+		if (searchParams.hostSchool) {queryString << ('hostSchool:"' + searchParams.hostSchool + '"')}
 		
 		def start = searchParams.start ? searchParams.start : 0
 		def rows = searchParams.limit ? searchParams.limit : 5000

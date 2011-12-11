@@ -7,8 +7,21 @@ class RegistrarController {
 	
 	RegistrationService registrationService
 	
-	def list = {
+	def index = {
+		
+	}
+	
+	def incoming = {
 		params.hostSchool = request.schoolAffiliation
+		forward(action: "list")
+	}
+	
+	def outgoing = {
+		params.homeSchool = request.schoolAffiliation
+		forward(action: "list")
+	}
+	
+	def list = {
 		def result = this.registrationService.searchStudentCourses(params)
 		def model = [total: result.total, root: result.records]
 		withFormat {

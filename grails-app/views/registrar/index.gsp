@@ -10,10 +10,12 @@
         	// <![CDATA[
         	$(document).ready(function(){
         		Ext.QuickTips.init();
-				var topicId = '${topicId}';
+				var topicId = '${params.topicId}';
+				var direction = '${params.direction}';
             	var params = {};
+            	var dataUrl = 'registrar/' + direction;
 				var store = new Ext.data.JsonStore({
-					url: CourseRegistration.constructUrl('registrar/list?format=json', topicId),
+					url: CourseRegistration.constructUrl(dataUrl + '?format=json', topicId),
 					root: 'root',
 					//proxy: new Ext.ux.data.PagingMemoryProxy(data),
 					//reader: new Ext.data.ArrayReader({
@@ -58,6 +60,8 @@
                         }
                     }
                 });
+                var schoolLabel = direction == 'incoming' ? 'Student Home School' : 'Host School';
+                var schoolParam = direction == 'incoming' ? 'homeSchool' : 'hostSchool';
                 var dataPnl = new Ext.grid.GridPanel({
                     id: 'data',
                     renderTo: 'petition-data-pnl',
@@ -72,141 +76,146 @@
 						    iconCls: 'action',
 						    menu: new Ext.menu.Menu({
 						        id: 'actionMenu',
-						        items: [{
-							        id: 'processBtn',
-						        	iconCls: 'process',
-						            text: 'Mark as processed',
-						            disabled: true,
-						            handler: function() {
-							        	var records = sm.getSelections();
-							    		var ids = '';
-							    		$(records).each(function(){
-							    			ids += ' ' + this.get('id');
-							    		});
-							    		dataPnl.loadMask.show();
-							        	$.ajax({
-							            	url: CourseRegistration.constructUrl('registrar/process?format=json', topicId),
-							            	type: CourseRegistration.requestType('POST'),
-							            	headers: {
-							                	'Accept': 'application/json'
-							                },
-							                data: {
-							                    ids: ids
-							                },
-							                dataType: 'json',
-							            	success: function(data){
-							            		dataPnl.loadMask.hide();
-							                	$(data).each(function(){
-							                    	var rec = store.getAt(store.find('id', this.id));
-							                		rec.set('processed', 'Processed');
-							                		store.commitChanges();
-							                    });
-							                }
-							            });
+						        items: [
+						        <g:if test="${params.direction == 'incoming'}">
+							        {
+								        id: 'processBtn',
+							        	iconCls: 'process',
+							            text: 'Mark as processed',
+							            disabled: true,
+							            handler: function() {
+								        	var records = sm.getSelections();
+								    		var ids = '';
+								    		$(records).each(function(){
+								    			ids += ' ' + this.get('id');
+								    		});
+								    		dataPnl.loadMask.show();
+								        	$.ajax({
+								            	url: CourseRegistration.constructUrl('registrar/process?format=json', topicId),
+								            	type: CourseRegistration.requestType('POST'),
+								            	headers: {
+								                	'Accept': 'application/json'
+								                },
+								                data: {
+								                    ids: ids
+								                },
+								                dataType: 'json',
+								            	success: function(data){
+								            		dataPnl.loadMask.hide();
+								                	$(data).each(function(){
+								                    	var rec = store.getAt(store.find('id', this.id));
+								                		rec.set('processed', 'Processed');
+								                		store.commitChanges();
+								                    });
+								                }
+								            });
+								        }
+							        },{
+								        id: 'approveBtn',
+							        	iconCls: 'approve',
+							            text: 'Approve',
+							            disabled: true,
+							            handler: function() {
+									        var records = sm.getSelections();
+								    		var ids = '';
+								    		$(records).each(function(){
+								    			ids += ' ' + this.get('id');
+								    		});
+								    		dataPnl.loadMask.show();
+								        	$.ajax({
+								            	url: CourseRegistration.constructUrl('faculty/approve?format=json', topicId),
+								            	type: CourseRegistration.requestType('POST'),
+								            	headers: {
+								                	'Accept': 'application/json'
+								                },
+								                data: {
+								                    ids: ids
+								                },
+								                dataType: 'json',
+								            	success: function(data){
+								            		dataPnl.loadMask.hide();
+								                	$(data).each(function(){
+								                    	var rec = store.getAt(store.find('id', this.id));
+								                		var state = this.state.state;
+								                    	var stateTerminal = this.state.terminal;
+								                    	var stateType = this.state.type;
+								                		rec.set('state', state);
+								                		rec.set('stateTerminal', stateTerminal);
+								                		rec.set('stateType', stateType);
+								                		store.commitChanges();
+													});
+								                }
+								            });
+								        }
+							        },{
+								        id: 'denyBtn',
+							        	iconCls: 'deny',
+							            text: 'Deny',
+							            disabled: true,
+							            handler: function() {
+									        var records = sm.getSelections();
+								    		var ids = '';
+								    		$(records).each(function(){
+								    			ids += ' ' + this.get('id');
+								    		});
+								    		dataPnl.loadMask.show();
+								        	$.ajax({
+								            	url: CourseRegistration.constructUrl('faculty/deny?format=json', topicId),
+								            	type: CourseRegistration.requestType('POST'),
+								            	headers: {
+								                	'Accept': 'application/json'
+								                },
+								                data: {
+								                    ids: ids
+								                },
+								                dataType: 'json',
+								            	success: function(data){
+								            		dataPnl.loadMask.hide();
+								                	$(data).each(function(){
+								                    	var rec = store.getAt(store.find('id', this.id));
+								                		var state = this.state.state;
+								                    	var stateTerminal = this.state.terminal;
+								                    	var stateType = this.state.type;
+								                		rec.set('state', state);
+								                		rec.set('stateTerminal', stateTerminal);
+								                		rec.set('stateType', stateType);
+								                		store.commitChanges();
+													});
+								                }
+								            });
+								        }
+							        },
+							        </g:if>
+							        {
+							        	iconCls: 'export',
+							            text: 'Export',
+							            menu: new Ext.menu.Menu({
+								            id: 'exportMenu',
+								            items: [{
+								            	iconCls: 'excel',
+									            text: 'Excel',
+									            handler: function(){
+										            window.open(CourseRegistration.constructUrl(dataUrl + '?format=xls', topicId), '_self');
+										        }
+									        },/*{
+								            	iconCls: 'pdf',
+									            text: 'PDF'
+									        },*/{
+								            	iconCls: 'xml',
+									            text: 'XML',
+									            handler: function(){
+										            window.open(CourseRegistration.constructUrl(dataUrl + '?format=xml', topicId), '_self');
+										        }
+									        },{
+								            	iconCls: 'json',
+									            text: 'JSON',
+									            handler: function(){
+										            window.open(CourseRegistration.constructUrl(dataUrl + '?format=json', topicId), '_self');
+										        }
+									        }]
+								        })
 							        }
-						        },{
-							        id: 'approveBtn',
-						        	iconCls: 'approve',
-						            text: 'Approve',
-						            disabled: true,
-						            handler: function() {
-								        var records = sm.getSelections();
-							    		var ids = '';
-							    		$(records).each(function(){
-							    			ids += ' ' + this.get('id');
-							    		});
-							    		dataPnl.loadMask.show();
-							        	$.ajax({
-							            	url: CourseRegistration.constructUrl('faculty/approve?format=json', topicId),
-							            	type: CourseRegistration.requestType('POST'),
-							            	headers: {
-							                	'Accept': 'application/json'
-							                },
-							                data: {
-							                    ids: ids
-							                },
-							                dataType: 'json',
-							            	success: function(data){
-							            		dataPnl.loadMask.hide();
-							                	$(data).each(function(){
-							                    	var rec = store.getAt(store.find('id', this.id));
-							                		var state = this.state.state;
-							                    	var stateTerminal = this.state.terminal;
-							                    	var stateType = this.state.type;
-							                		rec.set('state', state);
-							                		rec.set('stateTerminal', stateTerminal);
-							                		rec.set('stateType', stateType);
-							                		store.commitChanges();
-												});
-							                }
-							            });
-							        }
-						        },{
-							        id: 'denyBtn',
-						        	iconCls: 'deny',
-						            text: 'Deny',
-						            disabled: true,
-						            handler: function() {
-								        var records = sm.getSelections();
-							    		var ids = '';
-							    		$(records).each(function(){
-							    			ids += ' ' + this.get('id');
-							    		});
-							    		dataPnl.loadMask.show();
-							        	$.ajax({
-							            	url: CourseRegistration.constructUrl('faculty/deny?format=json', topicId),
-							            	type: CourseRegistration.requestType('POST'),
-							            	headers: {
-							                	'Accept': 'application/json'
-							                },
-							                data: {
-							                    ids: ids
-							                },
-							                dataType: 'json',
-							            	success: function(data){
-							            		dataPnl.loadMask.hide();
-							                	$(data).each(function(){
-							                    	var rec = store.getAt(store.find('id', this.id));
-							                		var state = this.state.state;
-							                    	var stateTerminal = this.state.terminal;
-							                    	var stateType = this.state.type;
-							                		rec.set('state', state);
-							                		rec.set('stateTerminal', stateTerminal);
-							                		rec.set('stateType', stateType);
-							                		store.commitChanges();
-												});
-							                }
-							            });
-							        }
-						        },{
-						        	iconCls: 'export',
-						            text: 'Export',
-						            menu: new Ext.menu.Menu({
-							            id: 'exportMenu',
-							            items: [{
-							            	iconCls: 'excel',
-								            text: 'Excel',
-								            handler: function(){
-									            window.open(CourseRegistration.constructUrl('registrar/list?format=xls', topicId), '_self');
-									        }
-								        },/*{
-							            	iconCls: 'pdf',
-								            text: 'PDF'
-								        },*/{
-							            	iconCls: 'xml',
-								            text: 'XML',
-								            handler: function(){
-									            window.open(CourseRegistration.constructUrl('registrar/list?format=xml', topicId), '_self');
-									        }
-								        },{
-							            	iconCls: 'json',
-								            text: 'JSON',
-								            handler: function(){
-									            window.open(CourseRegistration.constructUrl('registrar/list?format=json', topicId), '_self');
-									        }
-								        }]
-							        })
-						        }]
+						        ]
 						    })
 						}, '->', 'Petition Status', {
                             xtype: 'combo',
@@ -239,26 +248,26 @@
                                 	store.load({params:params});
                                 }
                             }
-                        }, ' ', 'Student Home School', {
+                        }, ' ', schoolLabel, {
                             xtype: 'combo',
                             store: new Ext.data.ArrayStore({
                                 autoDestroy: true,
                                 fields: ['id', 'name'],
                                 data : [
-									['1', 'All'],
-                                    ['2', 'Faculty of Arts and Sciences'],
-                                    ['3', 'Harvard Business School - Doctoral Program'],
-                                    ['4', 'Harvard Business School - MBA Program'],
-                                    ['5', 'Harvard Divinity School'],
-                                    ['6', 'Harvard Extension School'],
-                                    ['7', 'Harvard Graduate School of Design'],
-                                    ['8', 'Harvard Graduate School of Education'],
-                                    ['9', 'Harvard Kennedy School'],
-                                    ['10', 'Harvard Law School'],
-                                    ['11', 'Harvard Medical School'],
-                                    ['12', 'Harvard School of Dental Medicine'],
-                                    ['13', 'Harvard School of Public Health'],
-                                    ['14', 'Harvard Summer School']
+									['all', 'All'],
+                                    ['fas', 'Faculty of Arts and Sciences'],
+                                    ['hbsdoc', 'Harvard Business School - Doctoral Program'],
+                                    ['hbsmba', 'Harvard Business School - MBA Program'],
+                                    ['hds', 'Harvard Divinity School'],
+                                    ['ext', 'Harvard Extension School'],
+                                    ['gsd', 'Harvard Graduate School of Design'],
+                                    ['gse', 'Harvard Graduate School of Education'],
+                                    ['hks', 'Harvard Kennedy School'],
+                                    ['hls', 'Harvard Law School'],
+                                    ['hms', 'Harvard Medical School'],
+                                    ['hsdm', 'Harvard School of Dental Medicine'],
+                                    ['hsph', 'Harvard School of Public Health'],
+                                    ['sum', 'Harvard Summer School']
                                 ]
                             }),
                             valueField: 'id',
@@ -269,13 +278,13 @@
                             triggerAction: 'all',
                             selectOnFocus: true,
                             width: 250,
-                            value: '1',
+                            value: 'all',
                             listeners: {
                                 select: function(combo, record, index) {
-                                    if (index == 0) {
-                                        delete params["homeSchool"];
+                                    if (index == 'all') {
+                                        delete params[schoolParam];
                                     } else {
-                                        params["homeSchool"] = record.get('name');
+                                        params[schoolParam] = record.get('id');
                                     }
                                     store.load({params:params});
                                 }
@@ -291,39 +300,13 @@
                         displayInfo: true,
                         plugins: new Ext.ux.SlidingPager()
                     }),
-                    /*bbar: {
-                        items: [
-                        	'->',
-                        	'200 Petitions Found'
-                        ]
-                    },*/
                     colModel: new Ext.grid.ColumnModel({
                         defaults: {
                             sortable: true
                         },
                         columns: [
+                        	<g:if test="${params.direction == 'incoming'}">
                             sm,
-							/*{
-							    xtype: 'actioncolumn',
-							    header: 'Status',
-							    width: 75,
-							    align: 'center',
-							    items: [{
-							        icon   : 'http://isites.harvard.edu/js/isites/resources/images/fugue/tick-circle-frame.png',
-							        iconCls: 'column-btn',
-							        tooltip: 'Approve',
-							        handler: function(grid, rowIndex, colIndex) {
-							            alert('Approved');
-							        }
-							    },{
-							        icon   : 'http://isites.harvard.edu/js/isites/resources/images/fugue/cross-circle-frame.png',
-									iconCls: 'column-btn',
-							        tooltip: 'Deny',
-							        handler: function(grid, rowIndex, colIndex) {
-							            alert('Denied');
-							        }
-							    }]
-							},*/
 							{
                             	header: 'Registrar Status', 
                                 dataIndex: 'processed', 
@@ -331,6 +314,7 @@
                                     return String.format('<div class="icon-text {0}">{1}</div>', (value == 'Processed' ? 'process' : 'pending'), value);
                                 }
 							},
+							</g:if>
 							{
                             	header: 'Petition Status', 
                                 dataIndex: 'state', 
@@ -346,10 +330,9 @@
                                             value, record.get('firstName'), record.get('email'), record.get('phone'));
                                 }
                             },
-                            {header: 'Student Home School', dataIndex: 'homeSchool'},
                             {header: 'Date Submitted', dataIndex: 'petitionCreated'},
                             {header: 'Grading Option', dataIndex: 'gradingOption'},
-                            //{header: 'Host School', dataIndex: 'courseSchool'},
+                            {header: schoolLabel, dataIndex: schoolParam},
                             {header: 'Course', dataIndex: 'courseShortTitle'},
                             {
                                 header: 'Faculty', 
