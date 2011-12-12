@@ -11,7 +11,7 @@ class RegistrarController {
 	
 	def index = {
 		def school = School.get(request.schoolAffiliation)
-		[school: school]
+		[school: school ? school.titleShort : '']
 	}
 	
 	def incoming = {

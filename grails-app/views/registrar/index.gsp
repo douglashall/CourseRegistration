@@ -358,7 +358,7 @@
         </script>
     </head>
     <body>
-    	<h3>${school.titleShort}</h3>
+    	<h3>${school}</h3>
     	<div id="petition-data-pnl"></div>
     </body>
 </html>
