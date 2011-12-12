@@ -1,6 +1,8 @@
 package edu.harvard.coursereg
 
+import edu.harvard.icommons.coursedata.School
 import grails.converters.*
+
 import org.codehaus.groovy.grails.web.json.*
 
 class RegistrarController {
@@ -8,7 +10,8 @@ class RegistrarController {
 	RegistrationService registrationService
 	
 	def index = {
-		
+		def school = School.get(request.schoolAffiliation)
+		[school: school]
 	}
 	
 	def incoming = {
