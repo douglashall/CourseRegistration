@@ -11,8 +11,7 @@
         	$(document).ready(function(){
         		Ext.QuickTips.init();
 				var topicId = '${params.topicId}';
-				var direction = '${params.direction}';
-            	var dataUrl = 'registrar/' + direction;
+            	var dataUrl = 'registrar/list';
 				var store = new Ext.data.JsonStore({
 					url: CourseRegistration.constructUrl(dataUrl + '?format=json', topicId),
 					root: 'root',
@@ -44,23 +43,6 @@
                 });
                 store.load();
 
-                var sm = new Ext.grid.CheckboxSelectionModel({
-                    listeners: {
-                        'selectionchange': function(selectionModel) {
-                            if (selectionModel.hasSelection()) {
-                                Ext.getCmp('processBtn').enable();
-                                Ext.getCmp('approveBtn').enable();
-                                Ext.getCmp('denyBtn').enable();
-                            } else {
-                            	Ext.getCmp('processBtn').disable();
-                                Ext.getCmp('approveBtn').disable();
-                                Ext.getCmp('denyBtn').disable();
-                            }
-                        }
-                    }
-                });
-                var schoolLabel = direction == 'incoming' ? 'Student Home School' : 'Host School';
-                var schoolParam = direction == 'incoming' ? 'homeSchool' : 'hostSchool';
                 var dataPnl = new Ext.grid.GridPanel({
                     id: 'data',
                     renderTo: 'petition-data-pnl',
@@ -70,153 +52,7 @@
                     },
                     store: store,
                     tbar: {
-                        items: [{
-						    text: 'Actions',
-						    iconCls: 'action',
-						    menu: new Ext.menu.Menu({
-						        id: 'actionMenu',
-						        items: [
-						        <g:if test="${params.direction == 'incoming'}">
-							        {
-								        id: 'processBtn',
-							        	iconCls: 'process',
-							            text: 'Mark as processed',
-							            disabled: true,
-							            handler: function() {
-								        	var records = sm.getSelections();
-								    		var ids = '';
-								    		$(records).each(function(){
-								    			ids += ' ' + this.get('id');
-								    		});
-								    		dataPnl.loadMask.show();
-								        	$.ajax({
-								            	url: CourseRegistration.constructUrl('registrar/process?format=json', topicId),
-								            	type: CourseRegistration.requestType('POST'),
-								            	headers: {
-								                	'Accept': 'application/json'
-								                },
-								                data: {
-								                    ids: ids
-								                },
-								                dataType: 'json',
-								            	success: function(data){
-								            		dataPnl.loadMask.hide();
-								                	$(data).each(function(){
-								                    	var rec = store.getAt(store.find('id', this.id));
-								                		rec.set('processed', 'Processed');
-								                		store.commitChanges();
-								                    });
-								                }
-								            });
-								        }
-							        },{
-								        id: 'approveBtn',
-							        	iconCls: 'approve',
-							            text: 'Approve',
-							            disabled: true,
-							            handler: function() {
-									        var records = sm.getSelections();
-								    		var ids = '';
-								    		$(records).each(function(){
-								    			ids += ' ' + this.get('id');
-								    		});
-								    		dataPnl.loadMask.show();
-								        	$.ajax({
-								            	url: CourseRegistration.constructUrl('faculty/approve?format=json', topicId),
-								            	type: CourseRegistration.requestType('POST'),
-								            	headers: {
-								                	'Accept': 'application/json'
-								                },
-								                data: {
-								                    ids: ids
-								                },
-								                dataType: 'json',
-								            	success: function(data){
-								            		dataPnl.loadMask.hide();
-								                	$(data).each(function(){
-								                    	var rec = store.getAt(store.find('id', this.id));
-								                		var state = this.state.state;
-								                    	var stateTerminal = this.state.terminal;
-								                    	var stateType = this.state.type;
-								                		rec.set('state', state);
-								                		rec.set('stateTerminal', stateTerminal);
-								                		rec.set('stateType', stateType);
-								                		store.commitChanges();
-													});
-								                }
-								            });
-								        }
-							        },{
-								        id: 'denyBtn',
-							        	iconCls: 'deny',
-							            text: 'Deny',
-							            disabled: true,
-							            handler: function() {
-									        var records = sm.getSelections();
-								    		var ids = '';
-								    		$(records).each(function(){
-								    			ids += ' ' + this.get('id');
-								    		});
-								    		dataPnl.loadMask.show();
-								        	$.ajax({
-								            	url: CourseRegistration.constructUrl('faculty/deny?format=json', topicId),
-								            	type: CourseRegistration.requestType('POST'),
-								            	headers: {
-								                	'Accept': 'application/json'
-								                },
-								                data: {
-								                    ids: ids
-								                },
-								                dataType: 'json',
-								            	success: function(data){
-								            		dataPnl.loadMask.hide();
-								                	$(data).each(function(){
-								                    	var rec = store.getAt(store.find('id', this.id));
-								                		var state = this.state.state;
-								                    	var stateTerminal = this.state.terminal;
-								                    	var stateType = this.state.type;
-								                		rec.set('state', state);
-								                		rec.set('stateTerminal', stateTerminal);
-								                		rec.set('stateType', stateType);
-								                		store.commitChanges();
-													});
-								                }
-								            });
-								        }
-							        },
-							        </g:if>
-							        {
-							        	iconCls: 'export',
-							            text: 'Export All',
-							            menu: new Ext.menu.Menu({
-								            id: 'exportMenu',
-								            items: [{
-								            	iconCls: 'excel',
-									            text: 'Excel',
-									            handler: function(){
-										            window.open(CourseRegistration.constructUrl(dataUrl + '?format=xls', topicId), '_self');
-										        }
-									        },/*{
-								            	iconCls: 'pdf',
-									            text: 'PDF'
-									        },*/{
-								            	iconCls: 'xml',
-									            text: 'XML',
-									            handler: function(){
-										            window.open(CourseRegistration.constructUrl(dataUrl + '?format=xml', topicId), '_self');
-										        }
-									        },{
-								            	iconCls: 'json',
-									            text: 'JSON',
-									            handler: function(){
-										            window.open(CourseRegistration.constructUrl(dataUrl + '?format=json', topicId), '_self');
-										        }
-									        }]
-								        })
-							        }
-						        ]
-						    })
-						}, '->', 'Petition Status', {
+                        items: ['Petition Status', {
                             xtype: 'combo',
                             store: new Ext.data.ArrayStore({
                                 autoDestroy: true,
@@ -235,7 +71,7 @@
                             forceSelection: true,
                             triggerAction: 'all',
                             selectOnFocus: true,
-                            width: 175,
+                            width: 150,
                             value: '1',
                             listeners: {
                                 select: function(combo, record, index) {
@@ -247,7 +83,7 @@
                                 	store.load();
                                 }
                             }
-                        }, ' ', schoolLabel, {
+                        }, ' ', 'Home School', {
                             xtype: 'combo',
                             store: new Ext.data.ArrayStore({
                                 autoDestroy: true,
@@ -276,21 +112,62 @@
                             forceSelection: true,
                             triggerAction: 'all',
                             selectOnFocus: true,
-                            width: 250,
+                            width: 185,
                             value: 'all',
                             listeners: {
                                 select: function(combo, record, index) {
                                     if (index == 0) {
-                                        delete store.baseParams[schoolParam];
+                                        delete store.baseParams['homeSchool'];
                                     } else {
-                                        store.baseParams[schoolParam] = record.get('id');
+                                        store.baseParams['homeSchool'] = record.get('id');
+                                    }
+                                    store.load();
+                                }
+                            }
+                        }, ' ', 'Host School', {
+                            xtype: 'combo',
+                            store: new Ext.data.ArrayStore({
+                                autoDestroy: true,
+                                fields: ['id', 'name'],
+                                data : [
+									['all', 'All'],
+                                    ['fas', 'Faculty of Arts and Sciences'],
+                                    ['hbsdoc', 'Harvard Business School - Doctoral Program'],
+                                    ['hbsmba', 'Harvard Business School - MBA Program'],
+                                    ['hds', 'Harvard Divinity School'],
+                                    ['ext', 'Harvard Extension School'],
+                                    ['gsd', 'Harvard Graduate School of Design'],
+                                    ['gse', 'Harvard Graduate School of Education'],
+                                    ['hks', 'Harvard Kennedy School'],
+                                    ['hls', 'Harvard Law School'],
+                                    ['hms', 'Harvard Medical School'],
+                                    ['hsdm', 'Harvard School of Dental Medicine'],
+                                    ['hsph', 'Harvard School of Public Health'],
+                                    ['sum', 'Harvard Summer School']
+                                ]
+                            }),
+                            valueField: 'id',
+                            displayField: 'name',
+                            mode: 'local',
+                            editable: false,
+                            forceSelection: true,
+                            triggerAction: 'all',
+                            selectOnFocus: true,
+                            width: 185,
+                            value: 'all',
+                            listeners: {
+                                select: function(combo, record, index) {
+                                    if (index == 0) {
+                                        delete store.baseParams['hostSchool'];
+                                    } else {
+                                        store.baseParams['hostSchool'] = record.get('id');
                                     }
                                     store.load();
                                 }
                             }
                         }, ' ', 'Search', new Ext.ux.form.SearchField({
 			                store: store,
-			                width:200
+			                width:115
 			            })]
                     },
                     bbar: new Ext.PagingToolbar({
@@ -304,16 +181,6 @@
                             sortable: true
                         },
                         columns: [
-                        	<g:if test="${params.direction == 'incoming'}">
-                            sm,
-							{
-                            	header: 'Registrar Status', 
-                                dataIndex: 'processed', 
-                                renderer: function(value, metadata, record){
-                                    return String.format('<div class="icon-text {0}">{1}</div>', (value == 'Processed' ? 'process' : 'pending'), value);
-                                }
-							},
-							</g:if>
 							{
                             	header: 'Petition Status', 
                                 dataIndex: 'state', 
@@ -331,7 +198,8 @@
                             },
                             {header: 'Date Submitted', dataIndex: 'petitionCreated'},
                             {header: 'Grading Option', dataIndex: 'gradingOption'},
-                            {header: schoolLabel, dataIndex: schoolParam},
+                            {header: 'Home School', dataIndex: 'homeSchool'},
+                            {header: 'Host School', dataIndex: 'hostSchool'},
                             {header: 'Course', dataIndex: 'courseShortTitle'},
                             {
                                 header: 'Faculty', 
@@ -347,7 +215,6 @@
                     viewConfig: {
                         forceFit: true
                     },
-                    sm: sm,
                     frame: true,
                     plugins: new Ext.ux.PanelResizer({
                         minHeight: 100
@@ -358,7 +225,6 @@
         </script>
     </head>
     <body>
-    	<h3>${school.titleShort}</h3>
     	<div id="petition-data-pnl"></div>
     </body>
 </html>
