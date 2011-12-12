@@ -241,7 +241,7 @@
 		    			<g:each in="${entry.value}" var="studentCourse">
 							<tr class="course" id="${studentCourse.id}">
 								<td rowspan="1" colspan="1">
-									<span>${studentCourse.courseInstance.title} - ${studentCourse.courseInstance.subTitle} (${studentCourse.courseInstance.course.registrarCodeDisplay ? studentCourse.courseInstance.course.registrar : studentCourse.courseInstance.course.registrarCode})</span>
+									<span>${studentCourse.courseInstance.title} - ${studentCourse.courseInstance.subTitle} (${studentCourse.courseInstance.course.registrarCodeDisplay ? studentCourse.courseInstance.course.registrarCodeDisplay : studentCourse.courseInstance.course.registrarCode})</span>
 									<br/>${studentCourse.courseInstance.instructorsDisplay}<br/>${studentCourse.courseInstance.meetingTime}
 								</td>
 								<td class="course_level_option" rowspan="1" colspan="1">
