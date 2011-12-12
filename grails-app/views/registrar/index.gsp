@@ -12,7 +12,6 @@
         		Ext.QuickTips.init();
 				var topicId = '${params.topicId}';
 				var direction = '${params.direction}';
-            	var params = {};
             	var dataUrl = 'registrar/' + direction;
 				var store = new Ext.data.JsonStore({
 					url: CourseRegistration.constructUrl(dataUrl + '?format=json', topicId),
@@ -241,11 +240,11 @@
                             listeners: {
                                 select: function(combo, record, index) {
                                 	if (index == 0) {
-                                        delete params["state"];
+                                        delete store.baseParams["state"];
                                     } else {
-                                        params["state"] = record.get('name');
+                                        store.baseParams["state"] = record.get('name');
                                     }
-                                	store.load({params:params});
+                                	store.load();
                                 }
                             }
                         }, ' ', schoolLabel, {
@@ -281,12 +280,12 @@
                             value: 'all',
                             listeners: {
                                 select: function(combo, record, index) {
-                                    if (index == 'all') {
-                                        delete params[schoolParam];
+                                    if (index == 0) {
+                                        delete store.baseParams[schoolParam];
                                     } else {
-                                        params[schoolParam] = record.get('id');
+                                        store.baseParams[schoolParam] = record.get('id');
                                     }
-                                    store.load({params:params});
+                                    store.load();
                                 }
                             }
                         }, ' ', 'Search', new Ext.ux.form.SearchField({
