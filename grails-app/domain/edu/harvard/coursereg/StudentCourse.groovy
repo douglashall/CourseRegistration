@@ -169,17 +169,18 @@ class StudentCourse implements Serializable {
 	}
 	
 	public List<Map> getSchoolOptions() {
-		if (!schoolOptions) {
+		if (!this.schoolOptions) {
 			def student = this.getStudent()
-			schoolOptions = []
+			def options = []
 			student.schoolAffiliations.each {
 				def schoolId = BaselineUtils.ldapCodes[it]
 				if (schoolId) {
 					def school = School.get(schoolId)
-					schoolOptions << [school.id, school.titleShort]
+					options << [school.id, school.titleShort]
 				}
 			}
-			schoolOptions.sort {it[1]}
+			options.sort {it[1]}
+			this.schoolOptions = options
 		}
 		return schoolOptions
 	}
