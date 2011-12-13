@@ -243,7 +243,7 @@
 					{
 						border: false,
 						padding: '0px 10px 0px 10px',
-						html: '<p>The faculty member may require a separate application process.</p><p>You will receive a confirmation email, once the faculty member takes action on your petition.</p><p>Please click confirm to finalize your Cross Registration Petition.</p>'
+						html: '<p>The faculty member may require a separate application process.</p><p>You will receive a confirmation email once the faculty member takes action on your petition.</p><p>Please click confirm to finalize your Cross Registration Petition.</p>'
 					}
 				);
 			} else {
@@ -323,7 +323,7 @@
 				html: this.content
 			}];
 			this.buttons = [{
-				text: 'Approve',
+				text: 'Confirm',
 				handler: function(){
 					this.fireEvent('approvepetition');
 				},
@@ -359,7 +359,7 @@
 				html: this.content
 			}];
 			this.buttons = [{
-				text: 'Deny',
+				text: 'Confirm',
 				handler: function(){
 					this.fireEvent('denypetition');
 				},

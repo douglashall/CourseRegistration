@@ -156,7 +156,7 @@ standard.faculty.denial.text = """\
 """
 
 hds.faculty.approval.text = """\
-<p>By approving these petitions, you are guaranteeing the student(s) a space in the class therefore you should only take this action once you have determined who will be admitted into this limited enrollment course.</p>\
+<p>By approving these petitions, you are guaranteeing the student(s) a space in the class. Therefore, you should only take this action once you have determined who will be admitted into this limited enrollment course.</p>\
 <p>If you need to change your selections after you click confirm, please contact the Registrar\\'s Office.</p>\
 """
 hds.faculty.denial.text = """\
