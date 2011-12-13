@@ -8,6 +8,96 @@
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
         <script>
         	// <![CDATA[
+        	CourseRegistration.approvePetitions = function(records, store, mask, win, topicId) {
+				var ids = '';
+				$(records).each(function(){
+					ids += ' ' + this.get('id');
+				});
+		    	$.ajax({
+		        	url: CourseRegistration.constructUrl('faculty/approve?format=json', topicId),
+		        	type: CourseRegistration.requestType('POST'),
+		        	headers: {
+		            	'Accept': 'application/json'
+		            },
+		            data: {
+		                ids: ids
+		            },
+		            dataType: 'json',
+		        	success: function(data){
+		            	if (mask) {
+		            		mask.hide();
+		            	}
+		            	if (win) {
+		            		win.close();
+		            	}
+		            	var trEls = [];
+		            	$(data).each(function(){
+		                	var rec = store.getAt(store.find('id', this.id));
+		            		var state = this.state.state;
+		                	var stateTerminal = this.state.terminal;
+		                	var stateType = this.state.type;
+		            		var stateRec = rec.get('state');
+		            		stateRec.state = state;
+		            		stateRec.terminal = stateTerminal;
+		            		stateRec.type = stateType;
+		            		store.commitChanges();
+		
+		            		trEls.push('#' + this.id);
+		            		$('#' + this.id + ' .course_approve').remove();
+		            		$('#' + this.id + ' .course_deny').remove();
+		            		$('#' + this.id + ' .bulk_select input').remove();
+		            		$('#' + this.id + ' .status div').html(String.format('<div class="course_status icon-text {0}{1}">{2}</div>', stateType, stateTerminal ? ' terminal' : '', state));
+		                });
+		            	$(trEls.join(',')).effect('highlight', 1000);
+		            }
+		        });
+		    }
+		    
+		    CourseRegistration.denyPetitions = function(records, store, mask, win, topicId) {
+		        var ids = '';
+				$(records).each(function(){
+					ids += ' ' + this.get('id');
+				});
+		    	$.ajax({
+		        	url: CourseRegistration.constructUrl('faculty/deny?format=json', topicId),
+		        	type: CourseRegistration.requestType('POST'),
+		        	headers: {
+		            	'Accept': 'application/json'
+		            },
+		            data: {
+		                ids: ids
+		            },
+		            dataType: 'json',
+		        	success: function(data){
+		        		if (mask) {
+		            		mask.hide();
+		            	}
+		            	if (win) {
+		            		win.close();
+		            	}
+		            	var trEls = [];
+		            	$(data).each(function(){
+		                	var rec = store.getAt(store.find('id', this.id));
+		            		var state = this.state.state;
+		                	var stateTerminal = this.state.terminal;
+		                	var stateType = this.state.type;
+		            		var stateRec = rec.get('state');
+		            		stateRec.state = state;
+		            		stateRec.terminal = stateTerminal;
+		            		stateRec.type = stateType;
+		            		store.commitChanges();
+		
+		            		trEls.push('#' + this.id);
+		            		$('#' + this.id + ' .course_approve').remove();
+		            		$('#' + this.id + ' .course_deny').remove();
+		            		$('#' + this.id + ' .bulk_select input').remove();
+		            		$('#' + this.id + ' .status div').html(String.format('<div class="course_status icon-text {0}{1}">{2}</div>', stateType, stateTerminal ? ' terminal' : '', state));
+		                });
+		            	$(trEls.join(',')).effect('highlight', 1000);
+		            }
+		        });
+		    }
+    
         	$(document).ready(function(){
         		Ext.QuickTips.init();
 				var topicId = '${topicId}';
