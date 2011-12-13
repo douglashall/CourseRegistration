@@ -115,7 +115,7 @@ log4j = {
 	//}
 	appenders {
 		rollingFile name: "requestLog",
-					maxFileSize: 1024,
+					maxFileSize: "1024KB",
 					layout: pattern(conversionPattern: "%d %m%n"),
 					file: "${catalinaBase}/logs/request.log"
 	}

@@ -164,7 +164,7 @@ class RegistrationService {
 		def result = []
 		def queryString = []
 		if (searchParams.query) {queryString << ('"' + searchParams.query + '"')}
-		if (searchParams.state) {queryString << ('state:"' + searchParams.state + '"')}
+		if (searchParams.status) {queryString << ('state:"' + searchParams.status + '"')}
 		if (searchParams.homeSchool) {queryString << ('homeSchool:"' + searchParams.homeSchool + '"')}
 		if (searchParams.hostSchool) {queryString << ('hostSchool:"' + searchParams.hostSchool + '"')}
 		

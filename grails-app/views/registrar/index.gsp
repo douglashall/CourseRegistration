@@ -240,9 +240,9 @@
                             listeners: {
                                 select: function(combo, record, index) {
                                 	if (index == 0) {
-                                        delete store.baseParams["state"];
+                                        delete store.baseParams["status"];
                                     } else {
-                                        store.baseParams["state"] = record.get('name');
+                                        store.baseParams["status"] = record.get('name');
                                     }
                                 	store.load();
                                 }
