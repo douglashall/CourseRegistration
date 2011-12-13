@@ -235,7 +235,7 @@
                             forceSelection: true,
                             triggerAction: 'all',
                             selectOnFocus: true,
-                            width: 175,
+                            width: 150,
                             value: '1',
                             listeners: {
                                 select: function(combo, record, index) {
@@ -290,7 +290,7 @@
                             }
                         }, ' ', 'Search', new Ext.ux.form.SearchField({
 			                store: store,
-			                width:200
+			                width:175
 			            })]
                     },
                     bbar: new Ext.PagingToolbar({

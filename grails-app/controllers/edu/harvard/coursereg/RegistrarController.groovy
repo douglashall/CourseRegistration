@@ -15,13 +15,45 @@ class RegistrarController {
 	}
 	
 	def incoming = {
-		params.hostSchool = request.schoolAffiliation
-		forward(action: "list")
+		if (request.schoolAffiliation) {
+			params.hostSchool = request.schoolAffiliation
+			forward(action: "list")
+		} else {
+			def model = [total: 0, root: []]
+			withFormat {
+				json {
+					JSON.use("deep") {
+						render model as JSON
+					}
+				}
+				xml {
+					XML.use("deep") {
+						render model as XML
+					}
+				}
+			}
+		}
 	}
 	
 	def outgoing = {
-		params.homeSchool = request.schoolAffiliation
-		forward(action: "list")
+		if (request.schoolAffiliation) {
+			params.homeSchool = request.schoolAffiliation
+			forward(action: "list")
+		} else {
+			def model = [total: 0, root: []]
+			withFormat {
+				json {
+					JSON.use("deep") {
+						render model as JSON
+					}
+				}
+				xml {
+					XML.use("deep") {
+						render model as XML
+					}
+				}
+			}
+		}
 	}
 	
 	def list = {
