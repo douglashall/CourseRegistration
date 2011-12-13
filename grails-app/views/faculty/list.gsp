@@ -89,7 +89,7 @@
                     });
 
 					var win = new CourseRegistration.ApprovePetitionWindow({
-                        content: approvalText[rec.get('courseSchoolId')],
+                        content: approvalText[records[0].get('courseSchoolId')],
                         listeners: {
                             'approvepetition': function(){
                             	var mask = new Ext.LoadMask(this.body, {msg:"Please wait...", removeMask:true});
@@ -110,7 +110,7 @@
                     });
 
                     var win = new CourseRegistration.DenyPetitionWindow({
-                        content: denialText[rec.get('courseSchoolId')],
+                        content: denialText[records[0].get('courseSchoolId')],
                         listeners: {
                             'denypetition': function(){
                             	var mask = new Ext.LoadMask(this.body, {msg:"Please wait...", removeMask:true});
