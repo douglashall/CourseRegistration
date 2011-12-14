@@ -79,9 +79,9 @@
                             listeners: {
                                 select: function(combo, record, index) {
                                 	if (index == 0) {
-                                        delete store.baseParams["state"];
+                                        delete store.baseParams["status"];
                                     } else {
-                                        store.baseParams["state"] = record.get('name');
+                                        store.baseParams["status"] = record.get('name');
                                     }
                                 	store.load();
                                 }
@@ -173,12 +173,6 @@
 			                width:115
 			            })]
                     },
-                    bbar: new Ext.PagingToolbar({
-                        pageSize: 50,
-                        store: store,
-                        displayInfo: true,
-                        plugins: new Ext.ux.SlidingPager()
-                    }),
                     colModel: new Ext.grid.ColumnModel({
                         defaults: {
                             sortable: true
