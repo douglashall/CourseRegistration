@@ -27,6 +27,7 @@
 				 	    	width: 225,
 				 	        fieldLabel: 'School Affiliation',
 				 	        labelSeparator: '',
+				 	        editable: false,
 				 	        name: 'homeSchoolId',
 				 	        value: this.homeSchoolId,
 				 	        store: new Ext.data.ArrayStore({
@@ -62,6 +63,7 @@
 				 	    	width: 225,
 				 	        fieldLabel: 'Degree Year',
 				 	        labelSeparator: '',
+				 	        editable: false,
 				 	        name: 'degreeYear',
 				 	        value: this.degreeYear,
 				 	        store: new Ext.data.ArrayStore({
@@ -198,6 +200,7 @@
 	        			id: this.id,
 	        			value: undefined,
 	        	        triggerAction: 'all',
+	        	        editable: false,
 	        	        forceSelection: true,
 	        	        allowBlank: false,
 	        	        msgTarget: 'under',
@@ -214,6 +217,7 @@
 	        			id: this.id,
 	        			value: undefined,
 	        	        triggerAction: 'all',
+	        	        editable: false,
 	        	        forceSelection: true,
 	        	        allowBlank: false,
 	        	        msgTarget: 'under',

@@ -16,31 +16,33 @@
 				var store = new Ext.data.JsonStore({
 					url: CourseRegistration.constructUrl(dataUrl + '?format=json', topicId),
 					root: 'root',
-					//proxy: new Ext.ux.data.PagingMemoryProxy(data),
-					//reader: new Ext.data.ArrayReader({
-						fields: [
-							{name: 'id', mapping: 'id'},
-							{name: 'userId', mapping: 'studentHuid'},
-							{name: 'firstName', mapping: 'studentFirstName'},
-							{name: 'lastName', mapping: 'studentLastName'},
-							{name: 'email', mapping: 'studentEmail'},
-							{name: 'phone', mapping: 'studentPhone'},
-							{name: 'homeSchool', mapping: 'homeSchoolDisplay'},
-							{name: 'hostSchool', mapping: 'hostSchoolDisplay'},
-							{name: 'courseInstanceId', mapping: 'courseInstanceId'},
-							{name: 'courseShortTitle', mapping: 'courseShortTitle'},
-							{name: 'term', mapping: 'term'},
-							{name: 'instructorName', mapping: 'instructorName'},
-							{name: 'instructorEmail', mapping: 'instructorEmail'},
-							{name: 'instructorPhone', mapping: 'instructorPhone'},
-							{name: 'state', mapping: 'state'},
-							{name: 'stateTerminal', mapping: 'stateTerminal'},
-							{name: 'stateType', mapping: 'stateType'},
-							{name: 'petitionCreated', mapping: 'petitionCreated'},
-							{name: 'gradingOption', mapping: 'gradingOption'},
-							{name: 'processed', mapping: 'processed'}
-						]
-					//})
+					fields: [
+						{name: 'id', mapping: 'id'},
+						{name: 'userId', mapping: 'studentHuid'},
+						{name: 'firstName', mapping: 'studentFirstName'},
+						{name: 'lastName', mapping: 'studentLastName'},
+						{name: 'email', mapping: 'studentEmail'},
+						{name: 'phone', mapping: 'studentPhone'},
+						{name: 'homeSchool', mapping: 'homeSchoolDisplay'},
+						{name: 'hostSchool', mapping: 'hostSchoolDisplay'},
+						{name: 'courseInstanceId', mapping: 'courseInstanceId'},
+						{name: 'courseShortTitle', mapping: 'courseShortTitle'},
+						{name: 'term', mapping: 'term'},
+						{name: 'instructorName', mapping: 'instructorName'},
+						{name: 'instructorEmail', mapping: 'instructorEmail'},
+						{name: 'instructorPhone', mapping: 'instructorPhone'},
+						{name: 'state', mapping: 'state'},
+						{name: 'stateTerminal', mapping: 'stateTerminal'},
+						{name: 'stateType', mapping: 'stateType'},
+						{name: 'petitionCreated', mapping: 'petitionCreated'},
+						{name: 'gradingOption', mapping: 'gradingOption'},
+						{name: 'processed', mapping: 'processed'}
+					],
+					listeners: {
+						'load': function(){
+							$('.petition-count').html('Displaying ' + this.getCount() + ' petitions');
+						}
+					}
                 });
                 store.load();
 
@@ -64,7 +66,8 @@
                 var dataPnl = new Ext.grid.GridPanel({
                     id: 'data',
                     renderTo: 'petition-data-pnl',
-                    height: 400,
+                    autoHeight: true,
+                    width: 960,
                     loadMask: {
                         msg: 'Please wait...'
                     },
@@ -122,7 +125,7 @@
 								    		});
 								    		dataPnl.loadMask.show();
 								        	$.ajax({
-								            	url: CourseRegistration.constructUrl('faculty/approve?format=json', topicId),
+								            	url: CourseRegistration.constructUrl('registrar/approve?format=json', topicId),
 								            	type: CourseRegistration.requestType('POST'),
 								            	headers: {
 								                	'Accept': 'application/json'
@@ -159,7 +162,7 @@
 								    		});
 								    		dataPnl.loadMask.show();
 								        	$.ajax({
-								            	url: CourseRegistration.constructUrl('faculty/deny?format=json', topicId),
+								            	url: CourseRegistration.constructUrl('registrar/deny?format=json', topicId),
 								            	type: CourseRegistration.requestType('POST'),
 								            	headers: {
 								                	'Accept': 'application/json'
@@ -293,12 +296,6 @@
 			                width:175
 			            })]
                     },
-                    bbar: new Ext.PagingToolbar({
-                        pageSize: 50,
-                        store: store,
-                        displayInfo: true,
-                        plugins: new Ext.ux.SlidingPager()
-                    }),
                     colModel: new Ext.grid.ColumnModel({
                         defaults: {
                             sortable: true
@@ -345,20 +342,21 @@
                         ]
                     }),
                     viewConfig: {
-                        forceFit: true
+                        forceFit: true,
+                        scrollOffset: 0
                     },
                     sm: sm,
-                    frame: true,
-                    plugins: new Ext.ux.PanelResizer({
-                        minHeight: 100
-                    })
+                    frame: true
                 });
         	});
 			// ]]>
         </script>
     </head>
     <body>
-    	<h3>${school}</h3>
+    	<div class="data-pnl-header">
+	    	<h3 class="school-header">${school}</h3>
+	    	<h3 class="petition-count"></h3>
+	    </div>
     	<div id="petition-data-pnl"></div>
     </body>
 </html>

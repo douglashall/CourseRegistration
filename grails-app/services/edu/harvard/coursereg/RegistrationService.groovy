@@ -77,6 +77,14 @@ class RegistrationService {
 		this.updateRegistrationContextState("faculty_deny", ctx, userId)
 	}
 	
+	public void registrarApprove(RegistrationContext ctx, String userId) {
+		this.updateRegistrationContextState("registrar_approve", ctx, userId)
+	}
+	
+	public void registrarDeny(RegistrationContext ctx, String userId) {
+		this.updateRegistrationContextState("registrar_deny", ctx, userId)
+	}
+	
 	private void updateRegistrationContextState(String action, RegistrationContext ctx, String userId) {
 		def studentCourse = ctx.studentCourses.toArray()[0]
 		def registrationAction = RegistrationAction.findAllByAction(action).find {

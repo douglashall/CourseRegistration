@@ -41,3 +41,7 @@ INSERT INTO registration_action (id, school_id, action, state_before_id, state_a
 INSERT INTO registration_action (id, school_id, action, state_before_id, state_after_id) VALUES (registration_action_id_seq.nextval, null, 'register', null, 1);
 INSERT INTO registration_action (id, school_id, action, state_before_id, state_after_id) VALUES (registration_action_id_seq.nextval, null, 'faculty_approve', 3, 1);
 INSERT INTO registration_action (id, school_id, action, state_before_id, state_after_id) VALUES (registration_action_id_seq.nextval, null, 'faculty_deny', 3, 2);
+INSERT INTO registration_action (id, school_id, action, state_before_id, state_after_id) VALUES (registration_action_id_seq.nextval, null, 'registrar_approve', 3, 1);
+INSERT INTO registration_action (id, school_id, action, state_before_id, state_after_id) VALUES (registration_action_id_seq.nextval, null, 'registrar_approve', 2, 1);
+INSERT INTO registration_action (id, school_id, action, state_before_id, state_after_id) VALUES (registration_action_id_seq.nextval, null, 'registrar_deny', 3, 2);
+INSERT INTO registration_action (id, school_id, action, state_before_id, state_after_id) VALUES (registration_action_id_seq.nextval, null, 'registrar_deny', 1, 2);

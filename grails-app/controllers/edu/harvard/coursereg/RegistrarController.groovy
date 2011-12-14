@@ -116,4 +116,58 @@ class RegistrarController {
 		}
 	}
 	
+	def approve = {
+		def model = []
+		def ids = params.ids.trim().tokenize().collect {Long.parseLong(it)}
+		def studentCourses = StudentCourse.findAllByIdInList(ids)
+		
+		studentCourses.each {
+			def ctx = it.registrationContext
+			this.registrationService.registrarApprove(ctx, request.userId)
+			model << it
+		}
+		
+		withFormat {
+			form {redirect(action:list)}
+			html {redirect(action:list)}
+			json {
+				JSON.use("deep") {
+					render(contentType: "application/json"){model} as JSON
+				}
+			}
+			xml {
+				XML.use("deep") {
+					render(contentType: "application/xml"){model} as XML
+				}
+			}
+		}
+	}
+	
+	def deny = {
+		def model = []
+		def ids = params.ids.trim().tokenize().collect {Long.parseLong(it)}
+		def studentCourses = StudentCourse.findAllByIdInList(ids)
+		
+		studentCourses.each {
+			def ctx = it.registrationContext
+			this.registrationService.registrarDeny(ctx, request.userId)
+			model << it
+		}
+		
+		withFormat {
+			form {redirect(action:list)}
+			html {redirect(action:list)}
+			json {
+				JSON.use("deep") {
+					render(contentType: "application/json"){model} as JSON
+				}
+			}
+			xml {
+				XML.use("deep") {
+					render(contentType: "application/xml"){model} as XML
+				}
+			}
+		}
+	}
+	
 }

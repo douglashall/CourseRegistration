@@ -15,6 +15,12 @@
  	table.grid, div.result {
  		clear: both;
  	}
+ 	.data-pnl-header {
+ 		width: 960px;
+ 	}
+ 	#petition-data-pnl {
+ 		clear: both;
+ 	}
  	#petition-data-pnl .x-grid3-cell-inner {
  		white-space: normal;
  	}
@@ -71,5 +77,11 @@
 	}
 	.x-panel-bbar .x-toolbar-left {
 		visibility: hidden;
+	}
+	.school-header {
+		float: left;
+	}
+	.petition-count {
+		float: right;
 	}
 </style>
