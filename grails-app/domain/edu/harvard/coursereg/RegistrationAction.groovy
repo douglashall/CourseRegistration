@@ -5,6 +5,9 @@ import edu.harvard.icommons.coursedata.School
 class RegistrationAction implements Serializable {
 
 	String action
+	String emailType
+	int notifyStudent
+	int notifyFaculty
 	
 	static belongsTo = [
 		school : School,
@@ -18,6 +21,9 @@ class RegistrationAction implements Serializable {
 	}
 	
     static constraints = {
+		emailType(nullable:true)
+		notifyStudent(nullable:true)
+		notifyFaculty(nullable:true)
 		school(nullable:true)
 		stateBefore(nullable:true)
     }

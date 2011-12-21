@@ -1,6 +1,7 @@
 package edu.harvard.coursereg
 
 import static groovyx.net.http.ContentType.JSON
+import static groovyx.net.http.ContentType.TEXT
 
 import java.text.SimpleDateFormat
 import java.util.List
@@ -9,6 +10,8 @@ import org.apache.commons.lang.builder.*
 import org.codehaus.groovy.grails.commons.ConfigurationHolder
 
 import edu.harvard.icommons.coursedata.CourseInstance
+import grails.util.Environment
+import groovy.text.SimpleTemplateEngine
 import groovyx.net.http.*
 
 class RegistrationService {
@@ -18,6 +21,19 @@ class RegistrationService {
 	SimpleDateFormat solrIndexDateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'")
 	
 	def config = ConfigurationHolder.config
+	
+	def emailSubjects = [
+		"standard": config.standard.email.subject,
+		"hds": config.hds.email.subject,
+		"gse": config.gse.email.subject,
+		"hsph": config.hsph.email.subject
+	]
+	
+	def emailReplyToAddresses = [
+		"hds": config.hds.email.replyto,
+		"gse": config.gse.email.replyto,
+		"hsph": config.hsph.email.replyto
+	]
 	
 	def addCourseForStudent(String userId, CourseInstance ci) {
 		StudentCourse studentCourse = StudentCourse.createCriteria().get {
@@ -106,7 +122,10 @@ class RegistrationService {
 			
 			ctx.addToRegistrationContextStates(registrationContextState)
 			ctx.save(flush:true)
-			this.updateStudentCourseIndex(ctx.studentCourses.toList())
+			
+			def studentCourses = ctx.studentCourses.toList()
+			this.updateStudentCourseIndex(studentCourses)
+			this.sendNotificationEmailForAction(registrationAction, studentCourses, userId)
 		}
 	}
 	
@@ -197,6 +216,49 @@ class RegistrationService {
 			"total": total,
 			"records": result
 		]
+	}
+	
+	def sendNotificationEmailForAction(RegistrationAction action, List<StudentCourse> studentCourses, String userId) {
+		studentCourses.each {this.sendNotificationEmailForAction(action, it, userId)}
+	}
+	
+	def sendNotificationEmailForAction(RegistrationAction action, StudentCourse studentCourse, String userId) {
+		if (!action.notifyStudent && !action.notifyFaculty) {
+			return
+		}
+		
+		def student = studentCourse.getStudent()
+		def instructor = studentCourse.getInstructor()
+		def courseSchool = studentCourse.getCourseSchool()
+		def ci = studentCourse.getCourseInstance()
+		
+		def recipients = []
+		if (Environment.current != Environment.PRODUCTION) {
+			recipients.addAll(config.test.notification.email.recipients)
+		} else {
+			if (action.notifyStudent) recipients << student.email
+			if (action.notifyFaculty) recipients << instructor.email
+		}
+		
+		def model = [
+			student: student,
+			faculty: instructor,
+			course: [
+				code: ci.shortTitle ? ci.shortTitle : ci.course.registrarCode,
+				title: ci.title
+			],
+			plural: ""
+		]
+		def engine = new SimpleTemplateEngine()
+		def binding = ["courseCode": model.course.code.toString(), "plural": ""]
+		def template = engine.createTemplate(this.emailSubjects[courseSchool.id]).make(binding)
+		sendMail {
+			to recipients.toArray()
+			subject template.toString()
+			replyTo this.emailReplyToAddresses[courseSchool.id]
+			body (view: "/email/" + courseSchool.id + "/" + action.emailType, model: model)
+		}
+		log.info("Sent email to " + recipients + " for action " + action.action + " student course id " + studentCourse.id)
 	}
 	
 }

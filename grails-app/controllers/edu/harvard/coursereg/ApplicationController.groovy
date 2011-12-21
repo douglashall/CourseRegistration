@@ -467,4 +467,10 @@ class ApplicationController {
 		render "success"
 	}
 	
+	def testNotification = {
+		def action = RegistrationAction.findByAction("register")
+		def studentCourse = StudentCourse.findByUserIdAndActive("10564158", 1)
+		this.registrationService.sendNotificationEmailForAction(action, studentCourse, request.userId)
+	}
+	
 }

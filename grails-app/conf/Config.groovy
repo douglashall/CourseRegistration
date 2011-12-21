@@ -58,9 +58,13 @@ grails.exceptionresolver.params.exclude = ['password']
 environments {
 	production {
 		grails.serverURL = "http://localhost:8935/${appName}"
+		site.id = "icb.site83571"
+		tool.id = 14944
+		topic.id = "icb.topic1030497"
 		icommonsapi.url = "http://tool2.isites.harvard.edu:8971/icommonsapi"
 		solr.url = "http://tool2.isites.harvard.edu:8935/solr"
 		catalog.url = "http://tool2.isites.harvard.edu:8000/hucc_prod_solr"
+		notification.url = "http://isites.harvard.edu/icb/servlet/notification/create"
 		pilot.schools = "gse,hds,hsph"
 		registrar {
 			group.id = "20466"
@@ -73,9 +77,13 @@ environments {
 	}
 	test {
 		grails.serverURL = "http://localhost:8935/${appName}"
+		site.id = "icb.site83571"
+		tool.id = 14944
+		topic.id = "icb.topic1030497"
 		icommonsapi.url = "http://tool2.isites.harvard.edu:8971/icommonsapi"
 		solr.url = "http://tool2.isites.harvard.edu:8935/solr"
 		catalog.url = "http://tool2.isites.harvard.edu:8987/solr"
+		notification.url = "http://isites.harvard.edu/icb/servlet/notification/create"
 		pilot.schools = "gse,hds,hsph"
 		registrar {
 			group.id = "20466"
@@ -88,9 +96,13 @@ environments {
 	}
 	development {
 		grails.serverURL = "http://localhost:8080/${appName}"
+		site.id = "icb.site83571"
+		tool.id = 14944
+		topic.id = "icb.topic1030497"
 		icommonsapi.url = "http://qa.isites.harvard.edu:8861/icommonsapi"
 		solr.url = "http://localhost:8983/solr"
 		catalog.url = "http://qa.isites.harvard.edu:8986/solr"
+		notification.url = "http://isites.harvard.edu/icb/servlet/notification/create"
 		pilot.schools = "gse,hds,hsph"
 		registrar {
 			group.id = "18470"
@@ -145,6 +157,17 @@ log4j = {
 	//       'org.apache.http.wire'
 		   
 }
+
+test.notification.email.recipients = ["douglas_hall@harvard.edu", "aimee_hague@harvard.edu"]
+
+hds.email.replyto = "registrar@hds.harvard.edu"
+gse.email.replyto = "charles_perreault@gse.harvard.edu"
+hsph.email.replyto = "Svensson@hsph.harvard.edu"
+
+standard.email.subject = 'Cross Registration request${plural} for ${courseCode}'
+hds.email.subject = 'Cross Registration request${plural} for ${courseCode}'
+gse.email.subject = 'Petition to Cross Register into ${courseCode}'
+hsph.email.subject = 'Cross Registration request${plural} for ${courseCode}'
 
 standard.faculty.approval.text = """\
 <p>Approving these cross-registration petitions will submit them for to the Registrar’s Office for processing. It does not guarantee that there will be space in the class for the students</p>\

@@ -1,0 +1,6 @@
+#Tue Dec 20 21:00:15 EST 2011
+eclipse.preferences.version=1
+encoding//grails-app/views/email/gse/faculty.gsp=UTF-8
+encoding//grails-app/views/email/hds/denial.gsp=UTF-8
+encoding//grails-app/views/email/hds/faculty.gsp=UTF-8
+encoding//grails-app/views/email/hsph/faculty.gsp=UTF-8

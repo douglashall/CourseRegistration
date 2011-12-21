@@ -93,6 +93,7 @@ class StudentCourse implements Serializable {
 			def person = BaselineUtils.findPerson(this.userId)
 			this.student = [
 				'id': person.id,
+				'name': person.firstName + ' ' + person.lastName,
 				'firstName': person.firstName,
 				'lastName': person.lastName,
 				'email': person.email,
