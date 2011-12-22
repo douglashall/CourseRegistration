@@ -18,7 +18,7 @@ drop sequence student_course_id_seq;
 create table registration_action (id number(19,0) not null, action varchar2(255) not null, email_type varchar2(255), notify_faculty number(10,0), notify_student number(10,0), school_id varchar2(255), state_after_id number(19,0) not null, state_before_id number(19,0), primary key (id));
 create table registration_context (id number(19,0) not null, date_processed date, processed number(10,0) not null, processed_by varchar2(255), primary key (id));
 create table registration_context_state (id number(19,0) not null, created_by varchar2(255) not null, date_created date not null, registration_context_id number(19,0) not null, registration_state_id number(19,0) not null, primary key (id));
-create table registration_proxy (id number(19,0) not null, faculty_user_id varchar2(255) not null, proxy_user_id varchar2(255) not null, registration_proxy_url_id number(19,0) not null, primary key (id));
+create table registration_proxy (id number(19,0) not null, proxy_user_id varchar2(255) not null, registration_proxy_url_id varchar2(255) not null, primary key (id));
 create table registration_proxy_url (id varchar2(255) not null, faculty_user_id varchar2(255) not null, short_url varchar2(255), primary key (id));
 create table registration_state (id number(19,0) not null, state varchar2(255) not null, terminal number(10,0) not null, type varchar2(255) not null, primary key (id));
 create table registration_student (id number(19,0) not null, degree_year number(19,0) not null, home_school_id varchar2(255) not null, program_department varchar2(255) not null, user_id varchar2(255) not null, primary key (id));

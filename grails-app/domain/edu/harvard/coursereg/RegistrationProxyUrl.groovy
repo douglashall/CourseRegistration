@@ -18,12 +18,4 @@ class RegistrationProxyUrl implements Serializable {
 		shortUrl(nullable:true)
     }
 	
-	public boolean equals(RegistrationProxyUrl obj) {
-		return this.id.equals(obj)
-	}
-	
-	public int hashCode() {
-		return id.hashCode()
-	}
-	
 }

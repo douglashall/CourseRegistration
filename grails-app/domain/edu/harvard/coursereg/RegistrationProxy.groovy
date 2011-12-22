@@ -4,7 +4,6 @@ import edu.harvard.icommons.coursedata.School
 
 class RegistrationProxy implements Serializable {
 
-	String facultyUserId
 	String proxyUserId
 	
 	static belongsTo = [
@@ -17,7 +16,6 @@ class RegistrationProxy implements Serializable {
 	}
 	
     static constraints = {
-		facultyUserId(blank:false)
 		proxyUserId(blank:false)
 		registrationFacultyProxyUrl(blank:false)
     }
