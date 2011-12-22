@@ -319,12 +319,10 @@ class RegistrationService {
 		def engine = new SimpleTemplateEngine()
 		def binding = ["username": config.bitly.username, "apikey": config.bitly.apikey, "url": (config.faculty.proxy.url + proxyUrl.id).encodeAsURL()]
 		def template = engine.createTemplate(config.bitly.api.url).make(binding)
-		println template.toString()
 		
 		def http = new HTTPBuilder(template.toString())
 		http.request(Method.GET, JSON) {
 			response.success = {resp, json ->
-				println json
 				proxyUrl.shortUrl = json.data.url
 				proxyUrl.save()
 			}
