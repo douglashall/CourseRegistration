@@ -64,6 +64,7 @@ class ApplicationController {
 	
 	def triggerFacultyEmailJob = {
 		SendFacultyNotificationsJob.triggerNow()
+		render "job started"
 	}
 	
 	def loadDemoData = {
