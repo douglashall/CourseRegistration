@@ -24,6 +24,7 @@ class StudentCourse implements Serializable {
 	School courseSchool
 	String termDisplay
 	Map instructor
+	List instructors
 	List<Map> levelOptions
 	List<Map> gradingOptions
 	List<Map> schoolOptions
@@ -35,6 +36,7 @@ class StudentCourse implements Serializable {
 		'courseSchool',
 		'termDisplay',
 		'instructor',
+		'instructors',
 		'levelOptions',
 		'gradingOptions',
 		'schoolOptions',
@@ -112,15 +114,19 @@ class StudentCourse implements Serializable {
 	
 	public Map getInstructor() {
 		if (!instructor) {
-			def courseStaff = this.courseInstance.staff.find {it.roleId == 1}
-			if (courseStaff) {
-				def person = BaselineUtils.findPerson(courseStaff.userId)
-				def name = courseStaff.displayName ? courseStaff.displayName : this.courseInstance.instructorsDisplay
+			def courseStaff = this.courseInstance.staff
+			def courseHead = courseStaff.find {it.roleId == 1}
+			if (!courseHead) {courseHead = courseStaff.find {it.roleId == 2}}
+			if (!courseHead && courseStaff.size() > 0) {courseHead = courseStaff[0]}
+			
+			if (courseHead) {
+				def person = BaselineUtils.findPerson(courseHead.userId)
+				def name = courseHead.displayName ? courseHead.displayName : this.courseInstance.instructorsDisplay
 				if (!name || name == '') {
 					name = person.firstName + ' ' + person.lastName
 				}
 				instructor = [
-					'userId': courseStaff.userId,
+					'userId': courseHead.userId,
 					'name': name,
 					'email': person.email,
 					'phone': person.phone
@@ -128,11 +134,34 @@ class StudentCourse implements Serializable {
 			} else {
 				instructor = [
 					'userId': '',
-					'name': this.courseInstance.instructorsDisplay
+					'name': this.courseInstance.instructorsDisplay,
+					'email': '',
+					'phone': ''
 				]
 			}
 		}
 		return instructor
+	}
+	
+	public List getInstructors() {
+		if (!this.instructors) {
+			def instructors = []
+			def courseStaff = this.courseInstance.staff
+			courseStaff.each {
+				def person = BaselineUtils.findPerson(it.userId)
+				if (!person.unknown) {
+					def name = it.displayName ? it.displayName : (person.firstName + ' ' + person.lastName)
+					instructors << [
+						userId: it.userId,
+						name: name,
+						email: person.email,
+						phone: person.phone
+					]
+				}
+			}
+			this.instructors = instructors
+		}
+		return this.instructors
 	}
 	
 	public RegistrationState getState() {

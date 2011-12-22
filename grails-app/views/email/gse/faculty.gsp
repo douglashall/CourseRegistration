@@ -7,7 +7,7 @@
 <p>The following students are petitioning to cross register into <b>${course.code}</b>.</p>
 
 <g:each var="student" in="${students}">
-<b>${student.name}</b>, <b>${student.schoolDisplay}</b><br/>
+<b>${student.name}</b>, ${student.schoolDisplay}<br/>
 </g:each>
 
 <p><b>To take action on the petitions you may either:</b></p>
@@ -18,7 +18,7 @@
 
 <p><b>To Approve the Petitions Yourself:</b></p>
 <ul>
-<li>Please visit <a href="http://crossreg.harvard.edu">Cross Registration System</a>. If the link is broken, copy and paste it (with no spaces) into your browser address bar. <a href="http://crossreg.harvard.edu">http://crossreg.harvard.edu</a>
+<li>Please visit <a href="${url}">Cross Registration System</a>. If the link is broken, copy and paste it (with no spaces) into your browser address bar. <a href="${url}">${url}</a>
 <li>Login with your HUID and PIN.
 <li>Petitions may be approved or denied, either individually or in bulk.
 	<ul>
@@ -29,5 +29,6 @@
 </li>
 <li>Click “Confirm” in the pop-up, to finalize your approvals and/or denials.</li>
 <li>If you need to change your selections after you click confirm or have any questions, please contact Charles Perreault, <a href="mailto:charles_perreault@gse.harvard.edu">charles_perreault@gse.harvard.edu</a>.</li>
+</ul>
 
 <p>Thank You.</p>

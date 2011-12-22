@@ -6,7 +6,9 @@
 
 <p>Students are requesting to cross-register into <b>${course.code}</b>, a limited enrollment course. This list includes only non-HDS students interested in cross-registering; it does not include HDS or BTI students.  You should not approve these requests until you have decided which HDS students (and FAS students if the course is jointly offered) will be permitted to enroll. Once you have determined that the student is guaranteed a seat in the class you should follow the directions below to approve the cross-registration request.  The student will not be registered for this course until you approve this request, likewise a student will not know that they do not have a seat in the class until you deny the request.</p>
   
-<b>${student.name}</b>, <b>${student.schoolDisplay}</b><br/>
+<g:each var="student" in="${students}">
+<b>${student.name}</b>, ${student.schoolDisplay}<br/>
+</g:each>
 
 <p><b>To take action on the petitions you may either:</b></p>
 <ul>
@@ -16,7 +18,7 @@
 
 <p><b>To Approve the Petitions Yourself:</b></p>
 <ul>
-<li>Please visit the <a href="http://crossreg.harvard.edu">Cross Registration System</a>. If you are unable to click the link, please copy and paste the link, with no spaces, into your browser address bar. <a href="http://crossreg.harvard.edu">http://crossreg.harvard.edu</a></li>
+<li>Please visit the <a href="${url}">Cross Registration System</a>. If you are unable to click the link, please copy and paste the link, with no spaces, into your browser address bar. <a href="${url}">${url}</a></li>
 <li>Login with your HUID and PIN.</li>
 <li>Petitions can be approved/denied individually or in bulk.
 	<ul>

@@ -8,6 +8,8 @@ import grails.converters.*
 import groovyx.net.http.HTTPBuilder
 import groovyx.net.http.Method
 
+import courseregistration.SendFacultyNotificationsJob
+
 class ApplicationController {
 	
 	RegistrationService registrationService
@@ -58,6 +60,10 @@ class ApplicationController {
 		}
 		this.registrationService.updateStudentCourseIndex(studentCourses)
 		render "success"
+	}
+	
+	def triggerFacultyEmailJob = {
+		SendFacultyNotificationsJob.triggerNow()
 	}
 	
 	def loadDemoData = {
@@ -465,12 +471,6 @@ class ApplicationController {
 		}
 		
 		render "success"
-	}
-	
-	def testNotification = {
-		def action = RegistrationAction.findByAction("register")
-		def studentCourse = StudentCourse.findByUserIdAndActive("10564158", 1)
-		this.registrationService.sendNotificationEmailForAction(action, studentCourse, request.userId)
 	}
 	
 }

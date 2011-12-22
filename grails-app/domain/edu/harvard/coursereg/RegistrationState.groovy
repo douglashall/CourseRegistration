@@ -5,6 +5,10 @@ import org.apache.commons.lang.builder.HashCodeBuilder
 
 class RegistrationState implements Serializable {
 
+	public static final long APPROVED = 1
+	public static final long DENIED = 2
+	public static final long PENDING = 3
+	
 	String state
 	Integer terminal
 	String type

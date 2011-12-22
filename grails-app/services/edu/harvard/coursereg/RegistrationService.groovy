@@ -5,6 +5,7 @@ import static groovyx.net.http.ContentType.TEXT
 
 import java.text.SimpleDateFormat
 import java.util.List
+import java.util.Map;
 
 import org.apache.commons.lang.builder.*
 import org.codehaus.groovy.grails.commons.ConfigurationHolder
@@ -234,7 +235,7 @@ class RegistrationService {
 		
 		def recipients = []
 		if (Environment.current != Environment.PRODUCTION) {
-			recipients.addAll(config.test.notification.email.recipients)
+			recipients.addAll(config.test.email.recipients)
 		} else {
 			if (action.notifyStudent) recipients << student.email
 			if (action.notifyFaculty) recipients << instructor.email
@@ -254,11 +255,103 @@ class RegistrationService {
 		def template = engine.createTemplate(this.emailSubjects[courseSchool.id]).make(binding)
 		sendMail {
 			to recipients.toArray()
+			from config.email.from
 			subject template.toString()
 			replyTo this.emailReplyToAddresses[courseSchool.id]
 			body (view: "/email/" + courseSchool.id + "/" + action.emailType, model: model)
 		}
 		log.info("Sent email to " + recipients + " for action " + action.action + " student course id " + studentCourse.id)
+	}
+	
+	def sendNotificationEmailToFaculty(Map faculty, List<StudentCourse> studentCourses) {
+		def students = studentCourses.collect {it.student}.sort {a, b ->
+			if (a.school != b.school) {
+				return a.school.compareTo(b.school)
+			} else {
+				def aName = a.lastName + a.firstName
+				def bName = b.lastName + b.firstName
+				return aName.compareTo(bName)
+			}
+		}
+		def courseSchool = studentCourses[0].getCourseSchool()
+		def ci = studentCourses[0].getCourseInstance()
+		
+		def recipients = []
+		if (Environment.current != Environment.PRODUCTION) {
+			recipients.addAll(config.test.email.recipients)
+		} else {
+			recipients << faculty.email
+		}
+		
+		def proxyUrl = RegistrationProxyUrl.findByFacultyUserId(faculty.userId)
+		if (!proxyUrl) {
+			proxyUrl = this.createRegistrationProxyUrl(faculty.userId)
+		}
+		
+		def model = [
+			students: students,
+			faculty: faculty,
+			course: [
+				code: ci.shortTitle ? ci.shortTitle : ci.course.registrarCode,
+				title: ci.title
+			],
+			plural: students.size() > 1 ? "s" : "",
+			url: proxyUrl.shortUrl
+		]
+		
+		def engine = new SimpleTemplateEngine()
+		def binding = ["courseCode": model.course.code.toString(), "plural": model.plural.toString()]
+		def template = engine.createTemplate(this.emailSubjects[courseSchool.id]).make(binding)
+		sendMail {
+			to recipients.toArray()
+			from config.email.from
+			subject template.toString()
+			replyTo this.emailReplyToAddresses[courseSchool.id]
+			body (view: "/email/" + courseSchool.id + "/faculty", model: model)
+		}
+		log.info("Sent email to " + recipients + " for student course ids " + studentCourses.collect {it.id})
+	}
+	
+	def createRegistrationProxyUrl(String facultyUserId) {
+		def proxyUrl = new RegistrationProxyUrl(facultyUserId: facultyUserId)
+		proxyUrl.save(flush:true)
+		
+		def engine = new SimpleTemplateEngine()
+		def binding = ["username": config.bitly.username, "apikey": config.bitly.apikey, "url": (config.faculty.proxy.url + proxyUrl.id).encodeAsURL()]
+		def template = engine.createTemplate(config.bitly.api.url).make(binding)
+		println template.toString()
+		
+		def http = new HTTPBuilder(template.toString())
+		http.request(Method.GET, JSON) {
+			response.success = {resp, json ->
+				println json
+				proxyUrl.shortUrl = json.data.url
+				proxyUrl.save()
+			}
+		}
+		return proxyUrl
+	}
+	
+	def findAllStudentCoursesForProxy(String userId) {
+		def studentCourses = []
+		def proxies = RegistrationProxy.findAllByProxyUserId(userId)
+		proxies.each {
+			studentCourses.addAll(this.findAllStudentCoursesForFaculty(it.registrationProxyUrl.facultyUserId))
+		}
+		return studentCourses
+	}
+	
+	def findAllStudentCoursesForFaculty(String facultyId) {
+		def studentCourses = StudentCourse.executeQuery("\
+			select sc from StudentCourse as sc \
+			join sc.courseInstance as ci \
+			join ci.staff as staff \
+				with staff.userId = ? \
+			where sc.active = 1", [request.userId]
+		).findAll {
+			it.state
+		}
+		return studentCourses
 	}
 	
 }

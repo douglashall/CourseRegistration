@@ -10,15 +10,10 @@ class FacultyController {
 	RegistrationService registrationService
 	
 	def list = {
-		def studentCourses = StudentCourse.executeQuery("\
-			select sc from StudentCourse as sc \
-			join sc.courseInstance as ci \
-			join ci.staff as staff \
-				with staff.userId = ? \
-			where sc.active = 1", [request.userId]
-		).findAll {
-			it.state
-		}
+		Set<StudentCourse> studentCourses = new HashSet<StudentCourse>()
+		studentCourses.addAll(this.registrationService.findAllStudentCoursesForFaculty(request.userId))
+		studentCourses.addAll(this.registrationService.findAllStudentCoursesForProxy(request.userId))
+
 		def model = new TreeMap(studentCourses.groupBy {
 			def prefix = it.courseInstance.shortTitle ? it.courseInstance.shortTitle : it.courseInstance.course.registrarCode
 			prefix + " / " + it.courseInstance.term.displayName
@@ -104,6 +99,21 @@ class FacultyController {
 				}
 			}
 		}
+	}
+	
+	def proxy = {
+		def proxyUrl = RegistrationProxyUrl.get(params.proxy)
+		if (request.userId != proxyUrl.facultyUserId) {
+			def proxy = RegistrationProxy.findByRegistrationProxyUrlAndProxyUserId(proxyUrl, request.userId)
+			if (!proxy) {
+				proxy = new RegistrationProxy(
+					proxyUserId: request.userId,
+					registrationProxyUrl: proxyUrl
+				)
+				proxy.save(flush:true)
+			}
+		}
+		forward(action: "list")
 	}
 	
 }

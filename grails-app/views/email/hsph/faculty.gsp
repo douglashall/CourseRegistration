@@ -6,7 +6,9 @@
 
 <p>Students are requesting to cross-register into <b>${course.code}</b>.</p>
 
-<b>${student.name}</b>, <b>${student.schoolDisplay}</b><br/>
+<g:each var="student" in="${students}">
+<b>${student.name}</b>, ${student.schoolDisplay}<br/>
+</g:each>
 
 <p><b>To take action on the petitions you may either:</b></p>
 <ul>
@@ -16,7 +18,7 @@
 
 <p><b>To Approve the Petitions Yourself</b></p>
 <ul>
-<li>Please visit the <a href="http://crossreg.harvard.edu">Cross Registration System</a>. If you are unable to click the link, please copy and paste the link, with no spaces, into your browser address bar.  <a href="http://crossreg.harvard.edu">http://crossreg.harvard.edu</a></li>
+<li>Please visit the <a href="${url}">Cross Registration System</a>. If you are unable to click the link, please copy and paste the link, with no spaces, into your browser address bar.  <a href="${url}">${url}</a></li>
 <li>Login with your HUID and PIN.</li>
 <li>Petitions can be approved/denied individually or in bulk.
 	<ul>
