@@ -8,8 +8,6 @@ import grails.converters.*
 import groovyx.net.http.HTTPBuilder
 import groovyx.net.http.Method
 
-import courseregistration.SendFacultyNotificationsJob
-
 class ApplicationController {
 	
 	RegistrationService registrationService

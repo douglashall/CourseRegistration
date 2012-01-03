@@ -144,6 +144,8 @@ log4j = {
 	info additivity: false,
 		 requestLog: 'grails.app.filters.RequestLogFilters'
 		   
+	debug 'grails.app.jobs'
+	
     //debug  'org.apache.http.headers',
 	//       'org.apache.http.wire'
 		   

@@ -17,7 +17,7 @@ class RegistrationProxy implements Serializable {
 	
     static constraints = {
 		proxyUserId(blank:false)
-		registrationFacultyProxyUrl(blank:false)
+		registrationProxyUrl(blank:false)
     }
 	
 }

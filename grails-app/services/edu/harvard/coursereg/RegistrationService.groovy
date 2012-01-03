@@ -345,7 +345,7 @@ class RegistrationService {
 			join sc.courseInstance as ci \
 			join ci.staff as staff \
 				with staff.userId = ? \
-			where sc.active = 1", [request.userId]
+			where sc.active = 1", [facultyId]
 		).findAll {
 			it.state
 		}

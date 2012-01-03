@@ -1,5 +1,3 @@
-package courseregistration
-
 import edu.harvard.coursereg.RegistrationService;
 import edu.harvard.coursereg.RegistrationState
 import edu.harvard.coursereg.StudentCourse
@@ -16,12 +14,14 @@ class SendFacultyNotificationsJob {
 	}
 
     def execute() {
+		println "**** Job started ****"
         def studentCourses = StudentCourse.findAllByActive(1).findAll {
 			if (it.registrationContext) {
 				return it.registrationContext.currentState.id == RegistrationState.PENDING
 			}
 			return false
 		}
+		println "**** Student Courses found " + studentCourses.size() + " ****"
 		
 		def facultyMap = [:]
 		studentCourses.each {studentCourse ->
@@ -46,6 +46,7 @@ class SendFacultyNotificationsJob {
 				studentCourseEntry << studentCourse
 			}
 		}
+		println "**** Faculty Map created ****"
 		
 		facultyMap.each {facultyKey, facultyVal ->
 			facultyVal.studentCourseMap.each {courseKey, courseVal ->
