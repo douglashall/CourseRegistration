@@ -151,6 +151,9 @@ log4j = {
 		   
 }
 
+student.actions.disabled = false
+faculty.actions.disabled = false
+
 bitly.api.url = 'https://api-ssl.bitly.com/v3/shorten?login=${username}&apiKey=${apikey}&longUrl=${url}&format=json'
 
 email.from = "Online Cross Registration <icommons-bounces@harvard.edu>"

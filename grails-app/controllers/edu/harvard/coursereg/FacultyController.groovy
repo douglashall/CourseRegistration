@@ -1,7 +1,8 @@
 package edu.harvard.coursereg
 
-import edu.harvard.icommons.coursedata.CourseStaff
 import grails.converters.*
+
+import java.text.SimpleDateFormat
 
 import org.codehaus.groovy.grails.web.json.*
 
@@ -13,6 +14,13 @@ class FacultyController {
 		Set<StudentCourse> studentCourses = new HashSet<StudentCourse>()
 		studentCourses.addAll(this.registrationService.findAllStudentCoursesForFaculty(request.userId))
 		studentCourses.addAll(this.registrationService.findAllStudentCoursesForProxy(request.userId))
+		
+		SimpleDateFormat sdf = new SimpleDateFormat("MMM d, yyyy h:mm a")
+		studentCourses.sort {a,b ->
+			def aDate = sdf.parse(a.getDateSubmitted())
+			def bDate = sdf.parse(b.getDateSubmitted())
+			return aDate.compareTo(bDate)
+		}
 
 		def model = new TreeMap(studentCourses.groupBy {
 			def prefix = it.courseInstance.shortTitle ? it.courseInstance.shortTitle : it.courseInstance.course.registrarCode
@@ -49,13 +57,16 @@ class FacultyController {
 	
 	def approve = {
 		def model = []
-		def ids = params.ids.trim().tokenize().collect {Long.parseLong(it)}
-		def studentCourses = StudentCourse.findAllByIdInList(ids)
 		
-		studentCourses.each {
-			def ctx = it.registrationContext
-			this.registrationService.facultyApprove(ctx, request.userId)
-			model << it
+		if (!grailsApplication.config.faculty.actions.disabled) {
+			def ids = params.ids.trim().tokenize().collect {Long.parseLong(it)}
+			def studentCourses = StudentCourse.findAllByIdInList(ids)
+			
+			studentCourses.each {
+				def ctx = it.registrationContext
+				this.registrationService.facultyApprove(ctx, request.userId)
+				model << it
+			}
 		}
 		
 		withFormat {
@@ -76,13 +87,16 @@ class FacultyController {
 	
 	def deny = {
 		def model = []
-		def ids = params.ids.trim().tokenize().collect {Long.parseLong(it)}
-		def studentCourses = StudentCourse.findAllByIdInList(ids)
 		
-		studentCourses.each {
-			def ctx = it.registrationContext
-			this.registrationService.facultyDeny(ctx, request.userId)
-			model << it
+		if (!grailsApplication.config.faculty.actions.disabled) {
+			def ids = params.ids.trim().tokenize().collect {Long.parseLong(it)}
+			def studentCourses = StudentCourse.findAllByIdInList(ids)
+			
+			studentCourses.each {
+				def ctx = it.registrationContext
+				this.registrationService.facultyDeny(ctx, request.userId)
+				model << it
+			}
 		}
 		
 		withFormat {

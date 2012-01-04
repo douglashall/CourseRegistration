@@ -1,12 +1,6 @@
 package edu.harvard.coursereg
 
 import static groovyx.net.http.ContentType.XML
-import edu.harvard.grails.plugins.baseline.BaselineUtils
-import grails.converters.*
-import groovy.text.GStringTemplateEngine
-import groovy.xml.XmlUtil
-import groovyx.net.http.HTTPBuilder
-import groovyx.net.http.Method
 
 import javax.xml.transform.Result
 import javax.xml.transform.Source
@@ -20,6 +14,13 @@ import org.apache.fop.apps.Fop
 import org.apache.fop.apps.FopFactory
 import org.apache.fop.apps.MimeConstants
 import org.codehaus.groovy.grails.web.json.*
+
+import edu.harvard.grails.plugins.baseline.BaselineUtils
+import grails.converters.*
+import groovy.text.GStringTemplateEngine
+import groovy.xml.XmlUtil
+import groovyx.net.http.HTTPBuilder
+import groovyx.net.http.Method
 
 class StudentController {
 	
@@ -60,38 +61,40 @@ class StudentController {
 	}
 	
 	def register = {
-		def studentCourse = StudentCourse.findAllByUserIdAndActive(request.userId, 1).find {
-			!it.state &&
-			it.courseInstance.id.equals(Long.parseLong(params.id))
-		}
-		
-		if (studentCourse) {
-			studentCourse.programDepartment = params.programDepartment
-			studentCourse.degreeYear = params.degreeYear ? Long.parseLong(params.degreeYear) : null
-			if (!studentCourse.levelOption && params.levelOption) {
-				studentCourse.levelOption = studentCourse.getLevelOptions().find {it.id == Integer.parseInt(params.levelOption)}.name
-			}
-			if (!studentCourse.gradingOption && params.gradingOption) {
-				studentCourse.gradingOption = studentCourse.getGradingOptions().find {it.id == params.gradingOption}.name
-			}
-			if (!studentCourse.homeSchoolId && params.homeSchoolId) {
-				studentCourse.homeSchoolId = params.homeSchoolId
+		if (!grailsApplication.config.student.actions.disabled) {
+			def studentCourse = StudentCourse.findAllByUserIdAndActive(request.userId, 1).find {
+				!it.state &&
+				it.courseInstance.id.equals(Long.parseLong(params.id))
 			}
 			
-			def regStudent = RegistrationStudent.findByUserId(request.userId)
-			if (!regStudent) {
-				regStudent = new RegistrationStudent(userId: request.userId)
+			if (studentCourse) {
+				studentCourse.programDepartment = params.programDepartment
+				studentCourse.degreeYear = params.degreeYear ? Long.parseLong(params.degreeYear) : null
+				if (!studentCourse.levelOption && params.levelOption) {
+					studentCourse.levelOption = studentCourse.getLevelOptions().find {it.id == Integer.parseInt(params.levelOption)}.name
+				}
+				if (!studentCourse.gradingOption && params.gradingOption) {
+					studentCourse.gradingOption = studentCourse.getGradingOptions().find {it.id == params.gradingOption}.name
+				}
+				if (!studentCourse.homeSchoolId && params.homeSchoolId) {
+					studentCourse.homeSchoolId = params.homeSchoolId
+				}
+				
+				def regStudent = RegistrationStudent.findByUserId(request.userId)
+				if (!regStudent) {
+					regStudent = new RegistrationStudent(userId: request.userId)
+				}
+				regStudent.homeSchoolId = studentCourse.homeSchoolId
+				regStudent.programDepartment = studentCourse.programDepartment
+				regStudent.degreeYear = studentCourse.degreeYear
+				regStudent.save()
+				
+				def ctx = new RegistrationContext()
+				ctx.addToStudentCourses(studentCourse)
+				ctx.save(flush:true)
+				
+				this.registrationService.submit(ctx, request.userId)
 			}
-			regStudent.homeSchoolId = studentCourse.homeSchoolId
-			regStudent.programDepartment = studentCourse.programDepartment
-			regStudent.degreeYear = studentCourse.degreeYear
-			regStudent.save()
-			
-			def ctx = new RegistrationContext()
-			ctx.addToStudentCourses(studentCourse)
-			ctx.save(flush:true)
-			
-			this.registrationService.submit(ctx, request.userId)
 		}
 		
 		withFormat {

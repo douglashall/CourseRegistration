@@ -117,7 +117,7 @@ class StudentCourse implements Serializable {
 			def courseStaff = this.courseInstance.staff
 			def courseHead = courseStaff.find {it.roleId == 1}
 			if (!courseHead) {courseHead = courseStaff.find {it.roleId == 2}}
-			if (!courseHead && courseStaff.size() > 0) {courseHead = courseStaff[0]}
+			if (!courseHead && courseStaff.size() > 0) {courseHead = courseStaff.toArray()[0]}
 			
 			if (courseHead) {
 				def person = BaselineUtils.findPerson(courseHead.userId)

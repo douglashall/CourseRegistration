@@ -267,10 +267,12 @@
     	<g:each in="${model}" var="entry">
 	    	<fieldset>
 				<legend>${entry.key}</legend>
-				<div class="bulk-operations">
-					<input type="button" class="course_approve" value="Approve All Selected" disabled="disabled" />
-					<input type="button" class="course_deny" value="Deny All Selected" disabled="disabled" />
-				</div>
+				<g:if test="${!grailsApplication.config.faculty.actions.disabled}">
+					<div class="bulk-operations">
+						<input type="button" class="course_approve" value="Approve All Selected" disabled="disabled" />
+						<input type="button" class="course_deny" value="Deny All Selected" disabled="disabled" />
+					</div>
+				</g:if>
 				<table class="grid petition_form">
 					<thead>
 						<tr>
@@ -282,8 +284,10 @@
 							<th rowspan="1" colspan="1">Level</th>
 							<th rowspan="1" colspan="1">Grading&nbsp;Option</th>
 							<th rowspan="1" colspan="1">Status</th>
+							<g:if test="${!grailsApplication.config.faculty.actions.disabled}">
 							<th rowspan="1" colspan="1">Action</th>
 							<th rowspan="1" colspan="1"><input type="checkbox" class="bulk-select" /></th>
+							</g:if>
 						</tr>
 					</thead>
 					<tbody>
@@ -319,6 +323,7 @@
 										</g:if>
 									</div>
 								</td>
+								<g:if test="${!grailsApplication.config.faculty.actions.disabled}">
 								<td class="registration_action" rowspan="1" colspan="1">
 									<div>
 										<g:if test="${studentCourse.state && !studentCourse.state.terminal}">
@@ -332,6 +337,7 @@
 										<input type="checkbox"/>
 									</g:if>
 								</td>
+								</g:if>
 							</tr>
 						</g:each>
 					</tbody>
