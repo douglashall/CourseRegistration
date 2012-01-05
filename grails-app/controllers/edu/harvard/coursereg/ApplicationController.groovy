@@ -48,16 +48,8 @@ class ApplicationController {
 	}
 	
 	def updateSolrIndex = {
-		def studentCourses = []
-		def contexts = RegistrationContext.findAll("\
-			from RegistrationContext as ctx\
-			where ctx.registrationContextStates.size > 0\
-		")
-		contexts.each {
-			it.studentCourses.findAll {it.active == 1}.each {studentCourses << it}
-		}
-		this.registrationService.updateStudentCourseIndex(studentCourses)
-		render "success"
+		UpdateSolrIndexJob.triggerNow()
+		render "job started"
 	}
 	
 	def triggerFacultyEmailJob = {

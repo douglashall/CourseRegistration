@@ -319,7 +319,12 @@
 								<td class="status" rowspan="1" colspan="1">
 									<div>
 										<g:if test="${studentCourse.state}">
-											<div class="course_status icon-text ${studentCourse.state.type}<g:if test="${studentCourse.state.terminal == 1}"> terminal</g:if>">${studentCourse.state.state}</div>
+											<div class="course_status icon-text ${studentCourse.state.type}<g:if test="${studentCourse.state.terminal == 1}"> terminal</g:if>">
+												${studentCourse.state.state}
+												<g:if test="${studentCourse.state.terminal && studentCourse.stateCreator}">
+													<br/><i>by ${studentCourse.stateCreator}</i>
+												</g:if>
+											</div>
 										</g:if>
 									</div>
 								</td>

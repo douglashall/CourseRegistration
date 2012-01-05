@@ -14,18 +14,20 @@ class FacultyController {
 		Set<StudentCourse> studentCourses = new HashSet<StudentCourse>()
 		studentCourses.addAll(this.registrationService.findAllStudentCoursesForFaculty(request.userId))
 		studentCourses.addAll(this.registrationService.findAllStudentCoursesForProxy(request.userId))
-		
-		SimpleDateFormat sdf = new SimpleDateFormat("MMM d, yyyy h:mm a")
-		studentCourses.sort {a,b ->
-			def aDate = sdf.parse(a.getDateSubmitted())
-			def bDate = sdf.parse(b.getDateSubmitted())
-			return aDate.compareTo(bDate)
-		}
 
 		def model = new TreeMap(studentCourses.groupBy {
 			def prefix = it.courseInstance.shortTitle ? it.courseInstance.shortTitle : it.courseInstance.course.registrarCode
 			prefix + " / " + it.courseInstance.term.displayName
 		})
+		
+		SimpleDateFormat sdf = new SimpleDateFormat("MMM d, yyyy h:mm a")
+		model.each {
+			it.value.sort {a,b ->
+				def aDate = sdf.parse(a.getDateSubmitted())
+				def bDate = sdf.parse(b.getDateSubmitted())
+				return bDate.compareTo(aDate)
+			}
+		}
 		
 		def approvalText = [
 			"standard": grailsApplication.config.standard.faculty.approval.text,

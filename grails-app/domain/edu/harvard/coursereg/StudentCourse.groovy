@@ -29,6 +29,7 @@ class StudentCourse implements Serializable {
 	List<Map> gradingOptions
 	List<Map> schoolOptions
 	RegistrationState state
+	String stateCreator
 	String dateSubmitted
 	
 	static transients = [
@@ -41,6 +42,7 @@ class StudentCourse implements Serializable {
 		'gradingOptions',
 		'schoolOptions',
 		'state',
+		'stateCreator',
 		'dateSubmitted'
 	]
 	
@@ -169,6 +171,20 @@ class StudentCourse implements Serializable {
 			state = this.registrationContext.currentState
 		}
 		return state
+	}
+	
+	public String getStateCreator() {
+		if (!this.stateCreator) {
+			if (this.registrationContext && this.registrationContext.currentStateCreator) {
+				def creator = this.registrationContext.currentStateCreator
+				if (creator.unknown) {
+					this.stateCreator = creator.firstName
+				} else {
+					this.stateCreator = creator.firstName + " " + creator.lastName
+				}
+			}
+		}
+		return this.stateCreator
 	}
 	
 	public List<Map> getLevelOptions() {

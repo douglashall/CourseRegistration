@@ -5,6 +5,11 @@ quartz {
 }
 
 environments {
+	production {
+		quartz {
+			autoStartup = true
+		}
+	}
     test {
         quartz {
             autoStartup = true
