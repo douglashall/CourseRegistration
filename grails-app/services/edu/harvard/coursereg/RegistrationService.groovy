@@ -139,6 +139,7 @@ class RegistrationService {
 				state: it.state.state,
 				stateTerminal: it.state.terminal,
 				stateType: it.state.type,
+				stateCreator: it.stateCreator,
 				processed: it.registrationContext.processed > 0,
 				petitionCreated: initialState ? solrIndexDateFormat.format(initialState.dateCreated) : "",
 				gradingOption: it.gradingOption,
@@ -191,6 +192,7 @@ class RegistrationService {
 		def total
 		def result = []
 		def queryString = []
+		if (searchParams.id) {queryString << ('id:' + searchParams.id)}
 		if (searchParams.query) {queryString << ('"' + searchParams.query + '"')}
 		if (searchParams.status) {queryString << ('state:"' + searchParams.status + '"')}
 		if (searchParams.homeSchool) {queryString << ('homeSchool:"' + searchParams.homeSchool + '"')}
@@ -349,6 +351,14 @@ class RegistrationService {
 		).findAll {
 			it.state
 		}
+		
+		studentCourses.each {
+			def result = this.searchStudentCourses([id: it.id])
+			if (result.records.size() > 0) {
+				it.stateCreator = result.records[0].stateCreator
+			}
+		}
+		
 		return studentCourses
 	}
 	

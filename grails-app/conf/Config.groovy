@@ -110,6 +110,11 @@ environments {
 def catalinaBase = System.properties.getProperty('catalina.base')
 if (!catalinaBase) {catalinaBase = "target"}
 log4j = {
+	
+	root {
+		info()
+	}
+	
 	// Example of changing the log pattern for the default console
 	// appender:
 	//
@@ -143,8 +148,6 @@ log4j = {
 		   
 	info additivity: false,
 		 requestLog: 'grails.app.filters.RequestLogFilters'
-		   
-	debug 'grails.app.jobs'
 	
     //debug  'org.apache.http.headers',
 	//       'org.apache.http.wire'

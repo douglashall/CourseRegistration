@@ -180,7 +180,8 @@ class StudentCourse implements Serializable {
 				if (creator.unknown) {
 					this.stateCreator = creator.firstName
 				} else {
-					this.stateCreator = creator.firstName + " " + creator.lastName
+					def isRegistrar = BaselineUtils.isGroupMember(creator.id, "IcGroup", grailsApplication.config.registrar.group.id)
+					this.stateCreator = isRegistrar ? 'Registrar' : creator.firstName + " " + creator.lastName
 				}
 			}
 		}

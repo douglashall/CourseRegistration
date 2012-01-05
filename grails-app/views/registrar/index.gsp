@@ -34,6 +34,7 @@
 						{name: 'state', mapping: 'state'},
 						{name: 'stateTerminal', mapping: 'stateTerminal'},
 						{name: 'stateType', mapping: 'stateType'},
+						{name: 'stateCreator', mapping: 'stateCreator'},
 						{name: 'petitionCreated', mapping: 'petitionCreated'},
 						{name: 'gradingOption', mapping: 'gradingOption'},
 						{name: 'processed', mapping: 'processed'}
@@ -315,7 +316,8 @@
                             	header: 'Petition Status', 
                                 dataIndex: 'state', 
                                 renderer: function(value, metadata, record){
-                                    return String.format('<div class="icon-text {0}">{1}</div>', record.get('stateType'), value);
+                                    var stateCreator = record.get('stateCreator');
+                                    return String.format('<div class="icon-text {0}">{1}{2}</div>', record.get('stateType'), value, stateCreator && record.get('stateTerminal') ? String.format('<br/><i>by {0}</i>', stateCreator) : '');
                                 }
 							},
                             {

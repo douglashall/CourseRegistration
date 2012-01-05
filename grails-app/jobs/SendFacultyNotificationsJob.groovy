@@ -14,14 +14,14 @@ class SendFacultyNotificationsJob {
 	}
 
     def execute() {
-		println "**** Job started ****"
+		log.info("Starting SendFacultyNotificationsJob...")
         def studentCourses = StudentCourse.findAllByActive(1).findAll {
 			if (it.registrationContext) {
 				return it.registrationContext.currentState.id == RegistrationState.PENDING
 			}
 			return false
 		}
-		println "**** Student Courses found " + studentCourses.size() + " ****"
+		log.info("Sending faculty notifications for ${studentCourses.size()} student course records")
 		
 		def facultyMap = [:]
 		studentCourses.each {studentCourse ->
@@ -46,13 +46,13 @@ class SendFacultyNotificationsJob {
 				studentCourseEntry << studentCourse
 			}
 		}
-		println "**** Faculty Map created ****"
 		
 		facultyMap.each {facultyKey, facultyVal ->
 			facultyVal.studentCourseMap.each {courseKey, courseVal ->
 				registrationService.sendNotificationEmailToFaculty(facultyVal.faculty, courseVal)
 			}
 		}
+		log.info("Completed SendFacultyNotificationsJob.")
     }
 	
 }
