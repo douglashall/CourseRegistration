@@ -61,12 +61,12 @@ class StudentController {
 	}
 	
 	def register = {
+		def studentCourse = StudentCourse.findAllByUserIdAndActive(request.userId, 1).find {
+			!it.state &&
+			it.courseInstance.id.equals(Long.parseLong(params.id))
+		}
+		
 		if (!grailsApplication.config.student.actions.disabled) {
-			def studentCourse = StudentCourse.findAllByUserIdAndActive(request.userId, 1).find {
-				!it.state &&
-				it.courseInstance.id.equals(Long.parseLong(params.id))
-			}
-			
 			if (studentCourse) {
 				studentCourse.programDepartment = params.programDepartment
 				studentCourse.degreeYear = params.degreeYear ? Long.parseLong(params.degreeYear) : null
