@@ -36,6 +36,12 @@ class RegistrationContext implements Serializable {
 		processedBy(nullable: true)
     }
 	
+	public void resetCurrentState() {
+		this.currentState = null
+		this.currentRegistrationContextState = null
+		this.currentStateCreator = null
+	}
+	
 	public RegistrationState getCurrentState() {
 		if (!this.currentState) {
 			def currentRegistrationContextState = this.getCurrentRegistrationContextState()

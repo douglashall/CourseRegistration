@@ -138,7 +138,7 @@ class StudentController {
 			"email": person.email,
 			"courseId": solrXml.result.doc.str.find {it.@name.text() == "id"}.text(),
 			"levelOption": params.levelOption ? studentCourse.getLevelOptions().find {it.id == Integer.valueOf(params.levelOption)}.name : "",
-			"gradingOption": params.gradingOption ? studentCourse.getGradingOptions().find {it.id == Integer.valueOf(params.gradingOption)}.name : ""
+			"gradingOption": params.gradingOption ? studentCourse.getGradingOptions().find {it.id == params.gradingOption}.name : ""
 		]
 		def template = engine.createTemplate(personInfoFile).make(binding)
 		input.appendNode(new XmlSlurper().parseText(template.toString()))

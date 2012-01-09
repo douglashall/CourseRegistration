@@ -4,7 +4,7 @@
 <body>
 <p>Dear <b>${faculty.name}</b>,</p>
 
-<p>The following students are petitioning to cross register into <b>${course.code}</b>.</p>
+<p>Students are petitioning to cross register into <b>${course.code}</b>.</p>
 
 <g:each var="student" in="${students}">
 <b>${student.name}</b>, ${student.schoolDisplay}<br/>

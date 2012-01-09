@@ -122,6 +122,7 @@ class RegistrationService {
 			)
 			
 			ctx.addToRegistrationContextStates(registrationContextState)
+			ctx.resetCurrentState()
 			ctx.save(flush:true)
 			
 			def studentCourses = ctx.studentCourses.toList()
@@ -266,7 +267,9 @@ class RegistrationService {
 	}
 	
 	def sendNotificationEmailToFaculty(Map faculty, List<StudentCourse> studentCourses) {
-		def students = studentCourses.collect {it.student}.sort {a, b ->
+		def students = studentCourses.collect {it.student}.findAll {
+			!it.unknown
+		}.sort {a, b ->
 			if (a.school != b.school) {
 				return a.school.compareTo(b.school)
 			} else {
