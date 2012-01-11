@@ -116,6 +116,11 @@ class StudentController {
 	def showPetitionForm = {
 		def solrXml
 		def studentCourse = StudentCourse.get(params.id)
+		
+		if (!studentCourse.homeSchoolId && params.homeSchoolId) {
+			studentCourse.homeSchoolId = params.homeSchoolId
+		}
+		
 		def person = studentCourse.getStudent()
 		def http = new HTTPBuilder(grailsApplication.config.catalog.url + "/select?q=course_instance_id:" + studentCourse.courseInstance.id + "&sort=course_title+asc")
 		http.request(Method.GET, groovyx.net.http.ContentType.XML) {
@@ -133,7 +138,7 @@ class StudentController {
 			"firstName": person.firstName,
 			"lastName": person.lastName,
 			"formattedName": person.firstName + " " + person.lastName,
-			"homeSchool": person.school,
+			"homeSchool": person.schoolDisplay,
 			"phone": person.phone,
 			"email": person.email,
 			"courseId": solrXml.result.doc.str.find {it.@name.text() == "id"}.text(),

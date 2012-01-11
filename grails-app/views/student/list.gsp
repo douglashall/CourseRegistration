@@ -190,7 +190,98 @@
 					this.addEvents('createpetition');
 				}
 			});
-	
+
+			CourseRegistration.PrintPetitionFormPanel = Ext.extend(Ext.form.FormPanel, {
+				border: false,
+				labelWidth: 125,
+				padding: 10,
+				studentCourse: undefined,
+				homeSchoolId: undefined,
+				
+				initComponent: function(){
+				 	this.items = [{
+			 	    	id: 'home-school-combo',
+			 	    	xtype: 'combo',
+			 	    	width: 225,
+			 	        fieldLabel: 'School Affiliation',
+			 	        labelSeparator: '',
+			 	        editable: false,
+			 	        name: 'homeSchoolId',
+			 	        value: this.homeSchoolId,
+			 	        store: new Ext.data.ArrayStore({
+					        fields: ['id', 'name'],
+					        data : this.studentCourse.get('schoolOptions')
+					    }),
+			 	        displayField: 'name',
+			 	        valueField: 'id',
+			 	        mode: 'local',
+			 	        triggerAction: 'all',
+			 	        forceSelection: true,
+			 	        allowBlank: false,
+			 	        msgTarget: 'side',
+			 	        emptyText: 'Please select...',
+			 	        validationEvent: false
+			 	    }];
+			
+					CourseRegistration.PrintPetitionFormPanel.superclass.initComponent.apply(this);
+				}
+			});
+			
+			CourseRegistration.PrintPetitionWindow = Ext.extend(Ext.Window, {
+				layout: {
+		            type: 'vbox',
+		            align: 'stretch'  // Child items are stretched to full width
+		        },
+				title: 'Create and Print Online Cross Registration Petition',
+				buttonAlign: 'center',
+				height: 125,
+				width: 400,
+				modal: true,
+				bodyStyle: 'background-color: #FFFFFF',
+				studentCourse: undefined,
+				homeSchoolId: undefined,
+				
+				initComponent: function(){
+					this.items = [
+						new CourseRegistration.PrintPetitionFormPanel({
+							id: 'print-petition-form-panel', 
+							studentCourse: this.studentCourse,
+							homeSchoolId: this.homeSchoolId
+						})
+					];
+					this.buttons = [{
+						text: 'Print',
+						handler: function(){
+							var isValid = true;
+							var pnl = Ext.getCmp('print-petition-form-panel');
+							pnl.cascade(function(){
+								if (this.validate) {
+									isValid = this.validate() && isValid;
+								}
+							});
+							
+							if (isValid) {
+								var options = {
+									homeSchoolId: Ext.getCmp('home-school-combo').getValue()
+								};
+								this.fireEvent('print', options);
+							}
+						},
+						scope: this
+					},{
+						text: 'Cancel',
+						handler: function(){
+							this.close();
+						},
+						scope: this
+					}];
+					
+					CourseRegistration.PrintPetitionWindow.superclass.initComponent.apply(this);
+					
+					this.addEvents('print');
+				}
+			});
+			
         	$(document).ready(function(){
         		Ext.QuickTips.init();
 
@@ -384,7 +475,7 @@
                     	return;
                     }
 
-                	var params = '';
+					var params = '';
                 	if (levelCombo) {
                     	params += 'levelOption=' + levelCombo.getValue();
                     }
@@ -394,10 +485,31 @@
                         }
                         params += 'gradingOption=' + gradingCombo.getValue();
                     }
-                    if (params.length > 0) {
-                        params = '?' +  params;
+                    
+                    if (rec.get('schoolOptions').length > 1) {
+                    	var win = new CourseRegistration.PrintPetitionWindow({
+	                        studentCourse: rec,
+	                        homeSchoolId: regStudent.homeSchoolId,
+	                        listeners: {
+	                            'print': function(options){
+	                            	win.close();
+	                            	if (params.length > 0) {
+	                            		params += '&';
+	                            	}
+	                            	params += 'homeSchoolId=' + options.homeSchoolId
+	                            	
+	                            	params = '?' +  params;
+	                            	window.open(CourseRegistration.constructUrl('student/showPetitionForm/' + rec.get('id') + params, topicId), '_blank');
+	                            }
+	                        }
+	                    });
+	                    win.show();
+                    } else {
+                    	if (params.length > 0) {
+	                        params = '?' +  params;
+	                    }
+	                	window.open(CourseRegistration.constructUrl('student/showPetitionForm/' + rec.get('id') + params, topicId), '_blank');
                     }
-                	window.open(CourseRegistration.constructUrl('student/showPetitionForm/' + rec.get('id') + params, topicId), '_blank');
                 });
             });
         	// ]]>
