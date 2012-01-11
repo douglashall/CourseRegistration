@@ -25,18 +25,23 @@ class CourseController {
 	
 	def catalogList = {
 		def result = []
+		def terminalMap = [:]
 		def studentCourses = StudentCourse.findAllByUserIdAndActive(request.userId, 1)
 		
 		if (studentCourses.size() > 0) {
 			def queryString = []
 			studentCourses.each {
 				queryString << ('course_instance_id:' + it.courseInstance.id)
+				terminalMap[String.valueOf(it.courseInstance.id)] = it.state ? it.state.terminal == 1 : false
 			}
 			def http = new HTTPBuilder(grailsApplication.config.catalog.url + "/select?q=" + URLEncoder.encode(queryString.join(" OR "), 'UTF-8'))
 			http.request(Method.GET, groovyx.net.http.ContentType.XML) {
 				response.success = {resp, xml ->
 					xml.result.doc.each {
-						result.add(it.str.find {it.@name.text() == "id"}.text())
+						result.add([
+							courseInstanceId: it.str.find {it.@name.text() == "course_instance_id"}.text(),
+							catalogId: it.str.find {it.@name.text() == "id"}.text()
+						])
 					}
 				}
 			}
@@ -50,7 +55,7 @@ class CourseController {
 				render(contentType:"application/xml"){
 					courselist(size: result.size()){
 						for(c in result) {
-							course(course_id: c)
+							course(course_id: c.catalogId, terminal: terminalMap[c.courseInstanceId])
 						}
 					}
 				}
