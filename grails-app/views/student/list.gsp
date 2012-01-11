@@ -583,15 +583,15 @@
 								<td class="registration_action" rowspan="1" colspan="1">
 									<div>
 										<g:if test="${studentCourse.courseSchool.id != 'hks' && studentCourse.courseSchool.schoolId != 'ksg'}">
-											<g:if test="${!studentCourse.state}">
-												<g:if test="${studentCourse.checkPilot()}">
-													<g:if test="${!grailsApplication.config.student.actions.disabled}">
+											<g:if test="${!grailsApplication.config.student.actions.disabled || grailsApplication.config.student.actions.enabled.schools.contains(studentCourse.courseSchool.id)}">
+												<g:if test="${!studentCourse.state}">
+													<g:if test="${studentCourse.checkPilot()}">
 														<div class="course_create"><a style="font-size: small" title="" href="javascript:void(0);">Submit Online Petition</a></div>
 													</g:if>
+													<g:else>
+														<div class="course_print"><a style="font-size: small" title="" href="javascript:void(0);" target="">Create and Print Petition</a></div>
+													</g:else>
 												</g:if>
-												<g:else>
-													<div class="course_print"><a style="font-size: small" title="" href="javascript:void(0);" target="">Create and Print Petition</a></div>
-												</g:else>
 											</g:if>
 										</g:if>
 										<g:else>

@@ -62,7 +62,6 @@ environments {
 		solr.url = "http://tool2.isites.harvard.edu:8935/solr"
 		catalog.url = "http://tool2.isites.harvard.edu:8000/hucc_prod_solr"
 		faculty.proxy.url = "http://isites.harvard.edu/icb/icb.do?keyword=CrossRegistrationPreview&pageid=icb.page481293&pageContentId=icb.pagecontent1022115&view=faculty/proxy&viewParam_proxy="
-		pilot.schools = "gse,hds,hsph"
 		registrar {
 			group.id = "20466"
 			whitelist {
@@ -78,7 +77,6 @@ environments {
 		solr.url = "http://tool2.isites.harvard.edu:8935/solr"
 		catalog.url = "http://tool2.isites.harvard.edu:8987/solr"
 		faculty.proxy.url = "http://isites.harvard.edu/icb/icb.do?keyword=CrossRegistrationPreview&pageid=icb.page479222&pageContentId=icb.pagecontent1016467&view=faculty/proxy&viewParam_proxy="
-		pilot.schools = "gse,hds,hsph"
 		registrar {
 			group.id = "20466"
 			whitelist {
@@ -94,7 +92,6 @@ environments {
 		solr.url = "http://localhost:8983/solr"
 		catalog.url = "http://qa.isites.harvard.edu:8986/solr"
 		faculty.proxy.url = "http://isites.harvard.edu/icb/icb.do?keyword=CrossRegistrationPreview&pageid=icb.page479222&pageContentId=icb.pagecontent1016467&view=faculty/proxy&viewParam_proxy="
-		pilot.schools = "gse,hds,hsph"
 		registrar {
 			group.id = "18470"
 			whitelist {
@@ -154,8 +151,13 @@ log4j = {
 		   
 }
 
-student.actions.disabled = false
-faculty.actions.disabled = false
+pilot.schools = "gse,hds,hsph"
+
+student.actions.disabled = true
+faculty.actions.disabled = true
+
+student.actions.enabled.schools = []
+faculty.actions.enabled.schools = []
 
 bitly.api.url = 'https://api-ssl.bitly.com/v3/shorten?login=${username}&apiKey=${apikey}&longUrl=${url}&format=json'
 

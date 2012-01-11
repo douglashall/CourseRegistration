@@ -66,8 +66,9 @@ class StudentController {
 			it.courseInstance.id.equals(Long.parseLong(params.id))
 		}
 		
-		if (!grailsApplication.config.student.actions.disabled) {
-			if (studentCourse) {
+		
+		if (studentCourse) {
+			if (!grailsApplication.config.student.actions.disabled || grailsApplication.config.student.actions.enabled.schools.contains(studentCourse.getCourseSchool().id)) {
 				studentCourse.programDepartment = params.programDepartment
 				studentCourse.degreeYear = params.degreeYear ? Long.parseLong(params.degreeYear) : null
 				if (!studentCourse.levelOption && params.levelOption) {

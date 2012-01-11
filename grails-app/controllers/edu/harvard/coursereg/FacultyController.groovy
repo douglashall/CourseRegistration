@@ -60,7 +60,7 @@ class FacultyController {
 	def approve = {
 		def model = []
 		
-		if (!grailsApplication.config.faculty.actions.disabled) {
+		if (!grailsApplication.config.faculty.actions.disabled || grailsApplication.config.faculty.actions.enabled.schools.contains(studentCourse.getCourseSchool().id)) {
 			def ids = params.ids.trim().tokenize().collect {Long.parseLong(it)}
 			def studentCourses = StudentCourse.findAllByIdInList(ids)
 			
@@ -90,7 +90,7 @@ class FacultyController {
 	def deny = {
 		def model = []
 		
-		if (!grailsApplication.config.faculty.actions.disabled) {
+		if (!grailsApplication.config.faculty.actions.disabled || grailsApplication.config.faculty.actions.enabled.schools.contains(studentCourse.getCourseSchool().id)) {
 			def ids = params.ids.trim().tokenize().collect {Long.parseLong(it)}
 			def studentCourses = StudentCourse.findAllByIdInList(ids)
 			

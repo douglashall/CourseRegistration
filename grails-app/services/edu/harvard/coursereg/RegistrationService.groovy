@@ -236,10 +236,8 @@ class RegistrationService {
 		def courseSchool = studentCourse.getCourseSchool()
 		def ci = studentCourse.getCourseInstance()
 		
-		def recipients = []
-		if (Environment.current != Environment.PRODUCTION) {
-			recipients.addAll(config.test.email.recipients)
-		} else {
+		def recipients = config.test.email.recipients
+		if (Environment.current == Environment.PRODUCTION) {
 			if (action.notifyStudent) recipients << student.email
 			if (action.notifyFaculty) recipients << instructor.email
 		}
@@ -281,10 +279,8 @@ class RegistrationService {
 		def courseSchool = studentCourses[0].getCourseSchool()
 		def ci = studentCourses[0].getCourseInstance()
 		
-		def recipients = []
-		if (Environment.current != Environment.PRODUCTION) {
-			recipients.addAll(config.test.email.recipients)
-		} else {
+		def recipients = config.test.email.recipients
+		if (Environment.current == Environment.PRODUCTION) {
 			recipients << faculty.email
 		}
 		
