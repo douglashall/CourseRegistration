@@ -36,6 +36,30 @@ class RegistrationService {
 		"hsph": config.hsph.email.replyto
 	]
 	
+	def findAllActiveStudentCoursesForStudent(String userId) {
+		return StudentCourse.executeQuery("\
+			select sc from StudentCourse as sc \
+			join sc.courseInstance as ci \
+				with ci.excludeFromCatalog = 0 \
+			where \
+				sc.userId = :userId and \
+				sc.active = 1",
+			[
+				userId: userId
+			]
+		)
+	}
+	
+	def findAllActiveStudentCourses() {
+		return StudentCourse.executeQuery("\
+			select sc from StudentCourse as sc \
+			join sc.courseInstance as ci \
+				with ci.excludeFromCatalog = 0 \
+			where \
+				sc.active = 1"
+		)
+	}
+	
 	def addCourseForStudent(String userId, CourseInstance ci) {
 		StudentCourse studentCourse = StudentCourse.createCriteria().get {
 			eq("userId", userId)
@@ -46,7 +70,7 @@ class RegistrationService {
 			studentCourse = new StudentCourse(userId:userId, courseInstance:ci)
 			def schoolOptions = studentCourse.schoolOptions
 			if (schoolOptions.size() == 1) {
-				studentCourse.homeSchoolId = schoolOptions[0].id
+				studentCourse.homeSchoolId = schoolOptions[0][0]
 			}
 			def levelOptions = studentCourse.levelOptions
 			if (levelOptions.size() == 1) {
@@ -238,8 +262,8 @@ class RegistrationService {
 		
 		def recipients = config.test.email.recipients
 		if (Environment.current == Environment.PRODUCTION) {
-			if (action.notifyStudent) recipients << student.email
-			if (action.notifyFaculty) recipients << instructor.email
+			if (action.notifyStudent && !config.email.student.disabled) recipients << student.email
+			if (action.notifyFaculty && !config.email.faculty.disabled) recipients << instructor.email
 		}
 		
 		def model = [
@@ -280,7 +304,7 @@ class RegistrationService {
 		def ci = studentCourses[0].getCourseInstance()
 		
 		def recipients = config.test.email.recipients
-		if (Environment.current == Environment.PRODUCTION) {
+		if (Environment.current == Environment.PRODUCTION && !config.email.faculty.disabled) {
 			recipients << faculty.email
 		}
 		

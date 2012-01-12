@@ -27,7 +27,7 @@ class StudentController {
 	RegistrationService registrationService
 	
 	def list = {
-		def studentCourses = StudentCourse.findAllByUserIdAndActive(request.userId, 1)
+		def studentCourses = this.registrationService.findAllActiveStudentCoursesForStudent(request.userId)
 		
 		if (studentCourses.size() > 1) {
 			def student = studentCourses[0].student
@@ -61,7 +61,7 @@ class StudentController {
 	}
 	
 	def register = {
-		def studentCourse = StudentCourse.findAllByUserIdAndActive(request.userId, 1).find {
+		def studentCourse = this.registrationService.findAllActiveStudentCoursesForStudent(request.userId).find {
 			!it.state &&
 			it.courseInstance.id.equals(Long.parseLong(params.id))
 		}

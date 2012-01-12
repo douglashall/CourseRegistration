@@ -152,6 +152,7 @@ log4j = {
 }
 
 pilot.schools = "gse,hds,hsph"
+term.codes.active = [2,8,9]
 
 student.actions.disabled = true
 faculty.actions.disabled = true
@@ -160,6 +161,9 @@ student.actions.enabled.schools = []
 faculty.actions.enabled.schools = []
 
 bitly.api.url = 'https://api-ssl.bitly.com/v3/shorten?login=${username}&apiKey=${apikey}&longUrl=${url}&format=json'
+
+email.student.disabled = false
+email.faculty.disabled = true
 
 email.from = "Online Cross Registration <icommons-bounces@harvard.edu>"
 

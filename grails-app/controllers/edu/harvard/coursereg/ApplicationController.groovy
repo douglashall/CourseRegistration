@@ -448,7 +448,7 @@ class ApplicationController {
 	}
 	
 	def testRegister = {
-		def studentCourses = StudentCourse.findAllByActive(1).findAll {
+		def studentCourses = this.registrationService.findAllActiveStudentCourses().findAll {
 			!it.state
 		}
 		
@@ -462,6 +462,61 @@ class ApplicationController {
 		}
 		
 		render "success"
+	}
+	
+	def populateHomeSchoolId = {
+		def studentCourses = StudentCourse.list()
+		studentCourses.each {
+			def schoolOptions = it.schoolOptions
+			if (schoolOptions.size() == 1) {
+				it.homeSchoolId = schoolOptions[0][0]
+				it.save()
+			}
+		}
+		
+		render(contentType: "application/json") {["success": true]} as JSON
+	}
+	
+	def findPilotSchoolRecords = {
+		def result = []
+		StudentCourse.executeQuery("\
+			select sc from StudentCourse as sc \
+			join sc.courseInstance as ci \
+			join ci.course as c \
+				with c.schoolId in (:pilotSchools) \
+			join ci.term as t \
+				with t.termCode in (:activeTermCodes)",
+			[
+				pilotSchools: Arrays.asList(grailsApplication.config.pilot.schools.split(',')),
+				activeTermCodes: grailsApplication.config.term.codes.active
+			]
+		).each {
+			result << [
+				huid: it.userId,
+				email: it.student.email,
+				firstName: it.student.firstName,
+				lastName: it.student.lastName,
+				homeSchool: it.student.schoolAffiliations,
+				hostSchool: it.courseSchool.id
+			]
+		}
+		
+		def output = new StringBuilder()
+		result.each {
+			output.append(it.huid)
+			output.append("\t")
+			output.append(it.email)
+			output.append("\t")
+			output.append(it.firstName)
+			output.append("\t")
+			output.append(it.lastName)
+			output.append("\t")
+			output.append(it.homeSchool)
+			output.append("\t")
+			output.append(it.hostSchool)
+			output.append("\n")
+		}
+		render output.toString()
 	}
 	
 }

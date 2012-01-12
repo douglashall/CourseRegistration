@@ -26,7 +26,7 @@ class CourseController {
 	def catalogList = {
 		def result = []
 		def terminalMap = [:]
-		def studentCourses = StudentCourse.findAllByUserIdAndActive(request.userId, 1)
+		def studentCourses = this.registrationService.findAllActiveStudentCoursesForStudent(request.userId)
 		
 		if (studentCourses.size() > 0) {
 			def queryString = []

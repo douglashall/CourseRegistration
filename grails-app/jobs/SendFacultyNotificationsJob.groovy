@@ -7,6 +7,8 @@ import groovy.text.SimpleTemplateEngine
 
 class SendFacultyNotificationsJob {
 	
+	def grailsApplication
+	
 	RegistrationService registrationService
 	
     static triggers = {
@@ -15,8 +17,9 @@ class SendFacultyNotificationsJob {
 
     def execute() {
 		log.info("Starting SendFacultyNotificationsJob...")
-        def studentCourses = StudentCourse.findAllByActive(1).findAll {
-			if (it.registrationContext) {
+        def studentCourses = this.registrationService.findAllActiveStudentCourses().findAll {
+			def termCode = it.courseInstance.term.termCode
+			if (grailsApplication.config.term.codes.active.contains(termCode) && it.registrationContext) {
 				return it.registrationContext.currentState.id == RegistrationState.PENDING
 			}
 			return false
