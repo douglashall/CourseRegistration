@@ -260,7 +260,7 @@ class RegistrationService {
 		def courseSchool = studentCourse.getCourseSchool()
 		def ci = studentCourse.getCourseInstance()
 		
-		def recipients = config.test.email.recipients
+		def recipients = []
 		if (Environment.current == Environment.PRODUCTION) {
 			if (action.notifyStudent && !config.email.student.disabled) recipients << student.email
 			if (action.notifyFaculty && !config.email.faculty.disabled) recipients << instructor.email
@@ -279,7 +279,8 @@ class RegistrationService {
 		def binding = ["courseCode": model.course.code.toString(), "plural": ""]
 		def template = engine.createTemplate(this.emailSubjects[courseSchool.id]).make(binding)
 		sendMail {
-			to recipients.toArray()
+			to recipients.size() > 0 ? recipients.toArray() : config.email.from
+			bcc config.test.email.recipients.toArray()
 			from config.email.from
 			subject template.toString()
 			replyTo this.emailReplyToAddresses[courseSchool.id]
@@ -303,7 +304,7 @@ class RegistrationService {
 		def courseSchool = studentCourses[0].getCourseSchool()
 		def ci = studentCourses[0].getCourseInstance()
 		
-		def recipients = config.test.email.recipients
+		def recipients = []
 		if (Environment.current == Environment.PRODUCTION && !config.email.faculty.disabled) {
 			recipients << faculty.email
 		}
@@ -328,7 +329,8 @@ class RegistrationService {
 		def binding = ["courseCode": model.course.code.toString(), "plural": model.plural.toString()]
 		def template = engine.createTemplate(this.emailSubjects[courseSchool.id]).make(binding)
 		sendMail {
-			to recipients.toArray()
+			to recipients.size() > 0 ? recipients.toArray() : config.email.from
+			bcc config.test.email.recipients.toArray()
 			from config.email.from
 			subject template.toString()
 			replyTo this.emailReplyToAddresses[courseSchool.id]

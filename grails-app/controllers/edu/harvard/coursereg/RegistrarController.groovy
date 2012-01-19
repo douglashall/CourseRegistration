@@ -73,9 +73,9 @@ class RegistrarController {
 			}
 			xls {
 				def buffer = new StringBuffer()
-				buffer.append("Status\tStudent HUID\tStudent First Name\tStudent Last Name\tStudent Email\tHome School\tSubmitted On\tGrading Option\tCourse\tFaculty Name\tFaculty Email\tTerm\n")
+				buffer.append("Registrar Status\tPetition Status\tStudent HUID\tStudent First Name\tStudent Last Name\tStudent Email\tHome School\tSubmitted On\tGrading Option\tCourse\tFaculty Name\tFaculty Email\tTerm\n")
 				result.records.each {
-					buffer.append("${it.state}\t${it.studentHuid}\t${it.studentFirstName}\t${it.studentLastName}\t${it.studentEmail}\t${it.homeSchool}\t${it.petitionCreated}\t${it.gradingOption}\t${it.courseShortTitle}\t${it.instructorName}\t${it.instructorEmail}\t${it.term}\n")
+					buffer.append("${it.processed ? 'Processed' : 'Not Processed'}\t${it.state}\t${it.studentHuid}\t${it.studentFirstName}\t${it.studentLastName}\t${it.studentEmail}\t${it.homeSchool}\t${it.petitionCreated}\t${it.gradingOption}\t${it.courseShortTitle}\t${it.instructorName}\t${it.instructorEmail}\t${it.term}\n")
 				}
 				
 				def now = new Date()
