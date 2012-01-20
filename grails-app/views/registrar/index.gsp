@@ -40,8 +40,9 @@
 						{name: 'processed', mapping: 'processed'}
 					],
 					listeners: {
-						'load': function(){
-							$('.petition-count').html('Displaying ' + this.getCount() + ' petitions');
+						'load': function() {
+							$('.petition-count').html(this.getCount());
+                            $('.count-header').show();
 						}
 					}
                 });
@@ -229,7 +230,7 @@
                                     ['1', 'All'],
                                     ['2', 'Approved'],
                                     ['3', 'Awaiting Faculty Approval'],
-                                    ['4', 'Denied'],
+                                    ['4', 'Denied']
                                 ]
                             }),
                             valueField: 'id',
@@ -340,7 +341,7 @@
                                             value, record.get('instructorEmail'), record.get('instructorPhone'));
                                 }
                             },
-                            {header: 'Term', dataIndex: 'term'},
+                            {header: 'Term', dataIndex: 'term'}
                         ]
                     }),
                     viewConfig: {
@@ -357,7 +358,7 @@
     <body>
     	<div class="data-pnl-header">
 	    	<h3 class="school-header">${school}</h3>
-	    	<h3 class="petition-count"></h3>
+	    	<h3 class="count-header">Displaying <span class="petition-count">0</span> petitions</h3>
 	    </div>
     	<div id="petition-data-pnl"></div>
     </body>

@@ -16,6 +16,7 @@
  		clear: both;
  	}
  	.data-pnl-header {
+ 		height: 25px;
  		width: 960px;
  	}
  	#petition-data-pnl {
@@ -38,34 +39,34 @@
         overflow:hidden;
 	}
 	.action {
-	    background-image:url(http://isites.harvard.edu/js/isites/resources/images/fugue/gear.png) !important;
+	    background-image:url(https://isites.harvard.edu/js/isites/resources/images/fugue/gear.png) !important;
 	}
 	.approve {
-	    background-image:url(http://isites.harvard.edu/js/isites/resources/images/fugue/tick-circle-frame.png) !important;
+	    background-image:url(https://isites.harvard.edu/js/isites/resources/images/fugue/tick-circle-frame.png) !important;
 	}
 	.deny {
-	    background-image:url(http://isites.harvard.edu/js/isites/resources/images/fugue/cross-circle-frame.png) !important;
+	    background-image:url(https://isites.harvard.edu/js/isites/resources/images/fugue/cross-circle-frame.png) !important;
 	}
 	.pending {
-	    background-image:url(http://isites.harvard.edu/js/isites/resources/images/fugue/exclamation--frame.png) !important;
+	    background-image:url(https://isites.harvard.edu/js/isites/resources/images/fugue/exclamation--frame.png) !important;
 	}
 	.process {
-	    background-image:url(http://isites.harvard.edu/js/isites/resources/images/fugue/tick.png) !important;
+	    background-image:url(https://isites.harvard.edu/js/isites/resources/images/fugue/tick.png) !important;
 	}
 	.export {
-	    background-image:url(http://isites.harvard.edu/js/isites/resources/images/fugue/drive-download.png) !important;
+	    background-image:url(https://isites.harvard.edu/js/isites/resources/images/fugue/drive-download.png) !important;
 	}
 	.xml {
-	    background-image:url(http://isites.harvard.edu/js/isites/resources/images/coquette/xml_file.png) !important;
+	    background-image:url(https://isites.harvard.edu/js/isites/resources/images/coquette/xml_file.png) !important;
 	}
 	.json {
-	    background-image:url(http://isites.harvard.edu/js/isites/resources/images/coquette/json_file.png) !important;
+	    background-image:url(https://isites.harvard.edu/js/isites/resources/images/coquette/json_file.png) !important;
 	}
 	.excel {
-		background-image:url(http://isites.harvard.edu/js/isites/resources/images/fugue/document-excel.png) !important;
+		background-image:url(https://isites.harvard.edu/js/isites/resources/images/fugue/document-excel.png) !important;
 	}
 	.pdf {
-		background-image:url(http://isites.harvard.edu/js/isites/resources/images/fugue/document-pdf.png) !important;
+		background-image:url(https://isites.harvard.edu/js/isites/resources/images/fugue/document-pdf.png) !important;
 	}
 	.column-btn {
 		padding: 0 4px 0 0;
@@ -81,7 +82,8 @@
 	.school-header {
 		float: left;
 	}
-	.petition-count {
+	.count-header {
+		display: none;
 		float: right;
 	}
 </style>

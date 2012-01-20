@@ -40,7 +40,8 @@
 					],
 					listeners: {
 						'load': function(){
-							$('.petition-count').html('Displaying ' + this.getCount() + ' petitions');
+							$('.petition-count').html(this.getCount());
+                            $('.count-header').show();
 						}
 					}
                 });
@@ -56,7 +57,35 @@
                     },
                     store: store,
                     tbar: {
-                        items: ['Petition Status', {
+                        items: [{
+				        	iconCls: 'export',
+				            text: 'Export All',
+				            menu: new Ext.menu.Menu({
+					            id: 'exportMenu',
+					            items: [{
+					            	iconCls: 'excel',
+						            text: 'Excel',
+						            handler: function(){
+							            window.open(CourseRegistration.constructUrl(dataUrl + '?format=xls', topicId), '_self');
+							        }
+						        },/*{
+					            	iconCls: 'pdf',
+						            text: 'PDF'
+						        },*/{
+					            	iconCls: 'xml',
+						            text: 'XML',
+						            handler: function(){
+							            window.open(CourseRegistration.constructUrl(dataUrl + '?format=xml', topicId), '_self');
+							        }
+						        },{
+					            	iconCls: 'json',
+						            text: 'JSON',
+						            handler: function(){
+							            window.open(CourseRegistration.constructUrl(dataUrl + '?format=json', topicId), '_self');
+							        }
+						        }]
+					        })
+				        },'Status', {
                             xtype: 'combo',
                             store: new Ext.data.ArrayStore({
                                 autoDestroy: true,
@@ -65,7 +94,7 @@
                                     ['1', 'All'],
                                     ['2', 'Approved'],
                                     ['3', 'Awaiting Faculty Approval'],
-                                    ['4', 'Denied'],
+                                    ['4', 'Denied']
                                 ]
                             }),
                             valueField: 'id',
@@ -208,7 +237,7 @@
                                             value, record.get('instructorEmail'), record.get('instructorPhone'));
                                 }
                             },
-                            {header: 'Term', dataIndex: 'term'},
+                            {header: 'Term', dataIndex: 'term'}
                         ]
                     }),
                     viewConfig: {
@@ -224,7 +253,7 @@
     <body>
     	<div class="data-pnl-header">
 	    	<h3 class="school-header">${school}</h3>
-	    	<h3 class="petition-count"></h3>
+	    	<h3 class="count-header">Displaying <span class="petition-count">0</span> petitions</h3>
 	    </div>
     	<div id="petition-data-pnl"></div>
     </body>
