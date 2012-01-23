@@ -229,7 +229,7 @@
                                 data : [
                                     ['1', 'All'],
                                     ['2', 'Approved'],
-                                    ['3', 'Awaiting Faculty Approval'],
+                                    ['3', 'Pending Approval'],
                                     ['4', 'Denied']
                                 ]
                             }),
