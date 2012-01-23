@@ -61,7 +61,7 @@ environments {
 		icommonsapi.url = "http://tool2.isites.harvard.edu:8971/icommonsapi"
 		solr.url = "http://tool2.isites.harvard.edu:8935/solr"
 		catalog.url = "http://tool2.isites.harvard.edu:8000/hucc_prod_solr"
-		faculty.proxy.url = "http://isites.harvard.edu/icb/icb.do?keyword=CrossRegistrationPreview&pageid=icb.page481293&pageContentId=icb.pagecontent1022115&view=faculty/proxy&viewParam_proxy="
+		faculty.proxy.url = "http://isites.harvard.edu/icb/icb.do?keyword=CrossRegistration&pageid=icb.page481293&pageContentId=icb.pagecontent1022115&view=faculty/proxy&viewParam_proxy="
 		registrar {
 			group.id = "20466"
 			whitelist {

@@ -5,6 +5,8 @@ import org.codehaus.groovy.grails.web.json.*
 import edu.harvard.grails.plugins.baseline.BaselineUtils
 import edu.harvard.icommons.coursedata.CourseInstance
 import grails.converters.*
+import static groovyx.net.http.ContentType.JSON
+import groovy.text.SimpleTemplateEngine
 import groovyx.net.http.HTTPBuilder
 import groovyx.net.http.Method
 
@@ -517,6 +519,28 @@ class ApplicationController {
 			output.append("\n")
 		}
 		render output.toString()
+	}
+	
+	def fixFacultyProxyUrls = {
+		def proxyUrls = RegistrationProxyUrl.list()
+		log.info("Fixing " + proxyUrls.size() + " proxy urls")
+		proxyUrls.each {
+			def proxyUrl = it
+			def oldShortUrl = it.shortUrl
+			
+			def engine = new SimpleTemplateEngine()
+			def binding = ["username": grailsApplication.config.bitly.username, "apikey": grailsApplication.config.bitly.apikey, "url": (grailsApplication.config.faculty.proxy.url + proxyUrl.id).encodeAsURL()]
+			def template = engine.createTemplate(grailsApplication.config.bitly.api.url).make(binding)
+			
+			def http = new HTTPBuilder(template.toString())
+			http.request(Method.GET, groovyx.net.http.ContentType.JSON) {
+				response.success = {resp, json ->
+					proxyUrl.shortUrl = json.data.url
+					proxyUrl.save()
+					log.info("Changed proxy url for faculty " + proxyUrl.facultyUserId + " from " + oldShortUrl + " to " + proxyUrl.shortUrl)
+				}
+			}
+		}
 	}
 	
 }
