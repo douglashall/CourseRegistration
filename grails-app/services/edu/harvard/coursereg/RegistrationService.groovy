@@ -159,12 +159,14 @@ class RegistrationService {
 		def docs = []
 		studentCourses.each {
 			def initialState = it.registrationContext.getInitialState()
-			docs << [
+			def currentState = it.registrationContext.getCurrentRegistrationContextState()
+			def doc = [
 				id: it.id,
 				state: it.state.state,
 				stateTerminal: it.state.terminal,
 				stateType: it.state.type,
 				stateCreator: it.stateCreator,
+				stateCreated: currentState ? solrIndexDateFormat.format(currentState.dateCreated) : "",
 				processed: it.registrationContext.processed > 0,
 				petitionCreated: initialState ? solrIndexDateFormat.format(initialState.dateCreated) : "",
 				gradingOption: it.gradingOption,
@@ -185,6 +187,11 @@ class RegistrationService {
 				instructorEmail: it.instructor.email,
 				instructorPhone: it.instructor.phone
 			]
+			if (it.registrationContext.processed > 0) {
+				doc.processedAt = solrIndexDateFormat.format(it.registrationContext.dateProcessed)
+				doc.processedBy = it.registrationContext.getProcessor().firstName + " " + it.registrationContext.getProcessor().lastName
+			}
+			docs << doc
 		}
 		
 		def http = new HTTPBuilder(config.solr.url + "/update/json?commit=true")
@@ -235,6 +242,10 @@ class RegistrationService {
 				total = json.response.numFound
 				json.response.docs.each {
 					it.processed = it.processed ? "Processed" : "Not Processed"
+					if (it.processedAt) {
+						it.processedAt = sdf.format(solrIndexDateFormat.parse(it.processedAt))
+					}
+					it.stateCreated = sdf.format(solrIndexDateFormat.parse(it.stateCreated))
 					it.petitionCreated = sdf.format(solrIndexDateFormat.parse(it.petitionCreated))
 					result << it
 				}

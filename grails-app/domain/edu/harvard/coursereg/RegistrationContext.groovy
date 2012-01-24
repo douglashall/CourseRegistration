@@ -8,6 +8,8 @@ class RegistrationContext implements Serializable {
 	RegistrationContextState currentRegistrationContextState
 	RegistrationState currentState
 	Map currentStateCreator
+	Map processor
+	
 	int processed = 0
 	Date dateProcessed
 	String processedBy
@@ -16,7 +18,8 @@ class RegistrationContext implements Serializable {
 		'initialState',
 		'currentRegistrationContextState',
 		'currentState',
-		'currentStateCreator'
+		'currentStateCreator',
+		'processor'
 	]
 	
 	static hasMany = [
@@ -78,6 +81,15 @@ class RegistrationContext implements Serializable {
 			}
 		}
 		return this.currentStateCreator
+	}
+	
+	public Map getProcessor() {
+		if (!this.processor) {
+			if (this.processedBy) {
+				this.processor = BaselineUtils.findPerson(this.processedBy)
+			}
+		}
+		return this.processor
 	}
 	
 }

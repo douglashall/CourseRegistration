@@ -108,7 +108,7 @@
 							'${item.id}',
 							'${item.userId}',
 	                       	'${item.courseInstance.id}',
-	                       	'${item.courseInstance.shortTitle}',
+	                       	'${item.courseInstance.shortTitle ? item.courseInstance.shortTitle.replace("'", "\\'") : ""}',
 	                       	'${item.courseSchool.id}',
 	                       	${item.instructor as JSON},
 	                       	${item.state as JSON}

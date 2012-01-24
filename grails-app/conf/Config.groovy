@@ -154,7 +154,7 @@ log4j = {
 pilot.schools = "gse,hds,hsph"
 term.codes.active = [2,8,9]
 
-student.actions.disabled = true
+student.actions.disabled = false
 faculty.actions.disabled = true
 
 student.actions.enabled.schools = []

@@ -334,7 +334,7 @@
 							'${item.id}',
 							'${item.userId}',
 	                       	'${item.courseInstance.id}',
-	                       	'${item.courseInstance.shortTitle}',
+	                       	'${item.courseInstance.shortTitle ? item.courseInstance.shortTitle.replace("'", "\\'") : ""}',
 	                       	${item.courseInstance.xregInstructorSigReqd == 1},
 	                       	${item.levelOptions as JSON},
 	                       	${item.gradingOptions as JSON},
