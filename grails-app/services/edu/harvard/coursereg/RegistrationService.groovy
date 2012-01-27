@@ -289,15 +289,20 @@ class RegistrationService {
 		def engine = new SimpleTemplateEngine()
 		def binding = ["courseCode": model.course.code.toString(), "plural": ""]
 		def template = engine.createTemplate(this.emailSubjects[courseSchool.id]).make(binding)
-		sendMail {
-			to recipients.size() > 0 ? recipients.toArray() : config.email.from
-			bcc config.test.email.recipients.toArray()
-			from config.email.from
-			subject template.toString()
-			replyTo this.emailReplyToAddresses[courseSchool.id]
-			body (view: "/email/" + courseSchool.id + "/" + action.emailType, model: model)
+		
+		try {
+			sendMail {
+				to recipients.size() > 0 ? recipients.toArray() : config.email.from
+				bcc config.test.email.recipients.toArray()
+				from config.email.from
+				subject template.toString()
+				replyTo this.emailReplyToAddresses[courseSchool.id]
+				body (view: "/email/" + courseSchool.id + "/" + action.emailType, model: model)
+			}
+			log.info("Sent email to " + recipients + " for action " + action.action + " student course id " + studentCourse.id)
+		} catch (Exception e) {
+			log.error("Failed to send mail to " + recipients + " for action " + action.action + " student course id " + studentCourse.id)
 		}
-		log.info("Sent email to " + recipients + " for action " + action.action + " student course id " + studentCourse.id)
 	}
 	
 	def sendNotificationEmailToFaculty(Map faculty, List<StudentCourse> studentCourses) {
