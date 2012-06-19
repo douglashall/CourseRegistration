@@ -73,9 +73,9 @@ class RegistrarController {
 			}
 			xls {
 				def buffer = new StringBuffer()
-				buffer.append("Registrar Status\tProcessed On\tProcessed By\tPetition Status\tApproved/Denied By\tApproved/Denied On\tStudent HUID\tStudent First Name\tStudent Last Name\tStudent Email\tHome School\tHost School\tSubmitted On\tGrading Option\tCourse\tFaculty Name\tFaculty Email\tTerm\n")
+				buffer.append("Registrar Status\tProcessed On\tProcessed By\tPetition Status\tApproved/Denied By\tApproved/Denied On\tStudent HUID\tStudent First Name\tStudent Last Name\tStudent Email\tHome School\tHost School\tSubmitted On\tGrading Option\tCourse\tTitle\tCredits\tFaculty Name\tFaculty Email\tTerm\n")
 				result.records.each {
-					buffer.append("${it.processed}\t${it.processedAt ? it.processedAt : ''}\t${it.processedBy ? it.processedBy : ''}\t${it.state}\t${it.stateTerminal ? it.stateCreator : ''}\t${it.stateTerminal ? it.stateCreated : ''}\t${it.studentHuid}\t${it.studentFirstName}\t${it.studentLastName}\t${it.studentEmail}\t${it.homeSchool}\t${it.hostSchool}\t${it.petitionCreated}\t${it.gradingOption}\t${it.courseShortTitle}\t${it.instructorName}\t${it.instructorEmail}\t${it.term}\n")
+					buffer.append("${it.processed}\t${it.processedAt ? it.processedAt : ''}\t${it.processedBy ? it.processedBy : ''}\t${it.state}\t${it.stateTerminal ? it.stateCreator : ''}\t${it.stateTerminal ? it.stateCreated : ''}\t${it.studentHuid}\t${it.studentFirstName}\t${it.studentLastName}\t${it.studentEmail}\t${it.homeSchool}\t${it.hostSchool}\t${it.petitionCreated}\t${it.gradingOption}\t${it.courseShortTitle}\t${it.courseTitle}\t${it.credits}\t${it.instructorName}\t${it.instructorEmail}\t${it.term}\n")
 				}
 				
 				def now = new Date()
