@@ -28,10 +28,8 @@ grails.project.dependency.resolution = {
         // specify dependencies here under either 'build', 'compile', 'runtime', 'test' or 'provided' scopes eg.
 
         compile(
-			'org.codehaus.groovy.modules.http-builder:http-builder:0.5.1',
+			'org.codehaus.groovy.modules.http-builder:http-builder:0.5.2',
 			'org.apache.httpcomponents:httpclient:4.1.2',
-			'edu.harvard.icommons.grails.plugins:isites-coursedata:0.3',
-			'edu.harvard.grails.plugins:baseline:0.1',
 			'net.sourceforge.saxon:saxon:9.1.0.8',
 			'org.apache.xmlgraphics:fop:0.93'
 		) {
@@ -40,4 +38,11 @@ grails.project.dependency.resolution = {
 		
         runtime('com.oracle:ojdbc6:11.2.0.2')
     }
+	plugins {
+		compile(
+			'edu.harvard.icommons.grails.plugins:isites-coursedata:0.3',
+			'edu.harvard.grails.plugins:baseline:0.1',
+			':mail:1.0'
+		)
+	}
 }
